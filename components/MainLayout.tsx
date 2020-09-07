@@ -41,6 +41,7 @@ const MainLayout: React.FC<PropsML> = ({ children, title, changeAuthorization })
         />
         <meta name="description" content="x-check app" />
         <meta name="keywords" content="cross-check, app, rsschool" />
+        <link rel="shortcut icon" href="https://rs.school/favicon.ico" />
       </Head>
       <section className={'layout'}>
         <nav className={'nav'}>
