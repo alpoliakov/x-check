@@ -1,0 +1,53 @@
+*,
+*:after,
+*:before {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.box_auth {
+  margin: 0 auto;
+  text-align: center;
+}
+
+.nav {
+  padding: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.header-logo {
+  height: 30px;
+}
+
+.layout {
+  display: flex;
+  flex: auto;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.profile-text {
+  margin-left: 12px;
+  font-size: 18px;
+}
+
+.login-form {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -65%);
+  text-align: center;
+}
+
+.login-image {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto 50px;
+}
+#login-card-img {
+  width: 100px;
+  margin: 30px auto 20px;
+}
