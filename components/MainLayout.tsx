@@ -4,8 +4,6 @@ import Link from 'next/link';
 import { Avatar, Menu, Dropdown, Button, message } from 'antd';
 import { EyeOutlined, EditOutlined, LogoutOutlined } from '@ant-design/icons';
 
-// @ts-ignore
-
 interface PropsML {
   children?: React.ReactNode;
   title: string;
