@@ -4,11 +4,11 @@ import MainPages from './main';
 import { GetServerSideProps } from 'next';
 import { checkRef } from '../firebase';
 
-interface PropsHome {
+interface PropsIP {
   roleUser: string;
 }
 
-const Home: React.FC<PropsHome> = ({ roleUser }) => {
+const IndexPage: React.FC<PropsIP> = ({ roleUser }) => {
   const [authorization, setAuthorization] = useState(false);
   const [role, setRole] = useState(roleUser);
   const changeAuthorization = () => {
@@ -26,9 +26,9 @@ const Home: React.FC<PropsHome> = ({ roleUser }) => {
   );
 };
 
-export default Home;
+export default IndexPage;
 
-export const getServerSideProps: GetServerSideProps<PropsHome> = async () => {
+export const getServerSideProps: GetServerSideProps<PropsIP> = async () => {
   let role = '';
   checkRef.on('value', (snapshot) => {
     role = snapshot.val();
