@@ -5,14 +5,14 @@ interface PropsAdmin {
   changeAuthorization: () => void;
 }
 
-const AdminPage: React.FC<PropsAdmin> = ({ changeAuthorization }) => {
+const AuthorPage: React.FC<PropsAdmin> = ({ changeAuthorization }) => {
   return (
     <>
       <MainLayout title="Admin" changeAuthorization={changeAuthorization}>
-        <h1>Admin Page</h1>
+        <h1>Author Page</h1>
       </MainLayout>
     </>
   );
 };
 
-export default AdminPage;
+export default AuthorPage;

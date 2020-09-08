@@ -1,8 +1,9 @@
-import * as React from 'react';
+import React from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { Avatar, Menu, Dropdown, Button, message } from 'antd';
 import { EyeOutlined, EditOutlined, LogoutOutlined } from '@ant-design/icons';
+import { auth } from '../firebase';
 
 interface PropsML {
   children?: React.ReactNode;
@@ -11,6 +12,19 @@ interface PropsML {
 }
 
 const MainLayout: React.FC<PropsML> = ({ children, title, changeAuthorization }) => {
+  const logOut = () => {
+    auth.signOut().then(
+      function () {
+        console.log('Logged out!');
+      },
+      function (error) {
+        console.log(error.code);
+        console.log(error.message);
+      }
+    );
+    changeAuthorization();
+  };
+
   const menu = (
     <Menu>
       <Menu.Item key="profile" icon={<EyeOutlined />}>
@@ -22,7 +36,7 @@ const MainLayout: React.FC<PropsML> = ({ children, title, changeAuthorization })
       </Menu.Item>
       <Menu.Divider />
       <Menu.Item key="logout" icon={<LogoutOutlined />}>
-        <a className="ant-dropdown-link" type="button" onClick={changeAuthorization}>
+        <a className="ant-dropdown-link" type="button" onClick={logOut}>
           Logout
         </a>
       </Menu.Item>

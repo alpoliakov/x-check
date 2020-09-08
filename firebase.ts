@@ -19,6 +19,6 @@ if (!firebase.apps.length) {
 
 export const auth = firebase.auth();
 export const databaseRef = firebase.database().ref();
-export const checkRef = databaseRef.child('users');
+export const checkRef = databaseRef.child('users/');
 
 export default firebase;

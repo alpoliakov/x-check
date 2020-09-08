@@ -8,9 +8,10 @@ import Register from './users/register';
 
 interface Props {
   changeAuthorization: () => void;
+  changeRole: (data: string) => void;
 }
 
-const AuthPage: React.FC<Props> = ({ changeAuthorization }) => {
+const AuthPage: React.FC<Props> = ({ changeAuthorization, changeRole }) => {
   const router = useRouter();
   const changeAuthPage = (namePage: string): void => {
     setStateAuth(namePage);
@@ -20,8 +21,14 @@ const AuthPage: React.FC<Props> = ({ changeAuthorization }) => {
   return (
     <>
       {stateAuth === '' && <RequestAuth changeAuthPage={changeAuthPage} />}
-      {stateAuth === 'login' && <Login changeAuthPage={changeAuthPage} />}
-      {stateAuth === 'register' && <Register changeAuthPage={changeAuthPage} />}
+      {stateAuth === 'login' && <Login changeAuthPage={changeAuthPage} changeRole={changeRole} />}
+      {stateAuth === 'register' && (
+        <Register
+          changeAuthPage={changeAuthPage}
+          changeRole={changeRole}
+          changeAuthorization={changeAuthorization}
+        />
+      )}
     </>
   );
 };

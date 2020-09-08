@@ -14,13 +14,16 @@ const IndexPage: React.FC<PropsIP> = ({ roleUser }) => {
   const changeAuthorization = () => {
     setAuthorization(!authorization);
   };
+  const changeRole = (data: string) => {
+    setRole(data);
+  };
 
   return (
     <>
       {authorization ? (
         <MainPages role={role} changeAuthorization={changeAuthorization} />
       ) : (
-        <AuthPage changeAuthorization={changeAuthorization} />
+        <AuthPage changeRole={changeRole} changeAuthorization={changeAuthorization} />
       )}
     </>
   );
@@ -32,6 +35,7 @@ export const getServerSideProps: GetServerSideProps<PropsIP> = async () => {
   let role = '';
   checkRef.on('value', (snapshot) => {
     role = snapshot.val();
+    console.log(role);
   });
   return {
     props: {

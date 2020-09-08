@@ -68,6 +68,10 @@
   border-radius: 2px;
 }
 
+.notify {
+  color: tomato;
+}
+
 .ant-btn {
   margin-right: 8px;
 }

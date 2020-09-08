@@ -1,18 +1,23 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { HomeTwoTone } from '@ant-design/icons';
 import RequestAuth from './request';
-import { Form, Input, Button, Checkbox } from 'antd';
+import { Form, Input, Button, Checkbox, Modal } from 'antd';
 import { MailOutlined, UserOutlined, LockOutlined } from '@ant-design/icons';
 import { auth } from '../../firebase';
 
 interface PropsLogin {
   changeAuthPage: (data: string) => void;
+  changeRole: (data: string) => void;
 }
 
-const Login: React.FC<PropsLogin> = ({ changeAuthPage }) => {
+const Login: React.FC<PropsLogin> = ({ changeAuthPage, changeRole }) => {
   const router = useRouter();
+  const [notify, setNotification] = useState('');
+  const [visible, setVisible] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);
   const [form] = Form.useForm();
+
   const handleClick = (data: string) => {
     changeAuthPage(data);
   };
@@ -26,9 +31,26 @@ const Login: React.FC<PropsLogin> = ({ changeAuthPage }) => {
     auth.signInWithEmailAndPassword(email, password).catch((error) => {
       const errorCode = error.code;
       const errorMessage = error.message;
+      setNotification(`${errorMessage} - ${errorCode}`);
+      setVisible(true);
       console.error(`${errorMessage} - ${errorCode}`);
+      return;
     });
     console.log('Received values of form: ', values);
+  };
+
+  auth.onAuthStateChanged((user) => {
+    if (user) {
+      setLoggedIn(true);
+    } else {
+      setLoggedIn(false);
+    }
+    console.log(`Login - ${loggedIn}`);
+  });
+
+  const onCancel = () => {
+    setVisible(false);
+    setNotification('');
   };
 
   return (
@@ -37,15 +59,22 @@ const Login: React.FC<PropsLogin> = ({ changeAuthPage }) => {
         <div>
           <Form
             name="normal_login"
+            form={form}
             className="login-form"
             initialValues={{ remember: true }}
             onFinish={onFinish}
           >
+            {
+              <Modal visible={visible} title="Error!" onOk={onCancel} onCancel={onCancel}>
+                {notify}
+              </Modal>
+            }
             <img
               className="login-image"
               src="/static/images/logo-rs-school.svg"
               alt="RS School Logo"
             />
+
             <Form.Item
               name="email"
               rules={[
