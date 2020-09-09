@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { HomeTwoTone } from '@ant-design/icons';
-import RequestAuth from './request';
 import { Form, Input, Button, Checkbox, Modal } from 'antd';
-import { MailOutlined, UserOutlined, LockOutlined } from '@ant-design/icons';
+import { MailOutlined, LockOutlined } from '@ant-design/icons';
 import { auth } from '../../firebase';
 import { checkRef } from '../../firebase';
 
@@ -42,7 +40,7 @@ const Login: React.FC<PropsLogin> = ({ changeAuthPage, changeRole, changeAuthori
     console.log('Received values of form: ', values);
   };
 
-  auth.onAuthStateChanged((user) => {
+  const isSubscribe = auth.onAuthStateChanged((user) => {
     if (user) {
       setLoggedIn(true);
     } else {
@@ -51,11 +49,10 @@ const Login: React.FC<PropsLogin> = ({ changeAuthPage, changeRole, changeAuthori
   });
 
   useEffect((): (() => void) => {
-    let isSubscribed = true;
-    if (loggedIn && isSubscribed) {
+    if (loggedIn && isSubscribe) {
       goToMainPage();
     }
-    return (): boolean => (isSubscribed = false);
+    return () => isSubscribe();
   }, [loggedIn]);
 
   const onCancel = () => {
@@ -70,11 +67,11 @@ const Login: React.FC<PropsLogin> = ({ changeAuthPage, changeRole, changeAuthori
       for (let key in users) {
         if (users[key].email === userEmail) {
           role = users[key].roles[0];
+          changeRole(role);
+          changeAuthorization();
         }
       }
     });
-    changeRole(role || 'student');
-    changeAuthorization();
   };
 
   return (

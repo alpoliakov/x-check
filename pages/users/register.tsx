@@ -39,11 +39,16 @@ const Register: React.FC<PropsRegister> = ({ changeAuthPage, changeRole, changeA
   const [notify, setNotification] = useState('');
   const [visible, setVisible] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
-  const [userData, setUserdata] = useState({});
+  const [userData, setUserData] = useState({});
 
   const onFinish = (values: any) => {
-    const { email, password } = values;
-    setUserdata(values);
+    const { email, password, nickname, roles } = values;
+    setUserData({
+      nickname: nickname,
+      password: password,
+      email: email,
+      roles: roles,
+    });
     auth.createUserWithEmailAndPassword(email, password).catch((error) => {
       const errorCode = error.code;
       const errorMessage = error.message;
@@ -55,7 +60,7 @@ const Register: React.FC<PropsRegister> = ({ changeAuthPage, changeRole, changeA
     console.log('Received values of form: ', values);
   };
 
-  auth.onAuthStateChanged((user) => {
+  const subscribe = auth.onAuthStateChanged((user): void => {
     if (user) {
       setLoggedIn(true);
     } else {
@@ -64,16 +69,10 @@ const Register: React.FC<PropsRegister> = ({ changeAuthPage, changeRole, changeA
   });
 
   useEffect((): (() => void) => {
-    let isSubscribed = true;
-    let role = '';
-    if (loggedIn && isSubscribed) {
-      // @ts-ignore
-      role = userData['roles'][0];
-      checkRef.push(userData);
-      changeAuthorization();
-      changeRole(role || 'admin');
+    if (loggedIn && subscribe) {
+      setUserDataInDB();
     }
-    return (): boolean => (isSubscribed = false);
+    return () => subscribe();
   }, [loggedIn]);
 
   const onReset = () => {
@@ -90,16 +89,14 @@ const Register: React.FC<PropsRegister> = ({ changeAuthPage, changeRole, changeA
     changeAuthPage(data);
   };
 
-  const signOut = () => {
-    auth.signOut().then(
-      function () {
-        console.log('Logged out!');
-      },
-      function (error) {
-        console.log(error.code);
-        console.log(error.message);
-      }
-    );
+  const setUserDataInDB = () => {
+    // @ts-ignore
+    userData['uid'] = auth.currentUser.uid;
+    // @ts-ignore
+    const role = userData['roles'][0];
+    checkRef.push(userData);
+    changeAuthorization();
+    changeRole(role || 'admin');
   };
 
   return (
