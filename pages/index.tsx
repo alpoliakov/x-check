@@ -39,7 +39,7 @@ export const getServerSideProps: GetServerSideProps<PropsIP> = async () => {
   });
   return {
     props: {
-      roleUser: role || 'student',
+      roleUser: role || 'error',
     },
   };
 };

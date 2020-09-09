@@ -66,7 +66,7 @@ const Login: React.FC<PropsLogin> = ({ changeAuthPage, changeRole, changeAuthori
       const users = snapshot.val();
       for (let key in users) {
         if (users[key].email === userEmail) {
-          role = users[key].roles[0];
+          role = users[key].roles[0] || 'error';
           changeRole(role);
           changeAuthorization();
         }

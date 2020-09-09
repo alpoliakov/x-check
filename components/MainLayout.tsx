@@ -8,7 +8,7 @@ import { useRouter } from 'next/router';
 
 interface PropsML {
   children?: React.ReactNode;
-  title: string;
+  title?: string;
   changeAuthorization?: () => void;
 }
 
