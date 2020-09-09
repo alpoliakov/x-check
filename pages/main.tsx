@@ -15,7 +15,7 @@ const MainPages: React.FC<PropsMainPage> = ({ role, changeAuthorization }) => {
       {role === 'student' && <StudentPage changeAuthorization={changeAuthorization} />}
       {role === 'admin' && <AdminPage changeAuthorization={changeAuthorization} />}
       {role === 'mentor' && <MentorPage changeAuthorization={changeAuthorization} />}
-      {role === 'course_manager' && <ManagerPage changeAuthorization={changeAuthorization} />}
+      {role === 'manager' && <ManagerPage changeAuthorization={changeAuthorization} />}
     </>
   );
 };

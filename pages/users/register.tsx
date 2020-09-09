@@ -69,7 +69,7 @@ const Register: React.FC<PropsRegister> = ({ changeAuthPage, changeRole, changeA
   });
 
   useEffect((): (() => void) => {
-    if (loggedIn && subscribe) {
+    if (loggedIn) {
       setUserDataInDB();
     }
     return () => subscribe();
@@ -214,8 +214,8 @@ const Register: React.FC<PropsRegister> = ({ changeAuthPage, changeRole, changeA
                     </Checkbox>
                   </Col>
                   <Col span={20}>
-                    <Checkbox value="course_manager" style={{ lineHeight: '32px' }}>
-                      course manager
+                    <Checkbox value="manager" style={{ lineHeight: '32px' }}>
+                      manager
                     </Checkbox>
                   </Col>
                 </Row>
@@ -229,6 +229,7 @@ const Register: React.FC<PropsRegister> = ({ changeAuthPage, changeRole, changeA
                 Reset
               </Button>
             </Form.Item>
+            <br />
             <p className={'login__now_text'}>
               Or <a onClick={() => handleClick('login')}>login now!</a>
             </p>

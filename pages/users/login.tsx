@@ -49,7 +49,7 @@ const Login: React.FC<PropsLogin> = ({ changeAuthPage, changeRole, changeAuthori
   });
 
   useEffect((): (() => void) => {
-    if (loggedIn && isSubscribe) {
+    if (loggedIn) {
       goToMainPage();
     }
     return () => isSubscribe();

@@ -4,14 +4,17 @@ import Link from 'next/link';
 import { Avatar, Menu, Dropdown, Button, message } from 'antd';
 import { EyeOutlined, EditOutlined, LogoutOutlined } from '@ant-design/icons';
 import { auth } from '../firebase';
+import { useRouter } from 'next/router';
 
 interface PropsML {
   children?: React.ReactNode;
   title: string;
-  changeAuthorization: () => void;
+  changeAuthorization?: () => void;
 }
 
 const MainLayout: React.FC<PropsML> = ({ children, title, changeAuthorization }) => {
+  const router = useRouter();
+
   const logOut = () => {
     auth.signOut().then(
       function () {
@@ -22,13 +25,22 @@ const MainLayout: React.FC<PropsML> = ({ children, title, changeAuthorization })
         console.log(error.message);
       }
     );
-    changeAuthorization();
+    if (changeAuthorization) {
+      changeAuthorization();
+    }
+    router.push('/');
+  };
+
+  const viewUser = () => {
+    router.push(`/about/user`);
   };
 
   const menu = (
     <Menu>
       <Menu.Item key="profile" icon={<EyeOutlined />}>
-        <a className="ant-dropdown-link">View</a>
+        <a className="ant-dropdown-link" onClick={viewUser}>
+          View
+        </a>
       </Menu.Item>
       <Menu.Divider />
       <Menu.Item key="edit" icon={<EditOutlined />}>
