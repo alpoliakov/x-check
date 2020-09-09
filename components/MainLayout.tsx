@@ -74,7 +74,7 @@ const MainLayout: React.FC<PropsML> = ({ children, title, changeAuthorization })
           <div className="my-profile">
             <Dropdown overlay={menu} placement="bottomLeft" trigger={['click']}>
               <Button type="dashed" size="large" onClick={(e) => e.preventDefault()}>
-                <Avatar size="small" src="static/images/king.jpg" />
+                <Avatar size="small" src="/static/images/king.jpg" />
                 <span className="profile-text">My Profile</span>
               </Button>
             </Dropdown>

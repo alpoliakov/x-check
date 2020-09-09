@@ -5,17 +5,20 @@ import RequestAuth from './request';
 import { Form, Input, Button, Checkbox, Modal } from 'antd';
 import { MailOutlined, UserOutlined, LockOutlined } from '@ant-design/icons';
 import { auth } from '../../firebase';
+import { checkRef } from '../../firebase';
 
 interface PropsLogin {
   changeAuthPage: (data: string) => void;
   changeRole: (data: string) => void;
+  changeAuthorization: () => void;
 }
 
-const Login: React.FC<PropsLogin> = ({ changeAuthPage, changeRole }) => {
+const Login: React.FC<PropsLogin> = ({ changeAuthPage, changeRole, changeAuthorization }) => {
   const router = useRouter();
   const [notify, setNotification] = useState('');
   const [visible, setVisible] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
+  const [userEmail, setUserEmail] = useState('');
   const [form] = Form.useForm();
 
   const handleClick = (data: string) => {
@@ -28,13 +31,13 @@ const Login: React.FC<PropsLogin> = ({ changeAuthPage, changeRole }) => {
 
   const onFinish = (values: any) => {
     const { email, password } = values;
+    setUserEmail(email);
     auth.signInWithEmailAndPassword(email, password).catch((error) => {
       const errorCode = error.code;
       const errorMessage = error.message;
       setNotification(`${errorMessage} - ${errorCode}`);
       setVisible(true);
       console.error(`${errorMessage} - ${errorCode}`);
-      return;
     });
     console.log('Received values of form: ', values);
   };
@@ -45,12 +48,33 @@ const Login: React.FC<PropsLogin> = ({ changeAuthPage, changeRole }) => {
     } else {
       setLoggedIn(false);
     }
-    console.log(`Login - ${loggedIn}`);
   });
+
+  useEffect((): (() => void) => {
+    let isSubscribed = true;
+    if (loggedIn && isSubscribed) {
+      goToMainPage();
+    }
+    return (): boolean => (isSubscribed = false);
+  }, [loggedIn]);
 
   const onCancel = () => {
     setVisible(false);
     setNotification('');
+  };
+
+  const goToMainPage = () => {
+    let role = '';
+    checkRef.on('value', (snapshot) => {
+      const users = snapshot.val();
+      for (let key in users) {
+        if (users[key].email === userEmail) {
+          role = users[key].roles[0];
+        }
+      }
+    });
+    changeRole(role || 'student');
+    changeAuthorization();
   };
 
   return (

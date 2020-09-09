@@ -1,7 +1,9 @@
 import React from 'react';
-import StudentPage from './student';
-import AuthorPage from './author';
+import StudentPage from './roles/student';
+import AdminPage from './roles/admin';
 import MainLayout from '../components/MainLayout';
+import MentorPage from './roles/mentor';
+import ManagerPage from './roles/manager';
 
 interface PropsMainPage {
   role: string;
@@ -11,7 +13,9 @@ const MainPages: React.FC<PropsMainPage> = ({ role, changeAuthorization }) => {
   return (
     <>
       {role === 'student' && <StudentPage changeAuthorization={changeAuthorization} />}
-      {role === 'author' && <AuthorPage changeAuthorization={changeAuthorization} />}
+      {role === 'admin' && <AdminPage changeAuthorization={changeAuthorization} />}
+      {role === 'mentor' && <MentorPage changeAuthorization={changeAuthorization} />}
+      {role === 'course_manager' && <ManagerPage changeAuthorization={changeAuthorization} />}
     </>
   );
 };

@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-import { FormOutlined, LoginOutlined } from '@ant-design/icons';
-import { Button, Card } from 'antd';
 import { useRouter } from 'next/router';
 import RequestAuth from './users/request';
 import Login from './users/login';
@@ -21,7 +19,13 @@ const AuthPage: React.FC<Props> = ({ changeAuthorization, changeRole }) => {
   return (
     <>
       {stateAuth === '' && <RequestAuth changeAuthPage={changeAuthPage} />}
-      {stateAuth === 'login' && <Login changeAuthPage={changeAuthPage} changeRole={changeRole} />}
+      {stateAuth === 'login' && (
+        <Login
+          changeAuthPage={changeAuthPage}
+          changeRole={changeRole}
+          changeAuthorization={changeAuthorization}
+        />
+      )}
       {stateAuth === 'register' && (
         <Register
           changeAuthPage={changeAuthPage}

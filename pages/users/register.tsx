@@ -40,7 +40,6 @@ const Register: React.FC<PropsRegister> = ({ changeAuthPage, changeRole, changeA
   const [visible, setVisible] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
   const [userData, setUserdata] = useState({});
-  const [userId, setUserId] = useState('');
 
   const onFinish = (values: any) => {
     const { email, password } = values;
@@ -59,21 +58,23 @@ const Register: React.FC<PropsRegister> = ({ changeAuthPage, changeRole, changeA
   auth.onAuthStateChanged((user) => {
     if (user) {
       setLoggedIn(true);
-      setUserId(user.uid);
     } else {
       setLoggedIn(false);
     }
   });
 
-  useEffect(() => {
-    if (loggedIn) {
-      userData.id = userId;
+  useEffect((): (() => void) => {
+    let isSubscribed = true;
+    let role = '';
+    if (loggedIn && isSubscribed) {
+      // @ts-ignore
+      role = userData['roles'][0];
       checkRef.push(userData);
       changeAuthorization();
+      changeRole(role || 'admin');
     }
+    return (): boolean => (isSubscribed = false);
   }, [loggedIn]);
-
-  console.log(`Register - ${loggedIn}`);
 
   const onReset = () => {
     form.resetFields();
@@ -191,7 +192,11 @@ const Register: React.FC<PropsRegister> = ({ changeAuthPage, changeRole, changeA
             >
               <Input.Password />
             </Form.Item>
-            <Form.Item name="roles" label="Roles">
+            <Form.Item
+              name="roles"
+              label="Roles"
+              rules={[{ required: true, message: 'Please select at least one role!' }]}
+            >
               <Checkbox.Group>
                 <Row>
                   <Col span={20}>
@@ -200,15 +205,15 @@ const Register: React.FC<PropsRegister> = ({ changeAuthPage, changeRole, changeA
                     </Checkbox>
                   </Col>
                   <Col span={20}>
-                    <Checkbox value="author" style={{ lineHeight: '32px' }}>
-                      author
+                    <Checkbox value="admin" style={{ lineHeight: '32px' }}>
+                      admin
                     </Checkbox>
                   </Col>
                 </Row>
                 <Row>
                   <Col span={20}>
-                    <Checkbox value="supervisor" style={{ lineHeight: '32px' }}>
-                      supervisor
+                    <Checkbox value="mentor" style={{ lineHeight: '32px' }}>
+                      mentor
                     </Checkbox>
                   </Col>
                   <Col span={20}>
@@ -231,9 +236,6 @@ const Register: React.FC<PropsRegister> = ({ changeAuthPage, changeRole, changeA
               Or <a onClick={() => handleClick('login')}>login now!</a>
             </p>
           </Form>
-          <button type="button" onClick={signOut}>
-            {!loggedIn ? 'Some' : 'LogOut'}
-          </button>
         </div>
       </main>
     </>
