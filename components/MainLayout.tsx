@@ -8,7 +8,7 @@ import { useRouter } from 'next/router';
 
 interface PropsML {
   children?: React.ReactNode;
-  title: string;
+  title?: string;
   changeAuthorization?: () => void;
 }
 
@@ -35,6 +35,10 @@ const MainLayout: React.FC<PropsML> = ({ children, title, changeAuthorization })
     router.push(`/about/user`);
   };
 
+  const editUser = () => {
+    router.push(`/about/edit`);
+  };
+
   const menu = (
     <Menu>
       <Menu.Item key="profile" icon={<EyeOutlined />}>
@@ -44,7 +48,9 @@ const MainLayout: React.FC<PropsML> = ({ children, title, changeAuthorization })
       </Menu.Item>
       <Menu.Divider />
       <Menu.Item key="edit" icon={<EditOutlined />}>
-        <a className="ant-dropdown-link">Edit</a>
+        <a className="ant-dropdown-link" onClick={editUser}>
+          Edit
+        </a>
       </Menu.Item>
       <Menu.Divider />
       <Menu.Item key="logout" icon={<LogoutOutlined />}>

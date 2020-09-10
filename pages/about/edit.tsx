@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import MainLayout from '../../components/MainLayout';
 import { checkRef, auth } from '../../firebase';
 import { useRouter } from 'next/router';
-import { Card, Col, Row, Avatar, Typography, Empty } from 'antd';
+import { Button, Card, Col, Row, Avatar, Typography, Empty } from 'antd';
 import {
   GithubOutlined,
   EnvironmentOutlined,
+  EditOutlined,
+  SettingOutlined,
   InfoCircleOutlined,
   TagOutlined,
   ReadOutlined,
@@ -14,19 +16,16 @@ import {
   BookOutlined,
   MailOutlined,
 } from '@ant-design/icons';
+import { object, string } from 'prop-types';
 
-interface PropsUser {
-  title: string;
-}
+const EditUser: React.FC = () => {
+  const [userData, setUserData] = useState({});
+  const [userName, setUserName] = useState('');
+  const [userEmail, setUserEmail] = useState('');
+  const [path, setPath] = useState('');
 
-const User: React.FC<PropsUser> = ({ title }) => {
-  const [userData, setUserdata] = useState({});
-  const [email, setEmail] = useState('');
-  const [name, setName] = useState('');
-  const [uid, setUid] = useState('');
-  const [roles, setRoles] = useState([]);
-  const router = useRouter();
   const { Title, Link, Text } = Typography;
+  const router = useRouter();
 
   useEffect(() => {
     checkRef.on('value', (snapshot) => {
@@ -34,29 +33,35 @@ const User: React.FC<PropsUser> = ({ title }) => {
       for (let key in users) {
         // @ts-ignore
         if (users[key].uid === auth.currentUser.uid) {
-          setUserdata(users[key]);
-          setEmail(users[key].email);
-          setName(users[key].nickname);
-          setUid(users[key].uid);
-          setRoles(users[key].roles);
+          setUserData(users[key]);
+          setUserName(users[key].nickname);
+          setUserEmail(users[key].email);
+          setPath(users[key].roles[0]);
         }
       }
     });
   }, []);
 
-  const returnToPage = () => {
-    router.push(`../../roles/${roles[0]}`);
+  const backPage = () => {
+    router.push(`../../roles/${path}`);
   };
 
   return (
     <>
-      <MainLayout title={'User'}>
+      <MainLayout title={'Edit'}>
         <div className="site-card-wrapper">
           <Row gutter={16}>
             <Col span={6}>
-              <Card bordered={true} className="intro">
+              <Card
+                bordered={true}
+                className="intro"
+                actions={[
+                  <EditOutlined key="edit-intro" />,
+                  <SettingOutlined key="setting-intro" />,
+                ]}
+              >
                 <Avatar size={90} src="/static/images/king.jpg" />
-                <Title level={2}>{name}</Title>
+                <Title level={2}>{userName}</Title>
                 <Title level={5}>
                   <Link href="https://github.com/">
                     <GithubOutlined /> githab
@@ -64,24 +69,22 @@ const User: React.FC<PropsUser> = ({ title }) => {
                 </Title>
                 <div>
                   <Text>
-                    <EnvironmentOutlined /> location
+                    <EnvironmentOutlined /> Location
                   </Text>
                 </div>
                 <div>
                   <Text>
-                    <MailOutlined /> {email}
+                    <MailOutlined /> {userEmail}
                   </Text>
                 </div>
               </Card>
             </Col>
             <Col span={6}>
               <Card
-                title={[
-                  <InfoCircleOutlined key="info-user" />,
-                  <span key="span-user-about"> About</span>,
-                ]}
+                title={[<InfoCircleOutlined key="info" />, <span key="about"> About</span>]}
                 bordered={true}
-                key="card-user-about"
+                actions={[<EditOutlined key="edit-info" />, <SettingOutlined key="setting-info" />]}
+                key="card-about"
               >
                 <Empty
                   description="About info isn't written"
@@ -92,11 +95,12 @@ const User: React.FC<PropsUser> = ({ title }) => {
             <Col span={6}>
               <Card
                 title={[
-                  <TagOutlined key="english-user" />,
-                  <span key="span-user-english"> Estimated English level</span>,
+                  <TagOutlined key="english" />,
+                  <span key="span-english"> Estimated English level</span>,
                 ]}
                 bordered={true}
-                key="card-user-english"
+                actions={[<EditOutlined key="edit-engl" />, <SettingOutlined key="setting-engl" />]}
+                key="card-english"
               >
                 <Empty
                   description="English level isn't choosen"
@@ -106,12 +110,10 @@ const User: React.FC<PropsUser> = ({ title }) => {
             </Col>
             <Col span={6}>
               <Card
-                title={[
-                  <ReadOutlined key="education-user" />,
-                  <span key="span-user-edu"> Education</span>,
-                ]}
+                title={[<ReadOutlined key="education" />, <span key="span-edu"> Education</span>]}
                 bordered={true}
-                key="card-user-edu"
+                actions={[<EditOutlined key="edit-edu" />, <SettingOutlined key="setting-edu" />]}
+                key="card-edu"
               >
                 <Empty
                   description="Education history isn't filled in"
@@ -122,11 +124,12 @@ const User: React.FC<PropsUser> = ({ title }) => {
             <Col span={6}>
               <Card
                 title={[
-                  <ContactsOutlined key="contacts-user" />,
-                  <span key="span-user-cont"> Contacts</span>,
+                  <ContactsOutlined key="contacts" />,
+                  <span key="span-contacts"> Contacts</span>,
                 ]}
                 bordered={true}
-                key="card-user-cont"
+                actions={[<EditOutlined key="edit-cont" />, <SettingOutlined key="setting-cont" />]}
+                key="card-contacts"
               >
                 <Empty
                   description="Contacts aren't filled in"
@@ -137,11 +140,12 @@ const User: React.FC<PropsUser> = ({ title }) => {
             <Col span={6}>
               <Card
                 title={[
-                  <NotificationOutlined key="consents-user" />,
-                  <span key="span-user-cons"> Consents</span>,
+                  <NotificationOutlined key="consents" />,
+                  <span key="span-cons"> Consents</span>,
                 ]}
                 bordered={true}
-                key="card-user-cons"
+                actions={[<EditOutlined key="edit-cons" />]}
+                key="card=cons"
               >
                 <Empty description="Consents" image={Empty.PRESENTED_IMAGE_SIMPLE} />
               </Card>
@@ -149,18 +153,19 @@ const User: React.FC<PropsUser> = ({ title }) => {
             <Col span={6}>
               <Card
                 title={[
-                  <BookOutlined key="statistic-user" />,
-                  <span key="span-user-stat"> Student Statistics</span>,
+                  <BookOutlined key="statistics" />,
+                  <span key="span-stat"> Student Statistics</span>,
                 ]}
                 bordered={true}
-                key="card-user-stat"
+                actions={[<SettingOutlined key="setting-stat" />]}
+                key="card-stat"
               >
                 <Empty description="Statistics" image={Empty.PRESENTED_IMAGE_SIMPLE} />
               </Card>
             </Col>
             <Col span={6}>
-              <Card bordered={true} bodyStyle={{ textAlign: 'center' }} key="back">
-                <Link onClick={returnToPage}>Return to pages</Link>
+              <Card bordered={true} bodyStyle={{ textAlign: 'center' }} key="home">
+                <Link onClick={backPage}>Return to pages</Link>
               </Card>
             </Col>
           </Row>
@@ -170,4 +175,4 @@ const User: React.FC<PropsUser> = ({ title }) => {
   );
 };
 
-export default User;
+export default EditUser;

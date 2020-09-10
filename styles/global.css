@@ -116,3 +116,19 @@
   justify-content: center;
   align-items: center;
 }
+
+.intro {
+  text-align: center;
+}
+
+.site-card-wrapper {
+  padding: 15px;
+}
+
+.ant-card-actions {
+  background: #fafafa !important;
+}
+
+.ant-col {
+  margin-top: 20px;
+}
