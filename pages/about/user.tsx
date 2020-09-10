@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import MainLayout from '../../components/MainLayout';
 import { checkRef, auth } from '../../firebase';
-import { LogoutOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/router';
-import { Button, Card, Col, Row, Avatar, Typography, Empty } from 'antd';
+import { Card, Col, Row, Avatar, Typography, Empty } from 'antd';
 import {
   GithubOutlined,
   EnvironmentOutlined,
-  EditOutlined,
-  SettingOutlined,
   InfoCircleOutlined,
   TagOutlined,
   ReadOutlined,
@@ -79,8 +76,12 @@ const User: React.FC<PropsUser> = ({ title }) => {
             </Col>
             <Col span={6}>
               <Card
-                title={[<InfoCircleOutlined key="info" />, <span> About</span>]}
+                title={[
+                  <InfoCircleOutlined key="info-user" />,
+                  <span key="span-user-about"> About</span>,
+                ]}
                 bordered={true}
+                key="card-user-about"
               >
                 <Empty
                   description="About info isn't written"
@@ -90,8 +91,12 @@ const User: React.FC<PropsUser> = ({ title }) => {
             </Col>
             <Col span={6}>
               <Card
-                title={[<TagOutlined key="english" />, <span> Estimated English level</span>]}
+                title={[
+                  <TagOutlined key="english-user" />,
+                  <span key="span-user-english"> Estimated English level</span>,
+                ]}
                 bordered={true}
+                key="card-user-english"
               >
                 <Empty
                   description="English level isn't choosen"
@@ -101,8 +106,12 @@ const User: React.FC<PropsUser> = ({ title }) => {
             </Col>
             <Col span={6}>
               <Card
-                title={[<ReadOutlined key="english" />, <span> Education</span>]}
+                title={[
+                  <ReadOutlined key="education-user" />,
+                  <span key="span-user-edu"> Education</span>,
+                ]}
                 bordered={true}
+                key="card-user-edu"
               >
                 <Empty
                   description="Education history isn't filled in"
@@ -112,8 +121,12 @@ const User: React.FC<PropsUser> = ({ title }) => {
             </Col>
             <Col span={6}>
               <Card
-                title={[<ContactsOutlined key="contacts" />, <span> Contacts</span>]}
+                title={[
+                  <ContactsOutlined key="contacts-user" />,
+                  <span key="span-user-cont"> Contacts</span>,
+                ]}
                 bordered={true}
+                key="card-user-cont"
               >
                 <Empty
                   description="Contacts aren't filled in"
@@ -123,22 +136,30 @@ const User: React.FC<PropsUser> = ({ title }) => {
             </Col>
             <Col span={6}>
               <Card
-                title={[<NotificationOutlined key="consents" />, <span> Consents</span>]}
+                title={[
+                  <NotificationOutlined key="consents-user" />,
+                  <span key="span-user-cons"> Consents</span>,
+                ]}
                 bordered={true}
+                key="card-user-cons"
               >
                 <Empty description="Consents" image={Empty.PRESENTED_IMAGE_SIMPLE} />
               </Card>
             </Col>
             <Col span={6}>
               <Card
-                title={[<BookOutlined key="english" />, <span> Student Statistics</span>]}
+                title={[
+                  <BookOutlined key="statistic-user" />,
+                  <span key="span-user-stat"> Student Statistics</span>,
+                ]}
                 bordered={true}
+                key="card-user-stat"
               >
                 <Empty description="Statistics" image={Empty.PRESENTED_IMAGE_SIMPLE} />
               </Card>
             </Col>
             <Col span={6}>
-              <Card bordered={true} bodyStyle={{ textAlign: 'center' }}>
+              <Card bordered={true} bodyStyle={{ textAlign: 'center' }} key="back">
                 <Link onClick={returnToPage}>Return to pages</Link>
               </Card>
             </Col>

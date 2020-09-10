@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import AuthPage from './authorization';
 import MainPages from './main';
 import { GetServerSideProps } from 'next';
-import { checkRef } from '../firebase';
+import { checkRef, auth } from '../firebase';
 
 interface PropsIP {
   roleUser: string;
@@ -11,6 +11,9 @@ interface PropsIP {
 const IndexPage: React.FC<PropsIP> = ({ roleUser }) => {
   const [authorization, setAuthorization] = useState(false);
   const [role, setRole] = useState(roleUser);
+  useEffect(() => {
+    setRole(roleUser);
+  }, [roleUser]);
   const changeAuthorization = () => {
     setAuthorization(!authorization);
   };
@@ -34,8 +37,13 @@ export default IndexPage;
 export const getServerSideProps: GetServerSideProps<PropsIP> = async () => {
   let role = '';
   checkRef.on('value', (snapshot) => {
-    role = snapshot.val();
-    console.log(role);
+    const data = snapshot.val();
+    for (let key in data) {
+      // @ts-ignore
+      if (data[key].uid === auth.currentUser.uid) {
+        role = data[key].nickname;
+      }
+    }
   });
   return {
     props: {

@@ -126,7 +126,7 @@
 }
 
 .ant-card-actions {
-  background: #fafafa;
+  background: #fafafa !important;
 }
 
 .ant-col {

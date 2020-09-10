@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import MainLayout from '../../components/MainLayout';
+import { checkRef, auth } from '../../firebase';
+import { useRouter } from 'next/router';
 import { Button, Card, Col, Row, Avatar, Typography, Empty } from 'antd';
 import {
   GithubOutlined,
@@ -12,23 +14,54 @@ import {
   ContactsOutlined,
   NotificationOutlined,
   BookOutlined,
+  MailOutlined,
 } from '@ant-design/icons';
+import { object, string } from 'prop-types';
 
-const EditUser = () => {
+const EditUser: React.FC = () => {
+  const [userData, setUserData] = useState({});
+  const [userName, setUserName] = useState('');
+  const [userEmail, setUserEmail] = useState('');
+  const [path, setPath] = useState('');
+
   const { Title, Link, Text } = Typography;
+  const router = useRouter();
+
+  useEffect(() => {
+    checkRef.on('value', (snapshot) => {
+      const users = snapshot.val();
+      for (let key in users) {
+        // @ts-ignore
+        if (users[key].uid === auth.currentUser.uid) {
+          setUserData(users[key]);
+          setUserName(users[key].nickname);
+          setUserEmail(users[key].email);
+          setPath(users[key].roles[0]);
+        }
+      }
+    });
+  }, []);
+
+  const backPage = () => {
+    router.push(`../../roles/${path}`);
+  };
+
   return (
     <>
       <MainLayout title={'Edit'}>
         <div className="site-card-wrapper">
-          <Row gutter={32}>
+          <Row gutter={16}>
             <Col span={6}>
               <Card
                 bordered={true}
                 className="intro"
-                actions={[<EditOutlined key="edit" />, <SettingOutlined key="setting" />]}
+                actions={[
+                  <EditOutlined key="edit-intro" />,
+                  <SettingOutlined key="setting-intro" />,
+                ]}
               >
                 <Avatar size={90} src="/static/images/king.jpg" />
-                <Title level={2}>Oleksandr Poliakov</Title>
+                <Title level={2}>{userName}</Title>
                 <Title level={5}>
                   <Link href="https://github.com/">
                     <GithubOutlined /> githab
@@ -39,13 +72,19 @@ const EditUser = () => {
                     <EnvironmentOutlined /> Location
                   </Text>
                 </div>
+                <div>
+                  <Text>
+                    <MailOutlined /> {userEmail}
+                  </Text>
+                </div>
               </Card>
             </Col>
             <Col span={6}>
               <Card
-                title={[<InfoCircleOutlined key="info" />, <span> About</span>]}
+                title={[<InfoCircleOutlined key="info" />, <span key="about"> About</span>]}
                 bordered={true}
-                actions={[<EditOutlined key="edit" />, <SettingOutlined key="setting" />]}
+                actions={[<EditOutlined key="edit-info" />, <SettingOutlined key="setting-info" />]}
+                key="card-about"
               >
                 <Empty
                   description="About info isn't written"
@@ -55,9 +94,13 @@ const EditUser = () => {
             </Col>
             <Col span={6}>
               <Card
-                title={[<TagOutlined key="english" />, <span> Estimated English level</span>]}
+                title={[
+                  <TagOutlined key="english" />,
+                  <span key="span-english"> Estimated English level</span>,
+                ]}
                 bordered={true}
-                actions={[<EditOutlined key="edit" />, <SettingOutlined key="setting" />]}
+                actions={[<EditOutlined key="edit-engl" />, <SettingOutlined key="setting-engl" />]}
+                key="card-english"
               >
                 <Empty
                   description="English level isn't choosen"
@@ -67,9 +110,10 @@ const EditUser = () => {
             </Col>
             <Col span={6}>
               <Card
-                title={[<ReadOutlined key="english" />, <span> Education</span>]}
+                title={[<ReadOutlined key="education" />, <span key="span-edu"> Education</span>]}
                 bordered={true}
-                actions={[<EditOutlined key="edit" />, <SettingOutlined key="setting" />]}
+                actions={[<EditOutlined key="edit-edu" />, <SettingOutlined key="setting-edu" />]}
+                key="card-edu"
               >
                 <Empty
                   description="Education history isn't filled in"
@@ -79,9 +123,13 @@ const EditUser = () => {
             </Col>
             <Col span={6}>
               <Card
-                title={[<ContactsOutlined key="contacts" />, <span> Contacts</span>]}
+                title={[
+                  <ContactsOutlined key="contacts" />,
+                  <span key="span-contacts"> Contacts</span>,
+                ]}
                 bordered={true}
-                actions={[<EditOutlined key="edit" />, <SettingOutlined key="setting" />]}
+                actions={[<EditOutlined key="edit-cont" />, <SettingOutlined key="setting-cont" />]}
+                key="card-contacts"
               >
                 <Empty
                   description="Contacts aren't filled in"
@@ -91,25 +139,33 @@ const EditUser = () => {
             </Col>
             <Col span={6}>
               <Card
-                title={[<NotificationOutlined key="consents" />, <span> Consents</span>]}
+                title={[
+                  <NotificationOutlined key="consents" />,
+                  <span key="span-cons"> Consents</span>,
+                ]}
                 bordered={true}
-                actions={[<EditOutlined key="edit" />]}
+                actions={[<EditOutlined key="edit-cons" />]}
+                key="card=cons"
               >
                 <Empty description="Consents" image={Empty.PRESENTED_IMAGE_SIMPLE} />
               </Card>
             </Col>
             <Col span={6}>
               <Card
-                title={[<BookOutlined key="english" />, <span> Student Statistics</span>]}
+                title={[
+                  <BookOutlined key="statistics" />,
+                  <span key="span-stat"> Student Statistics</span>,
+                ]}
                 bordered={true}
-                actions={[<SettingOutlined key="setting" />]}
+                actions={[<SettingOutlined key="setting-stat" />]}
+                key="card-stat"
               >
                 <Empty description="Statistics" image={Empty.PRESENTED_IMAGE_SIMPLE} />
               </Card>
             </Col>
             <Col span={6}>
-              <Card bordered={true} bodyStyle={{ textAlign: 'center' }}>
-                <Link>Return to pages</Link>
+              <Card bordered={true} bodyStyle={{ textAlign: 'center' }} key="home">
+                <Link onClick={backPage}>Return to pages</Link>
               </Card>
             </Col>
           </Row>
