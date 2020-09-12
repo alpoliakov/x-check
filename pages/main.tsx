@@ -1,5 +1,5 @@
 import React from 'react';
-import StudentPage from './roles/student';
+import StudentPage from './student/student';
 import AdminPage from './roles/admin';
 import MentorPage from './roles/mentor';
 import ManagerPage from './roles/manager';
