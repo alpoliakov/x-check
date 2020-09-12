@@ -20,7 +20,14 @@ interface PropsUser {
 }
 
 const User: React.FC<PropsUser> = ({ title }) => {
-  const [userData, setUserdata] = useState({});
+  const [userData, setUserData] = useState({
+    avatar_url: '',
+    html_url: '',
+    location: '',
+    login: '',
+    name: '',
+    email: '',
+  });
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [uid, setUid] = useState('');
@@ -28,13 +35,18 @@ const User: React.FC<PropsUser> = ({ title }) => {
   const router = useRouter();
   const { Title, Link, Text } = Typography;
 
+  const getUserDataFromGit = async (name: string) => {
+    let response = await fetch(`https://api.github.com/users/${name}`);
+    let data = await response.json();
+    await setUserData(data);
+  };
+
   useEffect(() => {
     checkRef.on('value', (snapshot) => {
       const users = snapshot.val();
       for (let key in users) {
         // @ts-ignore
         if (users[key].uid === auth.currentUser.uid) {
-          setUserdata(users[key]);
           setEmail(users[key].email);
           setName(users[key].nickname);
           setUid(users[key].uid);
@@ -42,10 +54,13 @@ const User: React.FC<PropsUser> = ({ title }) => {
         }
       }
     });
-  }, []);
+    if (name) {
+      getUserDataFromGit(name).catch((e) => new Error(e));
+    }
+  }, [name]);
 
   const returnToPage = () => {
-    router.push(`../../roles/${roles[0]}`);
+    router.push(`../../roles/${roles[0]}`).catch((e) => new Error(e.message));
   };
 
   return (
@@ -55,21 +70,21 @@ const User: React.FC<PropsUser> = ({ title }) => {
           <Row gutter={16}>
             <Col span={6}>
               <Card bordered={true} className="intro">
-                <Avatar size={90} src="/static/images/king.jpg" />
-                <Title level={2}>{name}</Title>
+                <Avatar size={90} src={userData.avatar_url || '/static/images/king.jpg'} />
+                <Title level={2}>{userData.name}</Title>
                 <Title level={5}>
-                  <Link href="https://github.com/">
-                    <GithubOutlined /> githab
+                  <Link href={userData.html_url}>
+                    <GithubOutlined /> {`@${userData.login}` || 'unknown'}
                   </Link>
                 </Title>
                 <div>
                   <Text>
-                    <EnvironmentOutlined /> location
+                    <EnvironmentOutlined /> {userData.location || 'location'}
                   </Text>
                 </div>
                 <div>
                   <Text>
-                    <MailOutlined /> {email}
+                    <MailOutlined /> {userData.email || email}
                   </Text>
                 </div>
               </Card>

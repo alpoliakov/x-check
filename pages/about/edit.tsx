@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import MainLayout from '../../components/MainLayout';
 import { checkRef, auth } from '../../firebase';
 import { useRouter } from 'next/router';
-import { Button, Card, Col, Row, Avatar, Typography, Empty } from 'antd';
+import { Card, Col, Row, Avatar, Typography, Empty } from 'antd';
 import {
   GithubOutlined,
   EnvironmentOutlined,
@@ -16,7 +16,6 @@ import {
   BookOutlined,
   MailOutlined,
 } from '@ant-design/icons';
-import { object, string } from 'prop-types';
 
 const EditUser: React.FC = () => {
   const [userData, setUserData] = useState({});
@@ -43,7 +42,7 @@ const EditUser: React.FC = () => {
   }, []);
 
   const backPage = () => {
-    router.push(`../../roles/${path}`);
+    router.push(`../../roles/${path}`).catch((e) => new Error(e.message));
   };
 
   return (

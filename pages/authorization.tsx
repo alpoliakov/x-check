@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useRouter } from 'next/router';
 import RequestAuth from './users/request';
 import Login from './users/login';
 import Register from './users/register';
@@ -10,7 +9,6 @@ interface Props {
 }
 
 const AuthPage: React.FC<Props> = ({ changeAuthorization, changeRole }) => {
-  const router = useRouter();
   const changeAuthPage = (namePage: string): void => {
     setStateAuth(namePage);
   };
@@ -18,7 +16,9 @@ const AuthPage: React.FC<Props> = ({ changeAuthorization, changeRole }) => {
 
   return (
     <>
-      {stateAuth === '' && <RequestAuth changeAuthPage={changeAuthPage} />}
+      {stateAuth === '' && (
+        <RequestAuth changeAuthPage={changeAuthPage} changeAuthorization={changeAuthorization} />
+      )}
       {stateAuth === 'login' && (
         <Login
           changeAuthPage={changeAuthPage}

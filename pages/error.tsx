@@ -4,7 +4,11 @@ import { Result, Button } from 'antd';
 import { auth } from '../firebase';
 import { useRouter } from 'next/router';
 
-const Error = () => {
+interface PropsError {
+  changeAuthorization: () => void;
+}
+
+const Error: React.FC<PropsError> = ({ changeAuthorization }) => {
   const router = useRouter();
   const logOut = () => {
     auth.signOut().then(
@@ -15,12 +19,13 @@ const Error = () => {
         console.log(`${error.code}  - ${error.message}`);
       }
     );
+    changeAuthorization();
     router.push('/');
   };
 
   return (
     <>
-      <MainLayout>
+      <MainLayout changeAuthorization={changeAuthorization}>
         <main>
           <Result
             status="500"

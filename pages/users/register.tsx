@@ -93,7 +93,8 @@ const Register: React.FC<PropsRegister> = ({ changeAuthPage, changeRole, changeA
     // @ts-ignore
     userData['uid'] = auth.currentUser.uid;
     // @ts-ignore
-    const role = userData['roles'][0] || 'error';
+    const role = userData['roles'] ? userData['roles'][0] : 'error';
+    console.log(role);
     checkRef.push(userData);
     changeAuthorization();
     changeRole(role);
