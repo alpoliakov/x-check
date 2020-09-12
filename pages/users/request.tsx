@@ -1,13 +1,32 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { FormOutlined, LoginOutlined } from '@ant-design/icons';
 import { Button, Card } from 'antd';
+import { auth } from '../../firebase';
+import { useRouter } from 'next/router';
 
 const { Meta } = Card;
 interface PropsRequest {
   changeAuthPage: (data: string) => void;
+  changeAuthorization: () => void;
 }
 
-const RequestAuth: React.FC<PropsRequest> = ({ changeAuthPage }) => {
+const RequestAuth: React.FC<PropsRequest> = ({ changeAuthPage, changeAuthorization }) => {
+  const [loggedIn, setLoggedIn] = useState(false);
+
+  const subscribe = auth.onAuthStateChanged((user): void => {
+    if (user) {
+      setLoggedIn(true);
+    } else {
+      setLoggedIn(false);
+    }
+  });
+
+  useEffect(() => {
+    if (loggedIn) {
+      changeAuthorization();
+    }
+  }, [loggedIn]);
+
   const handleClick = (data: string) => {
     changeAuthPage(data);
   };

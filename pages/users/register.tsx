@@ -93,7 +93,8 @@ const Register: React.FC<PropsRegister> = ({ changeAuthPage, changeRole, changeA
     // @ts-ignore
     userData['uid'] = auth.currentUser.uid;
     // @ts-ignore
-    const role = userData['roles'][0] || 'error';
+    const role = userData['roles'] ? userData['roles'][0] : 'error';
+    console.log(role);
     checkRef.push(userData);
     changeAuthorization();
     changeRole(role);
@@ -128,7 +129,7 @@ const Register: React.FC<PropsRegister> = ({ changeAuthPage, changeRole, changeA
               name="nickname"
               label={
                 <span>
-                  Nickname&nbsp;
+                  Nickname Git&nbsp;
                   <Tooltip title="What do you want others to call you?">
                     <QuestionCircleOutlined />
                   </Tooltip>
@@ -196,28 +197,22 @@ const Register: React.FC<PropsRegister> = ({ changeAuthPage, changeRole, changeA
             >
               <Checkbox.Group>
                 <Row>
-                  <Col span={20}>
-                    <Checkbox value="student" style={{ lineHeight: '32px' }}>
-                      student
-                    </Checkbox>
-                  </Col>
-                  <Col span={20}>
-                    <Checkbox value="admin" style={{ lineHeight: '32px' }}>
-                      admin
-                    </Checkbox>
-                  </Col>
+                  <Checkbox value="student" style={{ lineHeight: '32px' }}>
+                    student
+                  </Checkbox>
+
+                  <Checkbox value="admin" style={{ lineHeight: '32px' }}>
+                    admin
+                  </Checkbox>
                 </Row>
                 <Row>
-                  <Col span={20}>
-                    <Checkbox value="mentor" style={{ lineHeight: '32px' }}>
-                      mentor
-                    </Checkbox>
-                  </Col>
-                  <Col span={20}>
-                    <Checkbox value="manager" style={{ lineHeight: '32px' }}>
-                      manager
-                    </Checkbox>
-                  </Col>
+                  <Checkbox value="mentor" style={{ lineHeight: '32px' }}>
+                    mentor
+                  </Checkbox>
+
+                  <Checkbox value="manager" style={{ lineHeight: '32px' }}>
+                    manager
+                  </Checkbox>
                 </Row>
               </Checkbox.Group>
             </Form.Item>

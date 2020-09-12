@@ -1,7 +1,6 @@
 import React from 'react';
 import Head from 'next/head';
-import Link from 'next/link';
-import { Avatar, Menu, Dropdown, Button, message } from 'antd';
+import { Avatar, Menu, Dropdown, Button } from 'antd';
 import { EyeOutlined, EditOutlined, LogoutOutlined } from '@ant-design/icons';
 import { auth } from '../firebase';
 import { useRouter } from 'next/router';
@@ -28,15 +27,15 @@ const MainLayout: React.FC<PropsML> = ({ children, title, changeAuthorization })
     if (changeAuthorization) {
       changeAuthorization();
     }
-    router.push('/');
+    router.push('/').catch((e) => new Error(e.message));
   };
 
   const viewUser = () => {
-    router.push(`/about/user`);
+    router.push(`/about/user`).catch((e) => new Error(e.message));
   };
 
   const editUser = () => {
-    router.push(`/about/edit`);
+    router.push(`/about/edit`).catch((e) => new Error(e.message));
   };
 
   const menu = (
@@ -65,7 +64,7 @@ const MainLayout: React.FC<PropsML> = ({ children, title, changeAuthorization })
     <>
       <Head>
         <title>X-Check/{title}</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
         <meta name="HandheldFriendly" content="true" />
         <meta
           name="viewport"
