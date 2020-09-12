@@ -130,5 +130,9 @@
 }
 
 .ant-col {
-  margin-top: 20px;
+  margin-top: 0px;
+}
+
+.ant-row div {
+  margin-right: 5px;
 }
