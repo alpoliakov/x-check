@@ -12,12 +12,21 @@ const data = ['Virtual Keyboard', 'Gem Puzzle', 'English for kids', 'MovieSearch
 
 const AdminMain: React.FC = () => {
   const [users, setUser] = useState<any[]>([]);
+  const [task, setTask] = useState<string | null>(null)
  useEffect(
   () => {
- /*       const changeRoleRef = checkRef.child('-MGoW-MfatwATMbO2Xh0').child('roles')
+  /*      const changeRoleRef = checkRef.child('-MGoW-MfatwATMbO2Xh0').child('roles')
     changeRoleRef.transaction(function(currentRole) {
     return   currentRole = ['admin']
-   });   */ 
+   });  */  
+
+   databaseRef.on("value",  function(snapshot) {
+    const userArray =  snapshot.val()
+     console.log(userArray)
+   }, function (error: any) {
+      console.log("Error: " + error.code);
+   });   
+
      checkRef.on("value",  function(snapshot) {
       const userArray =  snapshot.val()
        console.log(userArray)
