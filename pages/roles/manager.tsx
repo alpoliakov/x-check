@@ -3,14 +3,13 @@ import MainLayout from '../../components/MainLayout';
 
 interface PropsManager {
   changeAuthorization: () => void;
+  getRole: () => void;
 }
 
-const ManagerPage: React.FC<PropsManager> = ({ changeAuthorization }) => {
+const ManagerPage = () => {
   return (
     <>
-      <MainLayout title="Course Manager" changeAuthorization={changeAuthorization}>
-        <h1>Course Manager Page</h1>
-      </MainLayout>
+      <h1>Course Manager Page</h1>
     </>
   );
 };

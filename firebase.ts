@@ -13,12 +13,22 @@ const config = {
   measurementId: process.env.REACT_APP_MID,
 };
 
+const USERS = 'users';
+const TASKS = 'tasks';
+const SESSIONS = 'sessions';
+const SCORE = 'score';
+const COMPLETED_TASKS = 'completed_tasks';
+
 if (!firebase.apps.length) {
   firebase.initializeApp(config);
 }
 
 export const auth = firebase.auth();
 export const databaseRef = firebase.database().ref();
-export const checkRef = databaseRef.child('users/');
+export const checkRef = databaseRef.child(USERS);
+export const tasksRef = databaseRef.child(TASKS);
+export const sessionsRef = databaseRef.child(SESSIONS);
+export const scoreRef = databaseRef.child(SCORE);
+export const completedTasksRef = databaseRef.child(COMPLETED_TASKS);
 
 export default firebase;
