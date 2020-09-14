@@ -1,18 +1,22 @@
 import React from 'react';
 import { Select, Input } from 'antd';
 
-const Sidebar: React.FC = () => {
+interface PropsSidebar {
+  taskList: string[];
+  getTask: (value: string) => void;
+}
+
+const Sidebar: React.FC<PropsSidebar> = ({ getTask, taskList }) => {
   const { Option } = Select;
-  const data: string[] = ['task1', 'task2', 'task3'];
 
   const handleClick = (value: string) => {
-    console.log(value);
+    getTask(value);
   };
 
   return (
     <>
       <Select placeholder="Select the task" onChange={handleClick}>
-        {data.map((item) => (
+        {taskList.map((item) => (
           <Option key={item} value={`${item}`}>
             {item}
           </Option>

@@ -8,6 +8,9 @@ interface PropsStudent {
 
 const StudentPage: React.FC<PropsStudent> = ({ changeAuthorization }) => {
   const data: Array<string> = ['Cross-check', 'Tasks'];
+
+  console.log(123);
+
   return (
     <>
       <MainLayout title="Student" changeAuthorization={changeAuthorization}>
