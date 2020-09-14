@@ -17,21 +17,21 @@ const dataCourse: ICourse = {
       taskID: 123,
       name: 'task1',
       taskStage: 'stage',
-      deadline: new Date(),
+      deadline: new Date(0),
       start: new Date(),
     },
     {
       taskID: 567,
       name: 'task2',
       taskStage: 'stage',
-      deadline: new Date(),
+      deadline: new Date(2021, 0, 1),
       start: new Date(),
     },
     {
       taskID: 438,
       name: 'task3',
       taskStage: 'stage',
-      deadline: new Date(),
+      deadline: new Date(0),
       start: new Date(),
     },
   ],
@@ -39,11 +39,25 @@ const dataCourse: ICourse = {
 
 const CrossCheckPage: React.FC<PropsStudent> = ({ changeAuthorization }) => {
   const tasksData = dataCourse.tasks;
+  const taskList = tasksData.map((el) => el.name);
 
   const [task, setTask] = React.useState('');
+  const [isDeadline, setIsDeadline] = React.useState(false);
 
-  const getTask = (task: string) => {
+  const selectTask = (task: string) => {
     setTask(task);
+
+    const selectTaskDeadline = tasksData
+      .filter((el) => el.name === task)
+      .map((el) => el.deadline)[0];
+
+    const date = new Date();
+
+    if (selectTaskDeadline.getTime() < date.getTime()) {
+      setIsDeadline(true);
+    } else {
+      setIsDeadline(false);
+    }
   };
 
   return (
@@ -51,7 +65,7 @@ const CrossCheckPage: React.FC<PropsStudent> = ({ changeAuthorization }) => {
       <MainLayout title="Student" changeAuthorization={changeAuthorization}>
         <Row gutter={6}>
           <Col>
-            <Sidebar getTask={getTask} tasksData={tasksData} />
+            <Sidebar getTask={selectTask} taskList={taskList} isDeadline={isDeadline} />
           </Col>
           <Col />
         </Row>
