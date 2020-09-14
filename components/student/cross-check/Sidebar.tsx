@@ -1,17 +1,40 @@
 import React from 'react';
 import { Select, Input } from 'antd';
+import { ITaskStep } from '../../../interfaces/ICourse';
 
 interface PropsSidebar {
-  taskList: string[];
+  tasksData: ITaskStep[];
   getTask: (value: string) => void;
 }
 
-const Sidebar: React.FC<PropsSidebar> = ({ getTask, taskList }) => {
+const Sidebar: React.FC<PropsSidebar> = ({ getTask, tasksData }) => {
   const { Option } = Select;
+
+  // const [task, setTask] = React.useState('');
+  // const [isDeadline, setIsDeadline] = React.useState(false);
+
+  const taskList = tasksData.map((el) => el.name);
+  // let deadline = new Date('19:36:21');
+
+  // if (task) {
+  //   const activeTask = tasksData.filter((el) => el.name === task);
+  //   deadline = activeTask[0].deadline;
+  // }
 
   const handleClick = (value: string) => {
     getTask(value);
+    // setTask(value);
+
+    // const date = new Date();
+
+    // if (deadline > date) {
+    //   setIsDeadline(true);
+    // } else {
+    //   setIsDeadline(false);
+    // }
   };
+
+  // console.log(deadline);
 
   return (
     <>
@@ -22,6 +45,7 @@ const Sidebar: React.FC<PropsSidebar> = ({ getTask, taskList }) => {
           </Option>
         ))}
       </Select>
+      {}
       <h3>Solution URL Demo</h3>
       <Input placeholder="Link here" />
       <h3>Solution URL Pull request</h3>

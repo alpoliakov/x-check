@@ -38,8 +38,7 @@ const dataCourse: ICourse = {
 };
 
 const CrossCheckPage: React.FC<PropsStudent> = ({ changeAuthorization }) => {
-  const tasksArray = dataCourse.tasks;
-  const taskList = tasksArray.map((el) => el.name);
+  const tasksData = dataCourse.tasks;
 
   const [task, setTask] = React.useState('');
 
@@ -52,7 +51,7 @@ const CrossCheckPage: React.FC<PropsStudent> = ({ changeAuthorization }) => {
       <MainLayout title="Student" changeAuthorization={changeAuthorization}>
         <Row gutter={6}>
           <Col>
-            <Sidebar getTask={getTask} taskList={taskList} />
+            <Sidebar getTask={getTask} tasksData={tasksData} />
           </Col>
           <Col />
         </Row>
