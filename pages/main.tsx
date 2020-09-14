@@ -8,6 +8,7 @@ import { auth, checkRef } from '../firebase';
 import MainLayout from '../components/MainLayout';
 import { Select } from 'antd';
 import { useRouter } from 'next/router';
+import { Typography } from 'antd';
 
 interface PropsMainPage {
   role: string;
@@ -31,6 +32,7 @@ const useRequest = () => {
 };
 
 const MainPages: React.FC<PropsMainPage> = ({ changeAuthorization }) => {
+  const { Title, Link, Text } = Typography;
   const { Option } = Select;
   const [currentRole, setCurrentRole] = useState('');
   const [loggedIn, setLoggedIn] = useState(false);
@@ -62,8 +64,8 @@ const MainPages: React.FC<PropsMainPage> = ({ changeAuthorization }) => {
   }, [loggedIn, currentRole]);
 
   return (
-    <MainLayout title={`Main: ${currentRole}`} changeAuthorization={changeAuthorization}>
-      <section>
+    <MainLayout title={`main: ${currentRole}`} changeAuthorization={changeAuthorization}>
+      <section className={'select_role'}>
         <Select
           showSearch
           defaultValue={''}
@@ -80,8 +82,8 @@ const MainPages: React.FC<PropsMainPage> = ({ changeAuthorization }) => {
           ))}
         </Select>
       </section>
-      <section>
-        {currentRole === '' && <h2>Choice a role</h2>}
+      <section className={'box-roles'}>
+        {currentRole === '' && <Title level={1}>Choice a role</Title>}
         {currentRole === 'student' && <StudentPage />}
         {currentRole === 'admin' && <AdminPage />}
         {currentRole === 'mentor' && <MentorPage />}

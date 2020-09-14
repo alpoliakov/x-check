@@ -56,7 +56,7 @@ const EditUser: React.FC = () => {
 
   return (
     <>
-      <MainLayout title={'Edit'}>
+      <MainLayout title={`edit profile ${userName}`}>
         <div className="site-card-wrapper">
           <Row gutter={16}>
             <Col span={6}>

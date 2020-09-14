@@ -59,7 +59,7 @@ const User: React.FC<PropsUser> = ({ title }) => {
 
   return (
     <>
-      <MainLayout title={'User'}>
+      <MainLayout title={`user profile ${name}`}>
         <div className="site-card-wrapper">
           <Row gutter={16}>
             <Col span={6}>
