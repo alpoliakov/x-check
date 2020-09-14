@@ -102,8 +102,6 @@ const Register: React.FC<PropsRegister> = ({ changeAuthPage, changeAuthorization
     });
     await checkRef.push(userData);
     await changeAuthorization();
-    // const role = userData['roles'] ? userData['roles'][0] : 'error';
-    // await changeRole(role);
     await router.push(`/main`);
   };
 
