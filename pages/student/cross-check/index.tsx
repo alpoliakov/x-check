@@ -1,7 +1,7 @@
 import React from 'react';
 import MainLayout from '../../../components/MainLayout';
 import { Row, Col } from 'antd';
-import Sidebar from './Sidebar';
+import Sidebar from '../../../components/student/cross-check/Sidebar';
 
 interface PropsStudent {
   changeAuthorization: () => void;
