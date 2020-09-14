@@ -51,6 +51,7 @@ const Register: React.FC<PropsRegister> = ({ changeAuthPage, changeAuthorization
     email: '',
     roles: [],
     uid: '',
+    login: '',
   });
   const [userDataFromGit, setUserDataFromGit] = useState({});
 
@@ -69,6 +70,7 @@ const Register: React.FC<PropsRegister> = ({ changeAuthPage, changeAuthorization
       avatar_url: '',
       location: '',
       html_url: '',
+      login: '',
       nickname: nickname,
       password: password,
       email: email,
@@ -86,7 +88,7 @@ const Register: React.FC<PropsRegister> = ({ changeAuthPage, changeAuthorization
 
   const setUserDataInDB = async () => {
     // @ts-ignore
-    const { name, avatar_url, location, html_url } = userDataFromGit;
+    const { name, avatar_url, location, html_url, login } = userDataFromGit;
     // @ts-ignore
     const uid = auth.currentUser.uid;
     await setUserData(() => {
@@ -95,6 +97,7 @@ const Register: React.FC<PropsRegister> = ({ changeAuthPage, changeAuthorization
       userData.location = location;
       userData.html_url = html_url;
       userData.uid = uid;
+      userData.login = login;
       return userData;
     });
     await checkRef.push(userData);

@@ -14,28 +14,8 @@ interface PropsMainPage {
   changeAuthorization: () => void;
 }
 
-const MainPages: React.FC<PropsMainPage> = ({ changeAuthorization }) => {
-  const { Option } = Select;
-  const [currentRole, setCurrentRole] = useState('');
+const useRequest = () => {
   const [userData, setUserData] = useState({ roles: [] });
-  const [loggedIn, setLoggedIn] = useState(false);
-  const router = useRouter();
-
-  const subscribe = auth.onAuthStateChanged((user): void => {
-    if (user) {
-      setLoggedIn(true);
-    } else {
-      setLoggedIn(false);
-    }
-  });
-
-  console.log(currentRole);
-
-  const onChange = (value: string) => {
-    setCurrentRole(value);
-    // changeRole(value);
-  };
-
   const getUserData = () => {
     checkRef.on('value', (snapshot) => {
       let users = snapshot.val();
@@ -47,9 +27,34 @@ const MainPages: React.FC<PropsMainPage> = ({ changeAuthorization }) => {
       }
     });
   };
+  return [userData, getUserData];
+};
+
+const MainPages: React.FC<PropsMainPage> = ({ changeAuthorization }) => {
+  const { Option } = Select;
+  const [currentRole, setCurrentRole] = useState('');
+  const [loggedIn, setLoggedIn] = useState(false);
+  const router = useRouter();
+  const [userData, getUserData] = useRequest();
+
+  const subscribe = auth.onAuthStateChanged((user): void => {
+    if (user) {
+      setLoggedIn(true);
+    } else {
+      setLoggedIn(false);
+    }
+  });
+
+  const onChange = (value: string) => {
+    setCurrentRole(value);
+  };
+
+  // @ts-ignore
   const { roles } = userData;
+
   useEffect(() => {
     if (loggedIn) {
+      // @ts-ignore
       getUserData();
       setCurrentRole(currentRole);
     }
@@ -68,7 +73,7 @@ const MainPages: React.FC<PropsMainPage> = ({ changeAuthorization }) => {
           onChange={onChange}
         >
           <Option value={''}>choice a role</Option>
-          {roles.map((item) => (
+          {roles.map((item: string) => (
             <Option key={item} value={item}>
               {item}
             </Option>
