@@ -33,10 +33,55 @@ const AdminMain: React.FC = () => {
        setUser(userArray)
      }, function (error: any) {
         console.log("Error: " + error.code);
-     });   
+     }); 
+     distribute()  
   },
   []
 )
+const distribute = () => {
+  let createArray: any = [];
+  let jsObj: any = {};
+  for (let i: number = 0; i <= 4; i++){
+   let key= 'key' + i
+    let obj: any = {
+      key:{name:[]}
+    }
+  
+    createArray.push(obj)
+  } 
+
+console.log(createArray)
+let fourArray = Array(4).fill(createArray).flat().sort(() => Math.random() - 0.5)
+console.log(fourArray)
+
+  for(let i = 0; i < createArray.length; i +=1){
+    let keyResult : any = Object.keys(createArray[i])[0]
+    let valueResult : any = Object.values(createArray[i])[0]
+    console.log(createArray[i] , keyResult,valueResult)
+    for(let j = 0 ;valueResult.name.length < 4;  j +=1 ){
+      if(valueResult.name.length<4){
+        let q = fourArray.shift()
+        let w = Object.keys(q)
+        console.log(w[0], keyResult,valueResult.name.length)
+        let isElement = valueResult.name.includes(w[0])
+        if(keyResult !== w[0]){
+          console.log('не равно')
+          if(!isElement){
+            console.log('нет',isElement)
+            valueResult.name.push(q)
+            console.log('-----',valueResult.name,fourArray)
+          }
+      
+  
+        }else{
+        fourArray.push(q)
+        }
+      }
+    }
+  }
+ 
+console.log('result', createArray)
+}
   return (
     <div className="admin-wrapper">
       <Card style={{ marginTop: 30 }}>
