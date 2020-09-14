@@ -34,7 +34,7 @@ const EditUser: React.FC = () => {
   const { Title, Link, Text } = Typography;
   const router = useRouter();
 
-  useEffect(() => {
+  const setDataUser = () => {
     checkRef.on('value', (snapshot) => {
       const users = snapshot.val();
       for (let key in users) {
@@ -48,6 +48,10 @@ const EditUser: React.FC = () => {
         }
       }
     });
+  };
+
+  useEffect(() => {
+    setDataUser();
   }, []);
 
   const backPage = () => {

@@ -35,7 +35,7 @@ const User: React.FC<PropsUser> = ({ title }) => {
   const router = useRouter();
   const { Title, Link, Text } = Typography;
 
-  useEffect(() => {
+  const setDataUser = () => {
     checkRef.on('value', (snapshot) => {
       const users = snapshot.val();
       // @ts-ignore
@@ -51,6 +51,10 @@ const User: React.FC<PropsUser> = ({ title }) => {
         }
       }
     });
+  };
+
+  useEffect(() => {
+    setDataUser();
   }, []);
 
   const returnToPage = () => {
