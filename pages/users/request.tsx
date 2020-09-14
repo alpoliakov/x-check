@@ -33,6 +33,7 @@ const RequestAuth: React.FC<PropsRequest> = ({ changeAuthPage, changeAuthorizati
   return (
     <>
       <main>
+        {loggedIn ? <div>Logged in, wait...</div> : <div>Logged out!</div>}
         <div className="login-form">
           <img
             className="login-image"

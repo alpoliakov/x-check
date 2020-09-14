@@ -32,35 +32,42 @@ const User: React.FC<PropsUser> = ({ title }) => {
   const [name, setName] = useState('');
   const [uid, setUid] = useState('');
   const [roles, setRoles] = useState([]);
+  const [avatar_url, setAvatar_url] = useState('');
+  const [login, setLogin] = useState('');
   const router = useRouter();
   const { Title, Link, Text } = Typography;
 
-  const getUserDataFromGit = async (name: string) => {
-    let response = await fetch(`https://api.github.com/users/${name}`);
-    let data = await response.json();
-    await setUserData(data);
-  };
+  // const getUserDataFromGit = async (name: string) => {
+  //   let response = await fetch(`https://api.github.com/users/${name}`);
+  //   let data = await response.json();
+  //   await setUserData(data);
+  // };
 
   useEffect(() => {
     checkRef.on('value', (snapshot) => {
       const users = snapshot.val();
+      // @ts-ignore
       for (let key in users) {
         // @ts-ignore
         if (users[key].uid === auth.currentUser.uid) {
+          setUserData(users[key]);
+
           setEmail(users[key].email);
-          setName(users[key].nickname);
+          setName(users[key].name);
           setUid(users[key].uid);
           setRoles(users[key].roles);
+          setAvatar_url(users[key].avatar_url);
+          setLogin(users[key].login);
         }
       }
     });
-    if (name) {
-      getUserDataFromGit(name).catch((e) => new Error(e));
-    }
-  }, [name]);
+    // if (name) {
+    //   getUserDataFromGit(name).catch((e) => new Error(e));
+    // }
+  }, []);
 
   const returnToPage = () => {
-    router.push(`../../roles/${roles[0]}`).catch((e) => new Error(e.message));
+    router.push(`/main`).catch((e) => new Error(e.message));
   };
 
   return (
@@ -70,11 +77,11 @@ const User: React.FC<PropsUser> = ({ title }) => {
           <Row gutter={16}>
             <Col span={6}>
               <Card bordered={true} className="intro">
-                <Avatar size={90} src={userData.avatar_url || '/static/images/king.jpg'} />
-                <Title level={2}>{userData.name}</Title>
+                <Avatar size={90} src={avatar_url || '/static/images/king.jpg'} />
+                <Title level={2}>{name}</Title>
                 <Title level={5}>
                   <Link href={userData.html_url}>
-                    <GithubOutlined /> {`@${userData.login}` || 'unknown'}
+                    <GithubOutlined /> {`@${login}` || 'unknown'}
                   </Link>
                 </Title>
                 <div>

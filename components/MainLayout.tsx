@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { Avatar, Menu, Dropdown, Button } from 'antd';
 import { EyeOutlined, EditOutlined, LogoutOutlined } from '@ant-design/icons';
-import { auth } from '../firebase';
+import { auth, checkRef } from '../firebase';
 import { useRouter } from 'next/router';
 
 interface PropsML {
@@ -97,6 +97,7 @@ const MainLayout: React.FC<PropsML> = ({ children, title, changeAuthorization })
             </Dropdown>
           </div>
         </nav>
+
         <main>{children}</main>
       </section>
     </>

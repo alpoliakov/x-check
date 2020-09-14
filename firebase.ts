@@ -13,12 +13,27 @@ const config = {
   measurementId: process.env.REACT_APP_MID,
 };
 
+const USERS = 'users';
+const TASKS = 'tasks';
+const SESSIONS = 'sessions';
+const SCORE = 'score';
+const COMPLETED_TASKS = 'completed_tasks';
+
 if (!firebase.apps.length) {
   firebase.initializeApp(config);
 }
 
 export const auth = firebase.auth();
 export const databaseRef = firebase.database().ref();
-export const checkRef = databaseRef.child('users/');
+// Для работы с пользователями
+export const checkRef = databaseRef.child(USERS);
+// Для работы с задачами
+export const tasksRef = databaseRef.child(TASKS);
+// Для работы с сессиями
+export const sessionsRef = databaseRef.child(SESSIONS);
+// Для работы с оценками
+export const scoreRef = databaseRef.child(SCORE);
+// Для работы с выполненными задачами
+export const completedTasksRef = databaseRef.child(COMPLETED_TASKS);
 
 export default firebase;

@@ -2,16 +2,16 @@ import React from 'react';
 import MainLayout from '../../components/MainLayout';
 import AdminMain from '../../components/Admin/AdminMain';
 
-interface PropsAdmin {
-  changeAuthorization: () => void;
-}
-
-const AdminPage: React.FC<PropsAdmin> = ({ changeAuthorization }) => {
+const AdminPage = () => {
   return (
     <>
+<<<<<<< HEAD
       <MainLayout title="Admin" changeAuthorization={changeAuthorization}>
         <AdminMain />
       </MainLayout>
+=======
+      <h1>Admin Page</h1>
+>>>>>>> develop
     </>
   );
 };

@@ -33,7 +33,7 @@ const EditUser: React.FC = () => {
         // @ts-ignore
         if (users[key].uid === auth.currentUser.uid) {
           setUserData(users[key]);
-          setUserName(users[key].nickname);
+          setUserName(users[key].name);
           setUserEmail(users[key].email);
           setPath(users[key].roles[0]);
         }
@@ -42,7 +42,7 @@ const EditUser: React.FC = () => {
   }, []);
 
   const backPage = () => {
-    router.push(`../../roles/${path}`).catch((e) => new Error(e.message));
+    router.push(`/main`).catch((e) => new Error(e.message));
   };
 
   return (

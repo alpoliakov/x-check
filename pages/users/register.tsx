@@ -3,6 +3,8 @@ import { checkRef } from '../../firebase';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import { Form, Input, Tooltip, Checkbox, Button, Row, Col, Modal } from 'antd';
 import { auth } from '../../firebase';
+import { gitUserAPI } from '../api/api';
+import { useRouter } from 'next/router';
 
 const formItemLayout = {
   labelCol: {
@@ -30,20 +32,43 @@ const tailFormItemLayout = {
 
 interface PropsRegister {
   changeAuthPage: (data: string) => void;
-  changeRole: (data: string) => void;
   changeAuthorization: () => void;
 }
 
-const Register: React.FC<PropsRegister> = ({ changeAuthPage, changeRole, changeAuthorization }) => {
+const Register: React.FC<PropsRegister> = ({ changeAuthPage, changeAuthorization }) => {
   const [form] = Form.useForm();
+  const router = useRouter();
   const [notify, setNotification] = useState('');
   const [visible, setVisible] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
-  const [userData, setUserData] = useState({});
+  let [userData, setUserData] = useState({
+    name: '',
+    avatar_url: '',
+    location: '',
+    nickname: '',
+    html_url: '',
+    password: '',
+    email: '',
+    roles: [],
+    uid: '',
+  });
+  const [userDataFromGit, setUserDataFromGit] = useState({});
+
+  const getUserDataFromGit = async (nickname: string) => {
+    let response = await fetch(`${gitUserAPI}${nickname}`);
+    let data = await response.json();
+    await setUserDataFromGit(data);
+  };
 
   const onFinish = (values: any) => {
     const { email, password, nickname, roles } = values;
+    getUserDataFromGit(nickname).catch((e) => new Error(e));
     setUserData({
+      uid: '',
+      name: '',
+      avatar_url: '',
+      location: '',
+      html_url: '',
       nickname: nickname,
       password: password,
       email: email,
@@ -56,8 +81,27 @@ const Register: React.FC<PropsRegister> = ({ changeAuthPage, changeRole, changeA
       setNotification(`${errorMessage} - ${errorCode}`);
       setVisible(true);
     });
+    console.log('Received values of form: ', userData);
+  };
 
-    console.log('Received values of form: ', values);
+  const setUserDataInDB = async () => {
+    // @ts-ignore
+    const { name, avatar_url, location, html_url } = userDataFromGit;
+    // @ts-ignore
+    const uid = auth.currentUser.uid;
+    await setUserData(() => {
+      userData.name = name;
+      userData.avatar_url = avatar_url;
+      userData.location = location;
+      userData.html_url = html_url;
+      userData.uid = uid;
+      return userData;
+    });
+    await checkRef.push(userData);
+    await changeAuthorization();
+    // const role = userData['roles'] ? userData['roles'][0] : 'error';
+    // await changeRole(role);
+    await router.push(`/main`);
   };
 
   const subscribe = auth.onAuthStateChanged((user): void => {
@@ -68,11 +112,10 @@ const Register: React.FC<PropsRegister> = ({ changeAuthPage, changeRole, changeA
     }
   });
 
-  useEffect((): (() => void) => {
+  useEffect(() => {
     if (loggedIn) {
-      setUserDataInDB();
+      setUserDataInDB().catch((e) => new Error(e.message));
     }
-    return () => subscribe();
   }, [loggedIn]);
 
   const onReset = () => {
@@ -87,17 +130,6 @@ const Register: React.FC<PropsRegister> = ({ changeAuthPage, changeRole, changeA
 
   const handleClick = (data: string) => {
     changeAuthPage(data);
-  };
-
-  const setUserDataInDB = () => {
-    // @ts-ignore
-    userData['uid'] = auth.currentUser.uid;
-    // @ts-ignore
-    const role = userData['roles'] ? userData['roles'][0] : 'error';
-    console.log(role);
-    checkRef.push(userData);
-    changeAuthorization();
-    changeRole(role);
   };
 
   return (
