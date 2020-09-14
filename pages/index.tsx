@@ -3,7 +3,6 @@ import AuthPage from './authorization';
 import MainPages from './main';
 import { GetServerSideProps } from 'next';
 import { checkRef, auth } from '../firebase';
-import { useRouter } from 'next/router';
 
 interface PropsIP {
   roleUser: string;
@@ -13,26 +12,20 @@ const IndexPage: React.FC<PropsIP> = ({ roleUser }) => {
   const [authorization, setAuthorization] = useState(false);
   const [role, setRole] = useState(roleUser);
 
-  useEffect(() => {
-    setRole(roleUser);
-  }, [roleUser]);
-
-  console.log(authorization);
-
   const changeAuthorization = () => {
     setAuthorization(!authorization);
   };
 
-  const changeRole = (data: string) => {
-    setRole(data);
-  };
+  useEffect(() => {
+    setRole(roleUser);
+  });
 
   return (
     <>
       {authorization ? (
         <MainPages role={role} changeAuthorization={changeAuthorization} />
       ) : (
-        <AuthPage changeRole={changeRole} changeAuthorization={changeAuthorization} />
+        <AuthPage changeAuthorization={changeAuthorization} />
       )}
     </>
   );
