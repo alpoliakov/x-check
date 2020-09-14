@@ -3,20 +3,16 @@ import { useRouter } from 'next/router';
 import { Form, Input, Button, Checkbox, Modal } from 'antd';
 import { MailOutlined, LockOutlined } from '@ant-design/icons';
 import { auth } from '../../firebase';
-import { checkRef } from '../../firebase';
 
 interface PropsLogin {
   changeAuthPage: (data: string) => void;
-  changeRole: (data: string) => void;
-  changeAuthorization: () => void;
 }
 
-const Login: React.FC<PropsLogin> = ({ changeAuthPage, changeRole, changeAuthorization }) => {
+const Login: React.FC<PropsLogin> = ({ changeAuthPage }) => {
   const router = useRouter();
   const [notify, setNotification] = useState('');
   const [visible, setVisible] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
-  const [userEmail, setUserEmail] = useState('');
   const [form] = Form.useForm();
 
   const handleClick = (data: string) => {
@@ -29,7 +25,6 @@ const Login: React.FC<PropsLogin> = ({ changeAuthPage, changeRole, changeAuthori
 
   const onFinish = (values: any) => {
     const { email, password } = values;
-    setUserEmail(email);
     auth.signInWithEmailAndPassword(email, password).catch((error) => {
       const errorCode = error.code;
       const errorMessage = error.message;
@@ -48,7 +43,7 @@ const Login: React.FC<PropsLogin> = ({ changeAuthPage, changeRole, changeAuthori
     }
   });
 
-  useEffect((): (() => void) => {
+  useEffect(() => {
     if (loggedIn) {
       goToMainPage();
     }
@@ -61,17 +56,7 @@ const Login: React.FC<PropsLogin> = ({ changeAuthPage, changeRole, changeAuthori
   };
 
   const goToMainPage = () => {
-    let role = '';
-    checkRef.on('value', (snapshot) => {
-      const users = snapshot.val();
-      for (let key in users) {
-        if (users[key].email === userEmail) {
-          role = users[key].roles[0] || 'error';
-          changeRole(role);
-          changeAuthorization();
-        }
-      }
-    });
+    router.push('/main').catch((e) => new Error(e.message));
   };
 
   return (
