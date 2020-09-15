@@ -1,7 +1,7 @@
 import React from 'react';
 import { Row, Col, Card } from 'antd';
-import { ICriteriaPoint } from '../../../../../interfaces/ITask';
-import { ICheсkingPoint } from '../../../../../interfaces/IWorkDone';
+import { ICriteriaPoint } from '../../../../../../interfaces/ITask';
+import { ICheсkingPoint } from '../../../../../../interfaces/IWorkDone';
 import SwitchScore from './switch-score-item';
 import MaxScoreItem from './max-score-item';
 import InfoItem from './info-item';
@@ -11,12 +11,14 @@ type PropsItemCriteriaTask = {
   criteriaPoint: ICriteriaPoint;
   cheсkingPoint: ICheсkingPoint;
   onChangeScore: (cheсkingPointID: string, score: number) => void;
+  onChangeComment: (cheсkingPointID: string, score: number) => void;
 };
 
 function ItemCriteriaTask({
   criteriaPoint,
   cheсkingPoint,
   onChangeScore,
+  onChangeComment,
 }: PropsItemCriteriaTask): JSX.Element {
   const nameInfoCard = 'Балл за выполнение';
   const gridStyle: React.CSSProperties = {
@@ -38,7 +40,8 @@ function ItemCriteriaTask({
         <Col span={15}>
           <InfoItem
             descriptionItem={criteriaPoint.criteriaPointName}
-            commentsItem={criteriaPoint.criteriaPointName}
+            commentsItem={cheсkingPoint.comments}
+            onChangeComment={onChangeComment}
           />
         </Col>
         <Col span={6}>

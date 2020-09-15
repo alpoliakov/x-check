@@ -13,7 +13,7 @@ const cheсkingComment1: IComment = {
   id: '1',
   text: 'Comment 1',
   date: new Date(),
-  whoSaidThat: 'autor',
+  whoSaidThat: 'Student 1',
   isAnonimSay: true,
 };
 
@@ -21,7 +21,7 @@ const cheсkingComment2: IComment = {
   id: '2',
   text: 'Comment 2',
   date: new Date(),
-  whoSaidThat: 'autor',
+  whoSaidThat: 'Student 1',
   isAnonimSay: true,
 };
 

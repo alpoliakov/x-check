@@ -7,9 +7,15 @@ type PropsCheckTask = {
   task: ITask;
   checkingTask: ICheсk;
   onChangeScore: (cheсkingPointID: string, score: number) => void;
+  onChangeComment: (cheсkingPointID: string, score: number) => void;
 };
 
-function CriteriaTask({ task, checkingTask, onChangeScore }: PropsCheckTask): JSX.Element {
+function CriteriaTask({
+  task,
+  checkingTask,
+  onChangeScore,
+  onChangeComment,
+}: PropsCheckTask): JSX.Element {
   const criteriaGroupsTask = task.evaluationCriteria.map((item, index) => {
     const cheсkingPoints = item.criteriaPoints.map((point) => {
       const [res] = checkingTask.cheсking.filter((item) => {
@@ -23,6 +29,7 @@ function CriteriaTask({ task, checkingTask, onChangeScore }: PropsCheckTask): JS
         criteriaGroup={item}
         cheсkingPoints={cheсkingPoints}
         onChangeScore={onChangeScore}
+        onChangeComment={onChangeComment}
         key={index}
       />
     );

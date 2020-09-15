@@ -9,12 +9,14 @@ type PropsCriteriaGroup = {
   criteriaGroup: ICriteriaGroup;
   cheсkingPoints: ICheсkingPoint[];
   onChangeScore: (cheсkingPointID: string, score: number) => void;
+  onChangeComment: (cheсkingPointID: string, score: number) => void;
 };
 
 function CriteriaGroupTask({
   criteriaGroup,
   cheсkingPoints,
   onChangeScore,
+  onChangeComment,
 }: PropsCriteriaGroup): JSX.Element {
   const { Panel } = Collapse;
   const scoreGroup = cheсkingPoints.reduce(
@@ -43,6 +45,7 @@ function CriteriaGroupTask({
                 criteriaPoint={item}
                 cheсkingPoint={cheсkingPoints[index]}
                 onChangeScore={onChangeScore}
+                onChangeComment={onChangeComment}
                 key={index}
               />
             );
