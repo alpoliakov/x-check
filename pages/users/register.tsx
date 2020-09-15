@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { checkRef } from '../../firebase';
 import { QuestionCircleOutlined } from '@ant-design/icons';
-import { Form, Input, Tooltip, Checkbox, Button, Row, Col, Modal } from 'antd';
+import { Form, Input, Tooltip, Checkbox, Button, Row, Col, Modal, Typography } from 'antd';
 import { auth } from '../../firebase';
 import { gitUserAPI } from '../api/api';
 import { useRouter } from 'next/router';
+
+const { Link, Text } = Typography;
 
 const formItemLayout = {
   labelCol: {
@@ -94,7 +96,7 @@ const Register: React.FC<PropsRegister> = ({ changeAuthPage, changeAuthorization
     await setUserData(() => {
       userData.name = name;
       userData.avatar_url = avatar_url;
-      userData.location = location;
+      userData.location = location || 'unknown';
       userData.html_url = html_url;
       userData.uid = uid;
       userData.login = login;
@@ -259,7 +261,8 @@ const Register: React.FC<PropsRegister> = ({ changeAuthPage, changeAuthorization
             </Form.Item>
             <br />
             <p className={'login__now_text'}>
-              Or <a onClick={() => handleClick('login')}>login now!</a>
+              <Link onClick={() => handleClick('login')}>Login now</Link> or register with{' '}
+              <Link onClick={() => handleClick('github')}>GitHub</Link>
             </p>
           </Form>
         </div>

@@ -1,61 +1,99 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { GithubOutlined } from '@ant-design/icons';
-import { Button, Card, Divider, Typography } from 'antd';
+import { Button, Card, Divider, Typography, Modal, Space } from 'antd';
 import firebase from '../../firebase';
+import { auth, checkRef } from '../../firebase';
+import { useRouter } from 'next/router';
 
 const { Meta } = Card;
-const { Title, Link, Text } = Typography;
+const { Link, Text } = Typography;
 
 interface PropsGHSignUp {
   changeAuthPage: (data: string) => void;
 }
 
 const GitHubSignUp: React.FC<PropsGHSignUp> = ({ changeAuthPage }) => {
-  const [userData, setUserData] = useState();
+  const [userData, setUserData] = useState({});
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [isNewUser, setIsNewUser] = useState(true);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [visible, setVisible] = useState(false);
+  const router = useRouter();
+  const provider = new firebase.auth.GithubAuthProvider();
+
   const handleClick = (data: string) => {
     changeAuthPage(data);
   };
 
-  const provider = new firebase.auth.GithubAuthProvider();
-
   const signUpWithGit = () => {
-    firebase
-      .auth()
+    auth
       .signInWithPopup(provider)
-      .then(function (result) {
-        // @ts-ignore
-        const token = result.credential.accessToken;
+      .then((result) => {
         const user = result.user;
+        const userInfo = result.additionalUserInfo;
+        // @ts-ignore
+        const { name, email, html_url, location, avatar_url, login } = userInfo.profile;
+        // @ts-ignore
+        const { uid } = user;
+        // @ts-ignore
+        setIsNewUser(userInfo.isNewUser);
 
-        // console.log(token);
-        // console.dir(user);
-        setUserData(result.additionalUserInfo.profile);
-        // console.log(result.additionalUserInfo.profile);
+        setUserData({
+          email: email,
+          html_url: html_url,
+          location: location,
+          name: name,
+          avatar_url: avatar_url,
+          nickname: login,
+          login: login,
+          roles: ['student', 'admin', 'mentor', 'manager'],
+          uid: uid,
+        });
       })
-      .catch(function (error) {
-        console.log(`${error.code} ${error.message}`);
+      .catch((error) => {
+        setErrorMessage(`${error.code} ${error.message}`);
+        console.log(errorMessage);
+        setVisible(true);
       });
   };
 
-  console.log(userData);
+  const subscribe = auth.onAuthStateChanged((user): void => {
+    if (user) {
+      setLoggedIn(true);
+    } else {
+      setLoggedIn(false);
+    }
+  });
 
-  const signOutWithGit = () => {
-    firebase
-      .auth()
-      .signOut()
-      .then(
-        function () {
-          console.log('Signout successful!');
-        },
-        function (error) {
-          console.log('Signout failed');
-        }
-      );
+  const addUserDataInDB = () => {
+    if (isNewUser) {
+      checkRef.push(userData);
+      router.push('/main').catch((e) => new Error(e.message));
+      console.log('Add in DB');
+    } else {
+      router.push('/main').catch((e) => new Error(e.message));
+      console.log('Go to main page!');
+    }
   };
+
+  const closeModal = () => {
+    setVisible(false);
+    setErrorMessage('');
+  };
+
+  useEffect(() => {
+    if (loggedIn) {
+      addUserDataInDB();
+    }
+  }, [loggedIn]);
 
   return (
     <>
       <main>
+        {!loggedIn && <Text>Logged out!</Text>}
+        <Modal visible={visible} centered title={'Error!'} onOk={closeModal} onCancel={closeModal}>
+          {errorMessage}
+        </Modal>
         <div className="login-form">
           <img
             className="login-image"
@@ -95,16 +133,6 @@ const GitHubSignUp: React.FC<PropsGHSignUp> = ({ changeAuthPage }) => {
               Or <Link onClick={() => handleClick('')}>return</Link>
             </Text>
           </Card>
-          <Button
-            id="register"
-            key={'register'}
-            onClick={signOutWithGit}
-            size="large"
-            icon={<GithubOutlined />}
-            type="primary"
-          >
-            Sign out with GitHub
-          </Button>
         </div>
       </main>
     </>
