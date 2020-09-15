@@ -1,5 +1,5 @@
 import React, { useState, Key, useEffect, Props } from 'react';
-import { Card, Form, Input, Select, Button, Tag } from 'antd';
+import { Card, Form, Input, Select, Button, Tag, Avatar } from 'antd';
 import { databaseRef, auth, checkRef } from '../../../firebase';
 import { values } from 'lodash';
 
@@ -65,6 +65,14 @@ const AssignRole: React.FC<IProps> = ({ user }) => {
             >
               {Object.entries(users).map(([key, value]) => (
                 <Option key={key} value={value.nickname}>
+                  <Avatar
+                    size={20}
+                    src={
+                      value.avatar_url
+                        ? value.avatar_url
+                        : 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
+                    }
+                  />{' '}
                   {value.nickname}{' '}
                   {value.roles.map((userRoles: string, i: number) => (
                     <Tag

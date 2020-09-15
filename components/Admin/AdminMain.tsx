@@ -60,7 +60,7 @@ const AdminMain: React.FC = () => {
       .sort(() => Math.random() - 0.5);
     console.log(fourArray);
 
-    for (let i = 0; i < createArray.length; i += 1) {
+    /* for (let i = 0; i < createArray.length; i += 1) {
       const keyResult = Object.keys(createArray[i])[0];
       const valueResult: any = Object.values(createArray[i])[0];
       if (valueResult.name.length === 4) {
@@ -81,7 +81,7 @@ const AdminMain: React.FC = () => {
           fourArray.push(q);
         }
       }
-    }
+    } */
 
     console.log('result', createArray);
   };
