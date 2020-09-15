@@ -1,40 +1,26 @@
-import React, { useEffect, useState } from 'react';
-import { FormOutlined, LoginOutlined } from '@ant-design/icons';
-import { Button, Card, Typography, Divider } from 'antd';
-import { auth } from '../../firebase';
-import { useRouter } from 'next/router';
+import React from 'react';
+import { GithubOutlined } from '@ant-design/icons';
+import { Button, Card, Divider, Typography } from 'antd';
 
 const { Meta } = Card;
 const { Title, Link, Text } = Typography;
-interface PropsRequest {
+
+interface PropsGHSignUp {
   changeAuthPage: (data: string) => void;
-  changeAuthorization: () => void;
 }
 
-const RequestAuth: React.FC<PropsRequest> = ({ changeAuthPage, changeAuthorization }) => {
-  const [loggedIn, setLoggedIn] = useState(false);
-
-  const subscribe = auth.onAuthStateChanged((user): void => {
-    if (user) {
-      setLoggedIn(true);
-    } else {
-      setLoggedIn(false);
-    }
-  });
-
-  useEffect(() => {
-    if (loggedIn) {
-      changeAuthorization();
-    }
-  }, [loggedIn]);
-
+const GitHubSignUp: React.FC<PropsGHSignUp> = ({ changeAuthPage }) => {
   const handleClick = (data: string) => {
     changeAuthPage(data);
   };
+
+  const signUpWithGit = () => {
+    console.log('Sign Up with GitHub');
+  };
+
   return (
     <>
       <main>
-        {loggedIn ? <div>Logged in, wait...</div> : <div>Logged out!</div>}
         <div className="login-form">
           <img
             className="login-image"
@@ -54,35 +40,24 @@ const RequestAuth: React.FC<PropsRequest> = ({ changeAuthPage, changeAuthorizati
             }
             actions={[
               <Button
-                id="login"
-                key={'login'}
-                onClick={() => handleClick('login')}
-                size="large"
-                icon={<LoginOutlined />}
-                type="primary"
-              >
-                Login
-              </Button>,
-
-              <Button
                 id="register"
                 key={'register'}
-                onClick={() => handleClick('register')}
+                onClick={signUpWithGit}
                 size="large"
-                icon={<FormOutlined />}
+                icon={<GithubOutlined />}
                 type="primary"
               >
-                Sign Up
+                Sign up with GitHub
               </Button>,
             ]}
           >
             <Meta
-              title="Please login or sign up"
-              description="In order to access the X-Check RS School App, you need to login or sign up"
+              title="Please login via GitHub"
+              description="In order to access the RS School App, you need to login with your GitHub account"
             />
             <Divider />
             <Text>
-              Or sign up with <Link onClick={() => handleClick('github')}>GitHub</Link>
+              Or <Link onClick={() => handleClick('')}>return</Link>
             </Text>
           </Card>
         </div>
@@ -91,4 +66,4 @@ const RequestAuth: React.FC<PropsRequest> = ({ changeAuthPage, changeAuthorizati
   );
 };
 
-export default RequestAuth;
+export default GitHubSignUp;

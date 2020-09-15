@@ -1,15 +1,12 @@
 import React from 'react';
 import MainLayout from '../../components/MainLayout';
-
-interface PropsManager {
-  changeAuthorization: () => void;
-  getRole: () => void;
-}
+import { Typography } from 'antd';
 
 const ManagerPage = () => {
+  const { Title, Link, Text } = Typography;
   return (
     <>
-      <h1>Course Manager Page</h1>
+      <Title level={1}>Course Manager Page</Title>
     </>
   );
 };

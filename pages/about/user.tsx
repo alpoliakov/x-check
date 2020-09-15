@@ -30,18 +30,10 @@ const User: React.FC<PropsUser> = ({ title }) => {
   });
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
-  const [uid, setUid] = useState('');
-  const [roles, setRoles] = useState([]);
   const [avatar_url, setAvatar_url] = useState('');
   const [login, setLogin] = useState('');
   const router = useRouter();
   const { Title, Link, Text } = Typography;
-
-  // const getUserDataFromGit = async (name: string) => {
-  //   let response = await fetch(`https://api.github.com/users/${name}`);
-  //   let data = await response.json();
-  //   await setUserData(data);
-  // };
 
   useEffect(() => {
     checkRef.on('value', (snapshot) => {
@@ -54,16 +46,11 @@ const User: React.FC<PropsUser> = ({ title }) => {
 
           setEmail(users[key].email);
           setName(users[key].name);
-          setUid(users[key].uid);
-          setRoles(users[key].roles);
           setAvatar_url(users[key].avatar_url);
           setLogin(users[key].login);
         }
       }
     });
-    // if (name) {
-    //   getUserDataFromGit(name).catch((e) => new Error(e));
-    // }
   }, []);
 
   const returnToPage = () => {
@@ -72,7 +59,7 @@ const User: React.FC<PropsUser> = ({ title }) => {
 
   return (
     <>
-      <MainLayout title={'User'}>
+      <MainLayout title={`user profile ${name}`}>
         <div className="site-card-wrapper">
           <Row gutter={16}>
             <Col span={6}>
@@ -121,7 +108,7 @@ const User: React.FC<PropsUser> = ({ title }) => {
                 key="card-user-english"
               >
                 <Empty
-                  description="English level isn't choosen"
+                  description="English level isn't chosen"
                   image={Empty.PRESENTED_IMAGE_SIMPLE}
                 />
               </Card>
