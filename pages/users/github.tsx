@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { GithubOutlined } from '@ant-design/icons';
-import { Button, Card, Divider, Typography, Modal, Space } from 'antd';
+import { Button, Card, Divider, Typography, Modal } from 'antd';
 import firebase from '../../firebase';
 import { auth, checkRef } from '../../firebase';
 import { useRouter } from 'next/router';
@@ -12,18 +12,12 @@ interface PropsGHSignUp {
   changeAuthPage: (data: string) => void;
 }
 
-const GitHubSignUp: React.FC<PropsGHSignUp> = ({ changeAuthPage }) => {
+const useAuthWithGitHub = () => {
   const [userData, setUserData] = useState({});
-  const [loggedIn, setLoggedIn] = useState(false);
   const [isNewUser, setIsNewUser] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
   const [visible, setVisible] = useState(false);
-  const router = useRouter();
   const provider = new firebase.auth.GithubAuthProvider();
-
-  const handleClick = (data: string) => {
-    changeAuthPage(data);
-  };
 
   const signUpWithGit = () => {
     auth
@@ -57,13 +51,36 @@ const GitHubSignUp: React.FC<PropsGHSignUp> = ({ changeAuthPage }) => {
       });
   };
 
-  const subscribe = auth.onAuthStateChanged((user): void => {
-    if (user) {
-      setLoggedIn(true);
-    } else {
-      setLoggedIn(false);
-    }
-  });
+  const closeModal = () => {
+    setVisible(false);
+    setErrorMessage('');
+  };
+
+  return {
+    userData,
+    isNewUser,
+    errorMessage,
+    visible,
+    signUpWithGit,
+    closeModal,
+  };
+};
+
+const GitHubSignUp: React.FC<PropsGHSignUp> = ({ changeAuthPage }) => {
+  const [loggedIn, setLoggedIn] = useState(false);
+  const router = useRouter();
+  const {
+    userData,
+    isNewUser,
+    errorMessage,
+    visible,
+    signUpWithGit,
+    closeModal,
+  } = useAuthWithGitHub();
+
+  const handleClick = (data: string) => {
+    changeAuthPage(data);
+  };
 
   const addUserDataInDB = () => {
     if (isNewUser) {
@@ -76,15 +93,18 @@ const GitHubSignUp: React.FC<PropsGHSignUp> = ({ changeAuthPage }) => {
     }
   };
 
-  const closeModal = () => {
-    setVisible(false);
-    setErrorMessage('');
-  };
-
   useEffect(() => {
+    const subscribe = auth.onAuthStateChanged((user): void => {
+      if (user) {
+        setLoggedIn(true);
+      } else {
+        setLoggedIn(false);
+      }
+    });
     if (loggedIn) {
       addUserDataInDB();
     }
+    return () => subscribe();
   }, [loggedIn]);
 
   return (

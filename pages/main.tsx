@@ -7,7 +7,6 @@ import Error from './error';
 import { auth, checkRef } from '../firebase';
 import MainLayout from '../components/MainLayout';
 import { Select } from 'antd';
-import { useRouter } from 'next/router';
 import { Typography } from 'antd';
 
 interface PropsMainPage {
@@ -32,20 +31,11 @@ const useRequest = () => {
 };
 
 const MainPages: React.FC<PropsMainPage> = ({ changeAuthorization }) => {
-  const { Title, Link, Text } = Typography;
+  const { Title } = Typography;
   const { Option } = Select;
   const [currentRole, setCurrentRole] = useState('');
   const [loggedIn, setLoggedIn] = useState(false);
-  const router = useRouter();
   const [userData, getUserData] = useRequest();
-
-  const subscribe = auth.onAuthStateChanged((user): void => {
-    if (user) {
-      setLoggedIn(true);
-    } else {
-      setLoggedIn(false);
-    }
-  });
 
   const onChange = (value: string) => {
     setCurrentRole(value);
@@ -55,12 +45,19 @@ const MainPages: React.FC<PropsMainPage> = ({ changeAuthorization }) => {
   const { roles } = userData;
 
   useEffect(() => {
+    const subscribe = auth.onAuthStateChanged((user): void => {
+      if (user) {
+        setLoggedIn(true);
+      } else {
+        setLoggedIn(false);
+      }
+    });
     if (loggedIn) {
       // @ts-ignore
       getUserData();
       setCurrentRole(currentRole);
     }
-    subscribe();
+    return () => subscribe();
   }, [loggedIn, currentRole]);
 
   return (

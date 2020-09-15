@@ -2,10 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { FormOutlined, LoginOutlined } from '@ant-design/icons';
 import { Button, Card, Typography, Divider } from 'antd';
 import { auth } from '../../firebase';
-import { useRouter } from 'next/router';
 
 const { Meta } = Card;
-const { Title, Link, Text } = Typography;
+const { Link, Text } = Typography;
 interface PropsRequest {
   changeAuthPage: (data: string) => void;
   changeAuthorization: () => void;
@@ -14,18 +13,18 @@ interface PropsRequest {
 const RequestAuth: React.FC<PropsRequest> = ({ changeAuthPage, changeAuthorization }) => {
   const [loggedIn, setLoggedIn] = useState(false);
 
-  const subscribe = auth.onAuthStateChanged((user): void => {
-    if (user) {
-      setLoggedIn(true);
-    } else {
-      setLoggedIn(false);
-    }
-  });
-
   useEffect(() => {
+    const subscribe = auth.onAuthStateChanged((user): void => {
+      if (user) {
+        setLoggedIn(true);
+      } else {
+        setLoggedIn(false);
+      }
+    });
     if (loggedIn) {
       changeAuthorization();
     }
+    return () => subscribe();
   }, [loggedIn]);
 
   const handleClick = (data: string) => {

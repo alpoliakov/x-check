@@ -1,5 +1,4 @@
 import React from 'react';
-import MainLayout from '../components/MainLayout';
 import { Result, Button } from 'antd';
 import { auth } from '../firebase';
 import { useRouter } from 'next/router';

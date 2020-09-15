@@ -36,15 +36,14 @@ const Login: React.FC<PropsLogin> = ({ changeAuthPage }) => {
     console.log('Received values of form: ', values);
   };
 
-  const isSubscribe = auth.onAuthStateChanged((user) => {
-    if (user) {
-      setLoggedIn(true);
-    } else {
-      setLoggedIn(false);
-    }
-  });
-
   useEffect(() => {
+    const isSubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        setLoggedIn(true);
+      } else {
+        setLoggedIn(false);
+      }
+    });
     if (loggedIn) {
       goToMainPage();
     }
