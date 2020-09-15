@@ -1,13 +1,13 @@
 import React from 'react';
 import CriteriaGroupTask from './criteria-group-task';
 import { ITask } from '../../../../interfaces/ITask';
-import { ICheсk } from '../../../../interfaces/IWorkDone';
+import { ICheсk, IComment } from '../../../../interfaces/IWorkDone';
 
 type PropsCheckTask = {
   task: ITask;
   checkingTask: ICheсk;
   onChangeScore: (cheсkingPointID: string, score: number) => void;
-  onChangeComment: (cheсkingPointID: string, score: number) => void;
+  onChangeComment: (cheсkingPointID: string, comment: IComment) => void;
 };
 
 function CriteriaTask({

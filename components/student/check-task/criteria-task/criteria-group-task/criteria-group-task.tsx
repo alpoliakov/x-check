@@ -1,7 +1,7 @@
 import React from 'react';
 import { Collapse, Row, Col } from 'antd';
 import { ICriteriaGroup, ICriteriaPoint } from '../../../../../interfaces/ITask';
-import { ICheсkingPoint } from '../../../../../interfaces/IWorkDone';
+import { ICheсkingPoint, IComment } from '../../../../../interfaces/IWorkDone';
 import ItemCriteriaTask from './item-criteria-task';
 import styles from './criteria-group-task.module.css';
 
@@ -9,7 +9,7 @@ type PropsCriteriaGroup = {
   criteriaGroup: ICriteriaGroup;
   cheсkingPoints: ICheсkingPoint[];
   onChangeScore: (cheсkingPointID: string, score: number) => void;
-  onChangeComment: (cheсkingPointID: string, score: number) => void;
+  onChangeComment: (cheсkingPointID: string, comment: IComment) => void;
 };
 
 function CriteriaGroupTask({

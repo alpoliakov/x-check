@@ -3,7 +3,7 @@ export interface ITask {
   id: string;
   name: string;
   authorName?: string;
-  publisherID: string; //id user 
+  publisherID: string; //id user
   state: 'draft' | 'published';
   publishedAt?: Date;
   demo?: string;

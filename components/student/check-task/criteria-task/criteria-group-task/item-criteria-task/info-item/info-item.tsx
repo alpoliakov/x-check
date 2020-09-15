@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Input, Collapse, Form, Button, Comment, Avatar } from 'antd';
 import { IComment } from '../../../../../../../interfaces/IWorkDone';
 import styles from './info-item.module.css';
@@ -6,11 +6,13 @@ import styles from './info-item.module.css';
 type PropsInfoItem = {
   descriptionItem: string;
   commentsItem: IComment[];
-  onChangeComment: (cheсkingPointID: string, score: number) => void;
+  onChangeComment: (cheсkingPointID: string, comment: IComment) => void;
 };
 
 type PropsEditor = {
-  onChangeScore: (cheсkingPointID: string, score: number) => void;
+  value: string;
+  onChange: any;
+  onSubmit: any;
 };
 
 export default function InfoItem({
@@ -20,6 +22,17 @@ export default function InfoItem({
 }: PropsInfoItem): JSX.Element {
   const { TextArea } = Input;
   const { Panel } = Collapse;
+  const [stateComment, setComment] = useState<string>('');
+  const handleSubmit = () => {
+    if (!stateComment) {
+      return;
+    }
+    onChangeComment('onChangeComment', commentsItem[0]);
+  };
+
+  const onChangeInput = (e: React.FormEvent<HTMLInputElement>) => {
+    // setComment(e.currentTarget.value);
+  };
 
   const itemsComment = commentsItem.map((item, index) => {
     return (
@@ -37,13 +50,13 @@ export default function InfoItem({
     );
   });
 
-  const Editor = (/*{ value }: PropsEditor*/) => (
+  const Editor = ({ value, onChange, onSubmit }: PropsEditor) => (
     <>
       <Form.Item>
-        <TextArea placeholder="Input comment" autoSize />
+        <TextArea placeholder="Input comment" autoSize onChange={onChange} value={value} />
       </Form.Item>
       <Form.Item>
-        <Button htmlType="submit" type="primary">
+        <Button htmlType="submit" onClick={onSubmit} type="primary">
           Add Comment
         </Button>
       </Form.Item>
@@ -57,10 +70,10 @@ export default function InfoItem({
         <Panel header={<span>Comments</span>} key={0}>
           {itemsComment}
           <Editor
-          // onChange={this.handleChange}
-          // onSubmit={this.handleSubmit}
-          // submitting={submitting}
-          // value={value}
+            onChange={onChangeInput}
+            onSubmit={handleSubmit}
+            // submitting={submitting}
+            value={stateComment}
           />
         </Panel>
       </Collapse>

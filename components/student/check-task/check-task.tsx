@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ITask } from '../../../interfaces/ITask';
-import { ICheсk } from '../../../interfaces/IWorkDone';
+import { ICheсk, IComment } from '../../../interfaces/IWorkDone';
 import HeaderTask from './header-task';
 import ControlsTask from './controls-task';
 import CriteriaTask from './criteria-task';
@@ -13,6 +13,7 @@ type PropsCheckTask = {
 
 function CheckTask({ task, checkingTask }: PropsCheckTask): JSX.Element {
   const [stateCheckingTask, setCheckingTask] = useState<ICheсk>(checkingTask);
+  console.log(stateCheckingTask);
 
   const onChangeScore = (cheсkingPointID: string, score: number) => {
     setCheckingTask((prev) => {
@@ -25,16 +26,13 @@ function CheckTask({ task, checkingTask }: PropsCheckTask): JSX.Element {
     });
   };
 
-  const onChangeComment = (cheсkingPointID: string, score: number) => {
+  const onChangeComment = (cheсkingPointID: string, comment: IComment) => {
+    console.log('ssss');
     setCheckingTask((prev) => {
-      const checking = prev.cheсking.map((item) => {
-        if (item.cheсkingPointID === cheсkingPointID) {
-          item.autorScore = score;
-        }
-      });
-      return { ...prev, checking };
+      return prev;
     });
   };
+
   return (
     <>
       <HeaderTask title={task.name} description={task.description} />

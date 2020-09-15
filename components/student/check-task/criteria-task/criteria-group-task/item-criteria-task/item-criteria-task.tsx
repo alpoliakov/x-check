@@ -1,7 +1,7 @@
 import React from 'react';
 import { Row, Col, Card } from 'antd';
 import { ICriteriaPoint } from '../../../../../../interfaces/ITask';
-import { ICheсkingPoint } from '../../../../../../interfaces/IWorkDone';
+import { ICheсkingPoint, IComment } from '../../../../../../interfaces/IWorkDone';
 import SwitchScore from './switch-score-item';
 import MaxScoreItem from './max-score-item';
 import InfoItem from './info-item';
@@ -11,7 +11,7 @@ type PropsItemCriteriaTask = {
   criteriaPoint: ICriteriaPoint;
   cheсkingPoint: ICheсkingPoint;
   onChangeScore: (cheсkingPointID: string, score: number) => void;
-  onChangeComment: (cheсkingPointID: string, score: number) => void;
+  onChangeComment: (cheсkingPointID: string, comment: IComment) => void;
 };
 
 function ItemCriteriaTask({
