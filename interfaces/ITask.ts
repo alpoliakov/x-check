@@ -16,13 +16,13 @@ export interface ITask {
 }
 //groupScore автоподсчётом
 export interface ICriteria {
-  groupID: number;
+  groupID: string;
   groupName: string;
   criteriaItem: ICriteriaItem[];
 }
 
 export interface ICriteriaItem {
-  itemID: number;
+  itemID: string;
   itemName: string;
   itemScore: number;
   isFine: boolean;
