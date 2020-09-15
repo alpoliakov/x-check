@@ -2,7 +2,9 @@ import React from 'react';
 import MainLayout from '../../../components/MainLayout';
 import { Row, Col } from 'antd';
 import Sidebar from '../../../components/student/cross-check/Sidebar';
-
+import CheckTask from '../../..//components/student/check-task';
+import { checkingTask } from '../../../components/student/test-task/test-work-done';
+import { testTask } from '../../../components/student/test-task/test-task';
 import { ICourse } from '../../../interfaces/ICourse';
 
 interface PropsStudent {
@@ -63,11 +65,13 @@ const CrossCheckPage: React.FC<PropsStudent> = ({ changeAuthorization }) => {
   return (
     <>
       <MainLayout title="Student" changeAuthorization={changeAuthorization}>
-        <Row gutter={6}>
-          <Col>
+        <Row gutter={16}>
+          <Col span={5}>
             <Sidebar getTask={selectTask} taskList={taskList} isDeadline={isDeadline} />
           </Col>
-          <Col />
+          <Col span={18}>
+            <CheckTask task={testTask} checkingTask={checkingTask.cheсks[0]} />
+          </Col>
         </Row>
       </MainLayout>
     </>

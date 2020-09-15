@@ -1,0 +1,15 @@
+.maxName {
+  font-size: 10px;
+  color: yellowgreen;
+}
+
+.maxScore {
+  font-size: 25px;
+  color: red;
+  margin: 0;
+}
+
+.maxCard div {
+  padding: 0;
+  color: red;
+}
