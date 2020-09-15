@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { GithubOutlined } from '@ant-design/icons';
 import { Button, Card, Divider, Typography } from 'antd';
+import firebase from '../../firebase';
 
 const { Meta } = Card;
 const { Title, Link, Text } = Typography;
@@ -10,12 +11,46 @@ interface PropsGHSignUp {
 }
 
 const GitHubSignUp: React.FC<PropsGHSignUp> = ({ changeAuthPage }) => {
+  const [userData, setUserData] = useState();
   const handleClick = (data: string) => {
     changeAuthPage(data);
   };
 
+  const provider = new firebase.auth.GithubAuthProvider();
+
   const signUpWithGit = () => {
-    console.log('Sign Up with GitHub');
+    firebase
+      .auth()
+      .signInWithPopup(provider)
+      .then(function (result) {
+        // @ts-ignore
+        const token = result.credential.accessToken;
+        const user = result.user;
+
+        // console.log(token);
+        // console.dir(user);
+        setUserData(result.additionalUserInfo.profile);
+        // console.log(result.additionalUserInfo.profile);
+      })
+      .catch(function (error) {
+        console.log(`${error.code} ${error.message}`);
+      });
+  };
+
+  console.log(userData);
+
+  const signOutWithGit = () => {
+    firebase
+      .auth()
+      .signOut()
+      .then(
+        function () {
+          console.log('Signout successful!');
+        },
+        function (error) {
+          console.log('Signout failed');
+        }
+      );
   };
 
   return (
@@ -60,6 +95,16 @@ const GitHubSignUp: React.FC<PropsGHSignUp> = ({ changeAuthPage }) => {
               Or <Link onClick={() => handleClick('')}>return</Link>
             </Text>
           </Card>
+          <Button
+            id="register"
+            key={'register'}
+            onClick={signOutWithGit}
+            size="large"
+            icon={<GithubOutlined />}
+            type="primary"
+          >
+            Sign out with GitHub
+          </Button>
         </div>
       </main>
     </>
