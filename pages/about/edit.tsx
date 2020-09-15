@@ -18,15 +18,23 @@ import {
 } from '@ant-design/icons';
 
 const EditUser: React.FC = () => {
-  const [userData, setUserData] = useState({});
+  const [userData, setUserData] = useState({
+    avatar_url: '',
+    html_url: '',
+    location: '',
+    login: '',
+    name: '',
+    email: '',
+  });
   const [userName, setUserName] = useState('');
   const [userEmail, setUserEmail] = useState('');
-  const [path, setPath] = useState('');
+  const [userAvatar, setUserAvatar] = useState('');
+  const [login, setLogin] = useState('');
 
   const { Title, Link, Text } = Typography;
   const router = useRouter();
 
-  useEffect(() => {
+  const setDataUser = () => {
     checkRef.on('value', (snapshot) => {
       const users = snapshot.val();
       for (let key in users) {
@@ -35,10 +43,15 @@ const EditUser: React.FC = () => {
           setUserData(users[key]);
           setUserName(users[key].name);
           setUserEmail(users[key].email);
-          setPath(users[key].roles[0]);
+          setUserAvatar(users[key].avatar_url);
+          setLogin(users[key].login);
         }
       }
     });
+  };
+
+  useEffect(() => {
+    setDataUser();
   }, []);
 
   const backPage = () => {
@@ -47,7 +60,7 @@ const EditUser: React.FC = () => {
 
   return (
     <>
-      <MainLayout title={'Edit'}>
+      <MainLayout title={`edit profile ${userName}`}>
         <div className="site-card-wrapper">
           <Row gutter={16}>
             <Col span={6}>
@@ -59,16 +72,16 @@ const EditUser: React.FC = () => {
                   <SettingOutlined key="setting-intro" />,
                 ]}
               >
-                <Avatar size={90} src="/static/images/king.jpg" />
+                <Avatar size={90} src={userAvatar || '/static/images/king.jpg'} />
                 <Title level={2}>{userName}</Title>
                 <Title level={5}>
-                  <Link href="https://github.com/">
-                    <GithubOutlined /> githab
+                  <Link href={userData.html_url}>
+                    <GithubOutlined /> {`@${login}` || 'unknown'}
                   </Link>
                 </Title>
                 <div>
                   <Text>
-                    <EnvironmentOutlined /> Location
+                    <EnvironmentOutlined /> {userData.location || 'location'}
                   </Text>
                 </div>
                 <div>

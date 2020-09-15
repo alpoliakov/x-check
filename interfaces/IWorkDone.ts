@@ -1,6 +1,6 @@
 export interface IWorkDone {
-  id: number; //для обращения к данному шаблону проверки
-  taskID: number; //для поиска таска, на основании которого сделана проверка
+  id: string; //для обращения к данному шаблону проверки
+  taskID: string; //для поиска таска, на основании которого сделана проверка
   state: TaskState;
   student: IStudent; //имя выполнившего работу
   publishedAt: Date; // дата создания проверки
@@ -13,7 +13,7 @@ export interface IWorkDone {
   deployUrl: string;
 }
 
-enum TaskState {
+export enum TaskState {
   isAutorDraft,
   isMentorDraft,
   isAuditorDraft,
@@ -22,18 +22,18 @@ enum TaskState {
 }
 
 export interface IMentor {
-  id: number;
+  id: string;
   name: string;
 }
 
 export interface IStudent {
-  id: number;
+  id: string;
   name: string;
   isAuditorAnonim?: boolean; //скрывать ли имя проверившего, очевидно для ментора неактуально
 }
 
 export interface ICheсk {
-  checkerID: number;
+  checkerID: string;
   state: 'draft' | 'published';
   cheсking: ICheсkingPoint[];
   score: number; //набранные, масимальный будет браться из таска
@@ -42,16 +42,16 @@ export interface ICheсk {
 }
 //результаты проверки по конкретным пунктам требований
 export interface ICheсkingPoint {
-  pointID: number; //для обращения
-  criteriaID: number; // два верхних пункта для связи с самим таском - поиск нужных пунктов
+  cheсkingPointID: string; //для обращения
+  criteriaPointID: string; // два верхних пункта для связи с самим таском - поиск нужных пунктов
   autorScore: number; //оценка самопроверки
   auditorScore: number; //оценка проверяющего - студента или ментора
-  refereeScore: number; //финальная оценка в случае если вмешался человек со спецролью
+  refereeScore?: number; //финальная оценка в случае если вмешался человек со спецролью
   comments: IComment[]; //массив всех комментариев
   state: CheсkingPointState; // в зависимости от статуса будут доступны такие кнопки как оспорить/редактировать и тд
 }
 
-enum CheсkingPointState {
+export enum CheсkingPointState {
   SelfCheck,
   NotVerified,
   Verified,
@@ -62,7 +62,7 @@ enum CheсkingPointState {
 
 //отдельные комментарии
 export interface IComment {
-  id: number; // для обращения редактирования/удаления
+  id: string; // для обращения редактирования/удаления
   text: string; //содержание комментария
   date: Date; //дата создания/правки комментария
   whoSaidThat: string; // autor, auditor, referee - дать возможность редактировать только тому, кто этот коммент написал

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { Form, Input, Button, Checkbox, Modal } from 'antd';
+import { Form, Input, Button, Checkbox, Modal, Typography } from 'antd';
 import { MailOutlined, LockOutlined } from '@ant-design/icons';
 import { auth } from '../../firebase';
 
@@ -9,6 +9,7 @@ interface PropsLogin {
 }
 
 const Login: React.FC<PropsLogin> = ({ changeAuthPage }) => {
+  const { Link } = Typography;
   const router = useRouter();
   const [notify, setNotification] = useState('');
   const [visible, setVisible] = useState(false);
@@ -127,7 +128,8 @@ const Login: React.FC<PropsLogin> = ({ changeAuthPage }) => {
                 Reset
               </Button>
               <p className={'register__now_text'}>
-                Or <a onClick={() => handleClick('register')}>register now!</a>
+                <Link onClick={() => handleClick('register')}>Register now</Link> or register with{' '}
+                <Link onClick={() => handleClick('github')}>GitHub</Link>
               </p>
             </Form.Item>
           </Form>

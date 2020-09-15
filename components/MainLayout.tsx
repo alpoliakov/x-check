@@ -16,12 +16,11 @@ const MainLayout: React.FC<PropsML> = ({ children, title, changeAuthorization })
 
   const logOut = () => {
     auth.signOut().then(
-      function () {
+      () => {
         console.log('Logged out!');
       },
-      function (error) {
-        console.log(error.code);
-        console.log(error.message);
+      (error) => {
+        console.log(`${error.code} ${error.message}`);
       }
     );
     if (changeAuthorization) {
