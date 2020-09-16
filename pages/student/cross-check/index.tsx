@@ -70,7 +70,11 @@ const CrossCheckPage: React.FC<PropsStudent> = ({ changeAuthorization }) => {
             <Sidebar getTask={selectTask} taskList={taskList} isDeadline={isDeadline} />
           </Col>
           <Col span={18}>
-            <CheckTask task={testTask} checkingTask={checkingTask.cheсks[0]} />
+            <CheckTask
+              task={testTask}
+              checkingTask={checkingTask.cheсks[0]}
+              reviewer={checkingTask.checkers[0]}
+            />
           </Col>
         </Row>
       </MainLayout>

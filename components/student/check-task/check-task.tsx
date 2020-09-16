@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ITask } from '../../../interfaces/ITask';
-import { ICheсk, IComment } from '../../../interfaces/IWorkDone';
+import { ICheсk, IComment, IStudent } from '../../../interfaces/IWorkDone';
 import HeaderTask from './header-task';
 import ControlsTask from './controls-task';
 import CriteriaTask from './criteria-task';
@@ -9,41 +9,54 @@ import styles from './check-task.module.css';
 type PropsCheckTask = {
   task: ITask;
   checkingTask: ICheсk;
+  reviewer: IStudent;
 };
 
-function CheckTask({ task, checkingTask }: PropsCheckTask): JSX.Element {
+function CheckTask({ task, checkingTask, reviewer }: PropsCheckTask): JSX.Element {
   const [stateCheckingTask, setCheckingTask] = useState<ICheсk>(checkingTask);
-  console.log(stateCheckingTask);
 
   const onChangeScore = (cheсkingPointID: string, score: number) => {
     setCheckingTask((prev) => {
-      const checking = prev.cheсking.map((item) => {
+      prev.cheсking.forEach((item) => {
         if (item.cheсkingPointID === cheсkingPointID) {
           item.autorScore = score;
         }
       });
-      return { ...prev, checking };
+      return { ...prev };
     });
   };
 
   const onChangeComment = (cheсkingPointID: string, comment: IComment) => {
-    console.log('ssss');
+    reviewer.isAuditorAnonim === true
+      ? (comment.whoSaidThat = `Reviewer`)
+      : (comment.whoSaidThat = reviewer.name);
     setCheckingTask((prev) => {
-      return prev;
+      const newChecking = prev.cheсking.map((item) => {
+        if (item.cheсkingPointID === cheсkingPointID) {
+          item.comments.push(comment);
+        }
+        return item;
+      });
+      return { ...prev, cheсking: newChecking };
     });
   };
 
   return (
-    <>
-      <HeaderTask title={task.name} description={task.description} />
+    <div>
+      <HeaderTask
+        title={task.name}
+        description={task.description}
+        score={stateCheckingTask.score}
+        checkPoint={stateCheckingTask.cheсking.length}
+      />
       <CriteriaTask
         task={task}
         checkingTask={stateCheckingTask}
         onChangeComment={onChangeComment}
         onChangeScore={onChangeScore}
       />
-      <ControlsTask />
-    </>
+      <ControlsTask onSave={() => {}} onSubmit={() => {}} />
+    </div>
   );
 }
 

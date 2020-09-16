@@ -1,13 +1,26 @@
 import React from 'react';
-import { Button } from 'antd';
+import { Button, Row, Col } from 'antd';
 
-type PropsControlsTask = {};
+type PropsControlsTask = {
+  onSave: () => void;
+  onSubmit: () => void;
+};
 
-function ControlsTask({}: PropsControlsTask): JSX.Element {
+function ControlsTask({ onSave, onSubmit }: PropsControlsTask): JSX.Element {
   return (
     <>
-      <Button type="primary">Save</Button>
-      <Button type="primary">Send</Button>
+      <Row>
+        <Col flex={2}>
+          <Button type="primary" onClick={onSave}>
+            Save
+          </Button>
+        </Col>
+        <Col flex={3}>
+          <Button type="primary" onClick={onSubmit}>
+            Send
+          </Button>
+        </Col>
+      </Row>
     </>
   );
 }

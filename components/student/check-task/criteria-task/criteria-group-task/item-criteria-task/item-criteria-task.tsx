@@ -28,9 +28,13 @@ function ItemCriteriaTask({
   const onChangeScoreSwitch = (score: number) => {
     onChangeScore(cheсkingPoint.cheсkingPointID, score);
   };
+
+  const onChangeCommentInfo = (comment: IComment) => {
+    onChangeComment(cheсkingPoint.cheсkingPointID, comment);
+  };
   return (
     <Card.Grid className={styles.mb10} style={gridStyle}>
-      <Row gutter={8} justify="space-between">
+      <Row gutter={8}>
         <Col span={3}>
           <MaxScoreItem
             nameInfoCard={nameInfoCard}
@@ -41,7 +45,7 @@ function ItemCriteriaTask({
           <InfoItem
             descriptionItem={criteriaPoint.criteriaPointName}
             commentsItem={cheсkingPoint.comments}
-            onChangeComment={onChangeComment}
+            onChangeComment={onChangeCommentInfo}
           />
         </Col>
         <Col span={6}>

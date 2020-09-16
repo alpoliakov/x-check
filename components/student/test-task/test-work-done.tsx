@@ -88,13 +88,13 @@ const mentor: IMentor = {
 const student: IStudent = {
   id: 'Alex Alexsandrov 2183',
   name: 'Alex Alexsandrov',
-  isAuditorAnonim: false,
+  isAuditorAnonim: true,
 };
 
 const review1: IStudent = {
   id: 'reviewsID 1',
   name: 'reviews 1',
-  isAuditorAnonim: false,
+  isAuditorAnonim: true,
 };
 
 const reviews2: IStudent = {

@@ -6,13 +6,7 @@ import styles from './info-item.module.css';
 type PropsInfoItem = {
   descriptionItem: string;
   commentsItem: IComment[];
-  onChangeComment: (cheсkingPointID: string, comment: IComment) => void;
-};
-
-type PropsEditor = {
-  value: string;
-  onChange: any;
-  onSubmit: any;
+  onChangeComment: (comment: IComment) => void;
 };
 
 export default function InfoItem({
@@ -23,15 +17,24 @@ export default function InfoItem({
   const { TextArea } = Input;
   const { Panel } = Collapse;
   const [stateComment, setComment] = useState<string>('');
+
   const handleSubmit = () => {
     if (!stateComment) {
       return;
     }
-    onChangeComment('onChangeComment', commentsItem[0]);
+    const newComment: IComment = {
+      id: `${commentsItem[commentsItem.length - 1].id}`,
+      text: stateComment,
+      date: new Date(),
+      whoSaidThat: '',
+      isAnonimSay: true,
+    };
+    onChangeComment(newComment);
+    setComment('');
   };
 
-  const onChangeInput = (e: React.FormEvent<HTMLInputElement>) => {
-    // setComment(e.currentTarget.value);
+  const onChangeInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setComment(e.target.value);
   };
 
   const itemsComment = commentsItem.map((item, index) => {
@@ -45,23 +48,11 @@ export default function InfoItem({
           />
         }
         content={<p>{item.text}</p>}
+        datetime={item.date.toLocaleString()}
         key={index}
       />
     );
   });
-
-  const Editor = ({ value, onChange, onSubmit }: PropsEditor) => (
-    <>
-      <Form.Item>
-        <TextArea placeholder="Input comment" autoSize onChange={onChange} value={value} />
-      </Form.Item>
-      <Form.Item>
-        <Button htmlType="submit" onClick={onSubmit} type="primary">
-          Add Comment
-        </Button>
-      </Form.Item>
-    </>
-  );
 
   return (
     <>
@@ -69,12 +60,19 @@ export default function InfoItem({
       <Collapse ghost>
         <Panel header={<span>Comments</span>} key={0}>
           {itemsComment}
-          <Editor
-            onChange={onChangeInput}
-            onSubmit={handleSubmit}
-            // submitting={submitting}
-            value={stateComment}
-          />
+          <Form.Item>
+            <TextArea
+              placeholder="Input comment"
+              onChange={onChangeInput}
+              value={stateComment}
+              autoSize
+            />
+          </Form.Item>
+          <Form.Item>
+            <Button htmlType="submit" onClick={handleSubmit} type="primary">
+              Add Comment
+            </Button>
+          </Form.Item>
         </Panel>
       </Collapse>
     </>
