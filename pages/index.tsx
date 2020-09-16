@@ -33,20 +33,20 @@ const IndexPage: React.FC<PropsIP> = ({ roleUser }) => {
 
 export default IndexPage;
 
-export const getServerSideProps: GetServerSideProps<PropsIP> = async () => {
-  let role = '';
-  checkRef.on('value', (snapshot) => {
-    const data = snapshot.val();
-    for (let key in data) {
-      // @ts-ignore
-      if (data[key].uid === auth.currentUser.uid) {
-        role = data[key].nickname;
-      }
-    }
-  });
-  return {
-    props: {
-      roleUser: role || 'error',
-    },
-  };
-};
+// export const getServerSideProps: GetServerSideProps<PropsIP> = async () => {
+//   let role = '';
+//   checkRef.on('value', (snapshot) => {
+//     const data = snapshot.val();
+//     for (let key in data) {
+//       // @ts-ignore
+//       if (data[key].uid === auth.currentUser.uid) {
+//         role = data[key].nickname;
+//       }
+//     }
+//   });
+//   return {
+//     props: {
+//       roleUser: role || 'error',
+//     },
+//   };
+// };

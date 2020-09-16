@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import firebase from '../firebase';
-import { auth } from '../firebase';
+import firebase, { auth } from '../firebase';
 
 const useAuthWithGitHub = () => {
   const [userData, setUserData] = useState({});

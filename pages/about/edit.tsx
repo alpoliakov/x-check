@@ -17,7 +17,11 @@ import {
   MailOutlined,
 } from '@ant-design/icons';
 
-const EditUser: React.FC = () => {
+interface PropsEditUser {
+  data?: object;
+}
+
+const EditUser: React.FC<PropsEditUser> = ({ data }) => {
   const [userData, setUserData] = useState({
     avatar_url: '',
     html_url: '',
@@ -26,33 +30,26 @@ const EditUser: React.FC = () => {
     name: '',
     email: '',
   });
-  const [userName, setUserName] = useState('');
-  const [userEmail, setUserEmail] = useState('');
-  const [userAvatar, setUserAvatar] = useState('');
-  const [login, setLogin] = useState('');
+  const [email, setEmail] = useState('');
 
   const { Title, Link, Text } = Typography;
   const router = useRouter();
 
   const setDataUser = () => {
-    checkRef.on('value', (snapshot) => {
-      const users = snapshot.val();
-      for (let key in users) {
-        // @ts-ignore
-        if (users[key].uid === auth.currentUser.uid) {
-          setUserData(users[key]);
-          setUserName(users[key].name);
-          setUserEmail(users[key].email);
-          setUserAvatar(users[key].avatar_url);
-          setLogin(users[key].login);
-        }
+    // @ts-ignore
+    data.forEach((item) => {
+      // @ts-ignore
+      if (item.uid === auth.currentUser.uid) {
+        return setUserData(item);
       }
     });
+    // @ts-ignore
+    setEmail(auth.currentUser.email);
   };
 
   useEffect(() => {
     setDataUser();
-  }, []);
+  }, [data]);
 
   const backPage = () => {
     router.push(`/main`).catch((e) => new Error(e.message));
@@ -60,7 +57,7 @@ const EditUser: React.FC = () => {
 
   return (
     <>
-      <MainLayout title={`edit profile ${userName}`}>
+      <MainLayout title={`edit profile ${userData.name}`}>
         <div className="site-card-wrapper">
           <Row gutter={16}>
             <Col span={6}>
@@ -72,11 +69,11 @@ const EditUser: React.FC = () => {
                   <SettingOutlined key="setting-intro" />,
                 ]}
               >
-                <Avatar size={90} src={userAvatar || '/static/images/king.jpg'} />
-                <Title level={2}>{userName}</Title>
+                <Avatar size={90} src={userData.avatar_url || '/static/images/king.jpg'} />
+                <Title level={2}>{userData.name}</Title>
                 <Title level={5}>
                   <Link href={userData.html_url}>
-                    <GithubOutlined /> {`@${login}` || 'unknown'}
+                    <GithubOutlined /> {`@${userData.login}` || 'unknown'}
                   </Link>
                 </Title>
                 <div>
@@ -86,7 +83,7 @@ const EditUser: React.FC = () => {
                 </div>
                 <div>
                   <Text>
-                    <MailOutlined /> {userEmail}
+                    <MailOutlined /> {userData.email || email}
                   </Text>
                 </div>
               </Card>
@@ -185,6 +182,18 @@ const EditUser: React.FC = () => {
       </MainLayout>
     </>
   );
+};
+
+// @ts-ignore
+EditUser.getInitialProps = async (ctx: any) => {
+  let data: any[] = ['edit'];
+  await checkRef.on('value', (snapshot) => {
+    const items = snapshot.val();
+    for (let key in items) {
+      data.push(items[key]);
+    }
+  });
+  return { data };
 };
 
 export default EditUser;
