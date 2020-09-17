@@ -2,7 +2,7 @@ import React from 'react';
 import { Row, Col, Card } from 'antd';
 import { ICriteriaPoint } from '../../../../../../interfaces/ITask';
 import { ICheсkingPoint, IComment } from '../../../../../../interfaces/IWorkDone';
-import SwitchScore from './switch-score-item';
+import ChoiceScore from './choice-score-item';
 import MaxScoreItem from './max-score-item';
 import InfoItem from './info-item';
 import styles from './item-criteria-task.module.css';
@@ -49,7 +49,7 @@ function ItemCriteriaTask({
           />
         </Col>
         <Col span={6}>
-          <SwitchScore
+          <ChoiceScore
             maxScore={criteriaPoint.criteriaPointScore}
             score={cheсkingPoint.autorScore}
             onChangeScore={onChangeScoreSwitch}

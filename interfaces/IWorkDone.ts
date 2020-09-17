@@ -32,6 +32,7 @@ export enum CheckState {
   isAutorCheck, // состояние ожидания проверки
   isAuditorDraft, // состояние проверки всеми проверяющими
   isAuditorCheck, // окончание проверки всеми проверяющими
+  //конфликт
   isAcceptedDraft, // состояние оспаривание всеми проверяющими
   isAcceptedCheck, // состояние принятие всеми проверяющими
 }

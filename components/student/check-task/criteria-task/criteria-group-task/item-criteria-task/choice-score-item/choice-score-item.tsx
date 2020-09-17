@@ -1,45 +1,47 @@
 import React, { useState } from 'react';
-import { InputNumber, Radio, Switch } from 'antd';
+import { InputNumber, Radio } from 'antd';
 import { RadioChangeEvent } from 'antd/lib/radio';
 
-type PropsSwitchScore = {
+type PropsChoiceScore = {
   maxScore: number;
   score: number;
   onChangeScore: (score: number) => void;
 };
 
-export default function SwitchScore({
+export default function ChoiceScore({
   maxScore,
   score,
   onChangeScore,
-}: PropsSwitchScore): JSX.Element {
+}: PropsChoiceScore): JSX.Element {
   const minScore = 0;
   const nameOptions = ['не выполнено', 'выполнено частично', 'выполнено полностью'];
+  const [choiceState, setChoiceState] = useState<boolean>(true);
 
-  const [switchState, setSwitchState] = useState<boolean>(true);
   const onChangeInput = (value: string | number | undefined) => {
+    console.log('ss');
     if (typeof value === 'number') {
       onChangeScore(value);
     }
   };
 
   const onChangeRadio = (event: RadioChangeEvent) => {
-    onChangeScore(event.target.value);
+    console.log(event.target.value);
+    if (event.target.value !== undefined) {
+      onChangeScore(event.target.value);
+      setChoiceState(true);
+    } else {
+      setChoiceState(false);
+    }
   };
 
-  const onChangeSwitch = () => {
-    setSwitchState((prev) => {
-      return !prev;
-    });
-  };
   const radioStyle = {
     display: 'block',
     height: '30px',
     lineHeight: '30px',
   };
-  let switchCase: JSX.Element;
-  if (switchState) {
-    switchCase = (
+
+  return (
+    <>
       <Radio.Group name="radiogroup" defaultValue={score} onChange={onChangeRadio}>
         <Radio style={radioStyle} value={minScore}>
           {nameOptions[0]}
@@ -50,23 +52,16 @@ export default function SwitchScore({
         <Radio style={radioStyle} value={maxScore}>
           {nameOptions[2]}
         </Radio>
+        <Radio style={radioStyle}>
+          <InputNumber
+            min={minScore}
+            max={maxScore}
+            onChange={onChangeInput}
+            disabled={choiceState}
+            value={score}
+          />
+        </Radio>
       </Radio.Group>
-    );
-  } else {
-    switchCase = (
-      <InputNumber min={minScore} max={maxScore} defaultValue={score} onChange={onChangeInput} />
-    );
-  }
-
-  return (
-    <>
-      <Switch
-        checkedChildren="своя оценка"
-        unCheckedChildren="стандарт"
-        defaultChecked
-        onChange={onChangeSwitch}
-      />
-      {switchCase}
     </>
   );
 }
