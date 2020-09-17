@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { checkRef } from '../../../firebase';
-import { GetServerSideProps } from 'next';
-import { InferGetServerSidePropsType } from 'next';
+import Link from 'next/link';
 import { NextPage } from 'next';
 
 interface PropsUsers {
-  data?: [];
+  data?: any[];
 }
 
 // @ts-ignore
@@ -16,7 +14,7 @@ const Users: NextPage<PropsUsers> = ({ data }) => {
     let list = [];
     for (let key in data) {
       // @ts-ignore
-      list.push(data[key]['nickname']);
+      list.push(data[key]);
     }
     // @ts-ignore
     setListUsers(list);
@@ -26,8 +24,12 @@ const Users: NextPage<PropsUsers> = ({ data }) => {
     <>
       <h1>Users</h1>
       <ul>
-        {listUsers.map((item, index) => (
-          <li key={`${item}-${index}`}>{item}</li>
+        {listUsers.map((item) => (
+          <li key={`${item['uid']}`}>
+            <Link href="./student/[id]" as={'./student/' + item['uid']}>
+              <a>{item['nickname']}</a>
+            </Link>
+          </li>
         ))}
       </ul>
     </>

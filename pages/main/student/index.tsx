@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Typography } from 'antd';
-import Link from 'next/link';
 import Users from './users';
-import { checkRef } from '../../../firebase';
-import { NextPage } from 'next';
+import { db } from '../../../firebase';
 import MainLayout from '../../../components/MainLayout';
 
 interface PropsStudentPage {
@@ -11,7 +9,7 @@ interface PropsStudentPage {
 }
 
 const StudentPage: React.FC<PropsStudentPage> = ({ data }) => {
-  const { Title, Text } = Typography;
+  const { Title } = Typography;
   const [toUsers, setToUsers] = useState(false);
   const goToUsers = () => {
     setToUsers(!toUsers);
@@ -35,16 +33,17 @@ const StudentPage: React.FC<PropsStudentPage> = ({ data }) => {
   );
 };
 
-// @ts-ignore
-StudentPage.getInitialProps = async (ctx) => {
-  let data: any[] = [];
-  await checkRef.on('value', (snapshot) => {
-    const items = snapshot.val();
-    for (let key in items) {
-      data.push(items[key]);
-    }
-  });
-  return { data: data };
+export const getServerSideProps = async () => {
+  let data: firebase.firestore.DocumentData | undefined = [];
+  await db
+    .collection('users')
+    .get()
+    .then((snap) => {
+      data = snap.docs.map((doc) => doc.data());
+    });
+  return {
+    props: { data },
+  };
 };
 
 export default StudentPage;

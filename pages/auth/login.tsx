@@ -27,11 +27,8 @@ const Login: React.FC<PropsLogin> = ({ changeAuthPage }) => {
   const onFinish = (values: any) => {
     const { email, password } = values;
     auth.signInWithEmailAndPassword(email, password).catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      setNotification(`${errorMessage} - ${errorCode}`);
+      setNotification(`${error.message} - ${error.code}`);
       setVisible(true);
-      console.error(`${errorMessage} - ${errorCode}`);
     });
     console.log('Received values of form: ', values);
   };

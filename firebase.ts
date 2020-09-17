@@ -1,6 +1,7 @@
 import firebase from 'firebase/app';
 import 'firebase/database';
 import 'firebase/auth';
+import 'firebase/firestore';
 
 const config = {
   apiKey: process.env.REACT_APP_APIKEY,
@@ -22,6 +23,8 @@ const COMPLETED_TASKS = 'completed_tasks';
 if (!firebase.apps.length) {
   firebase.initializeApp(config);
 }
+
+export const db = firebase.firestore();
 
 export const auth = firebase.auth();
 export const databaseRef = firebase.database().ref();

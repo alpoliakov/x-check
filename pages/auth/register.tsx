@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { checkRef } from '../../firebase';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import { Form, Input, Tooltip, Checkbox, Button, Row, Modal, Typography } from 'antd';
-import { auth } from '../../firebase';
+import { auth, db } from '../../firebase';
 import { gitUserAPI } from '../api/api';
 import { useRouter } from 'next/router';
 
@@ -102,7 +101,7 @@ const Register: React.FC<PropsRegister> = ({ changeAuthPage, changeAuthorization
       userData.login = login;
       return userData;
     });
-    await checkRef.push(userData);
+    await db.collection('users').doc(userData.uid).set(userData);
     await changeAuthorization();
     await router.push(`/main`);
   };

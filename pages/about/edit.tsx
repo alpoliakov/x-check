@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import MainLayout from '../../components/MainLayout';
-import { checkRef, auth } from '../../firebase';
+import { auth, db } from '../../firebase';
 import { useRouter } from 'next/router';
 import { Card, Col, Row, Avatar, Typography, Empty } from 'antd';
 import {
@@ -30,12 +30,13 @@ const EditUser: React.FC<PropsEditUser> = ({ data }) => {
     name: '',
     email: '',
   });
-  const [email, setEmail] = useState('');
+  // @ts-ignore
+  const email = auth.currentUser.email;
 
   const { Title, Link, Text } = Typography;
   const router = useRouter();
 
-  const setDataUser = () => {
+  const setEditDataUser = () => {
     // @ts-ignore
     data.forEach((item) => {
       // @ts-ignore
@@ -43,17 +44,26 @@ const EditUser: React.FC<PropsEditUser> = ({ data }) => {
         return setUserData(item);
       }
     });
-    // @ts-ignore
-    setEmail(auth.currentUser.email);
   };
 
   useEffect(() => {
-    setDataUser();
+    setEditDataUser();
   }, [data]);
 
   const backPage = () => {
     router.push(`/main`).catch((e) => new Error(e.message));
   };
+
+  // @ts-ignore
+  if (!data.length) {
+    return (
+      <>
+        <MainLayout>
+          <p>Loading...</p>
+        </MainLayout>
+      </>
+    );
+  }
 
   return (
     <>
@@ -184,16 +194,17 @@ const EditUser: React.FC<PropsEditUser> = ({ data }) => {
   );
 };
 
-// @ts-ignore
-EditUser.getInitialProps = async (ctx: any) => {
-  let data: any[] = ['edit'];
-  await checkRef.on('value', (snapshot) => {
-    const items = snapshot.val();
-    for (let key in items) {
-      data.push(items[key]);
-    }
-  });
-  return { data };
+export const getServerSideProps = async () => {
+  let data: any | undefined = [];
+  await db
+    .collection('users')
+    .get()
+    .then((snap) => {
+      data = snap.docs.map((doc) => doc.data());
+    });
+  return {
+    props: { data },
+  };
 };
 
 export default EditUser;
