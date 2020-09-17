@@ -6,6 +6,8 @@ import CheckTask from '../../..//components/student/check-task';
 import { checkingTask } from '../../../components/student/test-task/test-work-done';
 import { testTask } from '../../../components/student/test-task/test-task';
 import { ICourse } from '../../../interfaces/ICourse';
+import { ICheсk } from '../../../interfaces/IWorkDone';
+import { Role } from '../../../interfaces/IUser';
 
 interface PropsStudent {
   changeAuthorization: () => void;
@@ -62,6 +64,16 @@ const CrossCheckPage: React.FC<PropsStudent> = ({ changeAuthorization }) => {
     }
   };
 
+  const onSave = (checkTask: ICheсk) => {
+    console.log('Save in Data', checkTask);
+  };
+
+  const onSubmit = (checkTask: ICheсk) => {
+    console.log('Change and save in Data', checkTask);
+  };
+
+  const role = Role.student;
+
   return (
     <>
       <MainLayout title="Student" changeAuthorization={changeAuthorization}>
@@ -73,7 +85,12 @@ const CrossCheckPage: React.FC<PropsStudent> = ({ changeAuthorization }) => {
             <CheckTask
               task={testTask}
               checkingTask={checkingTask.cheсks[0]}
+              onSave={onSave}
+              onSubmit={onSubmit}
               reviewer={checkingTask.checkers[0]}
+              deployUrl={checkingTask.deployUrl}
+              sourceGithubRepoUrl={checkingTask.sourceGithubRepoUrl}
+              role={role}
             />
           </Col>
         </Row>

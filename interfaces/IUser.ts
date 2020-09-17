@@ -23,3 +23,9 @@ export interface ITaskInfo {
   taskID: number;
   taskName: string;
 }
+
+export enum Role {
+  student,
+  mentor,
+  admin,
+}

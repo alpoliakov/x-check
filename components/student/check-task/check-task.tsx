@@ -1,19 +1,53 @@
 import React, { useState } from 'react';
 import { ITask } from '../../../interfaces/ITask';
-import { ICheсk, IComment, IStudent } from '../../../interfaces/IWorkDone';
+import { Role } from '../../../interfaces/IUser';
+import {
+  ICheсk,
+  IComment,
+  IStudent,
+  CheсkingPointState,
+  CheckState,
+} from '../../../interfaces/IWorkDone';
 import HeaderTask from './header-task';
 import ControlsTask from './controls-task';
 import CriteriaTask from './criteria-task';
+import createCheckOnTask from './common';
 import styles from './check-task.module.css';
 
 type PropsCheckTask = {
   task: ITask;
-  checkingTask: ICheсk;
+  checkingTask?: ICheсk;
   reviewer: IStudent;
+  role: Role;
+  deployUrl: string;
+  sourceGithubRepoUrl: string;
+  onSave: (checkTask: ICheсk) => void;
+  onSubmit: (checkTask: ICheсk) => void;
 };
 
-function CheckTask({ task, checkingTask, reviewer }: PropsCheckTask): JSX.Element {
-  const [stateCheckingTask, setCheckingTask] = useState<ICheсk>(checkingTask);
+function CheckTask({
+  task,
+  checkingTask,
+  reviewer,
+  role,
+  deployUrl,
+  sourceGithubRepoUrl,
+  onSave,
+  onSubmit,
+}: PropsCheckTask): JSX.Element {
+  switch (role) {
+    case Role.student:
+      console.log('Student');
+      break;
+
+    case Role.mentor:
+      console.log('Mentor');
+      break;
+  }
+  const [stateCheckingTask, setCheckingTask] = useState<ICheсk>(
+    checkingTask || createCheckOnTask(task)
+  );
+  console.log(stateCheckingTask);
 
   const onChangeScore = (cheсkingPointID: string, score: number) => {
     setCheckingTask((prev) => {
@@ -22,8 +56,50 @@ function CheckTask({ task, checkingTask, reviewer }: PropsCheckTask): JSX.Elemen
           item.autorScore = score;
         }
       });
+      prev.score = doScore(prev);
       return { ...prev };
     });
+  };
+
+  const onChangeIsAnonim = () => {
+    setCheckingTask((prev) => {
+      prev.isAnonim = !prev.isAnonim;
+      return { ...prev };
+    });
+  };
+
+  const doMaxScore = (task: ITask) => {
+    return task.evaluationCriteria.reduce((accumulator, currentValue) => {
+      return (
+        accumulator +
+        currentValue.criteriaPoints.reduce((ac, cur) => {
+          return ac + cur.criteriaPointScore;
+        }, 0)
+      );
+    }, 0);
+  };
+
+  const doScore = (cheсkTask: ICheсk) => {
+    return cheсkTask.cheсking.reduce((accumulator, currentValue) => {
+      switch (currentValue.state) {
+        case CheсkingPointState.SelfCheck:
+          return accumulator + currentValue.autorScore;
+        default:
+          return accumulator + currentValue.autorScore;
+      }
+    }, 0);
+  };
+
+  const onSaveCheckTask = () => {
+    onSave(stateCheckingTask);
+  };
+
+  const onSubmitCheckTask = () => {
+    setCheckingTask((prev) => {
+      prev.state = CheckState.isAuditorCheck;
+      return { ...prev };
+    });
+    onSubmit(stateCheckingTask);
   };
 
   const onChangeComment = (cheсkingPointID: string, comment: IComment) => {
@@ -46,8 +122,10 @@ function CheckTask({ task, checkingTask, reviewer }: PropsCheckTask): JSX.Elemen
       <HeaderTask
         title={task.name}
         description={task.description}
+        sourceGithubRepoUrl={sourceGithubRepoUrl}
+        deployUrl={deployUrl}
         score={stateCheckingTask.score}
-        checkPoint={stateCheckingTask.cheсking.length}
+        maxScore={doMaxScore(task)}
       />
       <CriteriaTask
         task={task}
@@ -55,7 +133,12 @@ function CheckTask({ task, checkingTask, reviewer }: PropsCheckTask): JSX.Elemen
         onChangeComment={onChangeComment}
         onChangeScore={onChangeScore}
       />
-      <ControlsTask onSave={() => {}} onSubmit={() => {}} />
+      <ControlsTask
+        isAnonim={stateCheckingTask.isAnonim}
+        onChangeIsAnonim={onChangeIsAnonim}
+        onSave={onSaveCheckTask}
+        onSubmit={onSubmitCheckTask}
+      />
     </div>
   );
 }

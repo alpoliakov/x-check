@@ -14,16 +14,34 @@ export interface IWorkDone {
 }
 
 export enum TaskState {
-  isAutorDraft,
+  isAutorDraft, // состояние самопроверки
+  isAutorCheck, // состояние ожидания проверки
+  isAuditorDraft, // состояние проверки всеми проверяющими
+  isAuditorCheck, // окончание проверки всеми проверяющими
+  isAcceptedDraft, // состояние оспаривание всеми проверяющими
+  isAcceptedCheck, // состояние принятие всеми проверяющими
+}
+
+export enum CheckStateMentor {
   isMentorDraft,
-  isAuditorDraft,
-  isAutorCheck,
   isMentorCheck,
+}
+
+export enum CheckState {
+  isAutorDraft, // состояние самопроверки
+  isAutorCheck, // состояние ожидания проверки
+  isAuditorDraft, // состояние проверки всеми проверяющими
+  isAuditorCheck, // окончание проверки всеми проверяющими
+  isAcceptedDraft, // состояние оспаривание всеми проверяющими
+  isAcceptedCheck, // состояние принятие всеми проверяющими
 }
 
 export interface IMentor {
   id: string;
   name: string;
+  state: CheckStateMentor;
+  cheсking: ICheсkingPoint[];
+  score: number;
 }
 
 export interface IStudent {
@@ -34,9 +52,9 @@ export interface IStudent {
 
 export interface ICheсk {
   checkerID: string;
-  state: 'draft' | 'published';
+  state: CheckState;
   cheсking: ICheсkingPoint[];
-  score: number; //набранные, масимальный будет браться из таска
+  score: number; //набранные, максимальный будет браться из таска
   comment?: string; // для благодарностей
   isAnonim: boolean;
 }

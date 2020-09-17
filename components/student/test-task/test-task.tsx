@@ -52,7 +52,10 @@ export const testTask: ITask = {
   publisherID: 'publisherID',
   state: 'draft',
   publishedAt: new Date(),
-  description: 'description',
+  description: `Допускается:
+  -другая тематика приложения (не птицы)
+  -использование вместо изображений видео
+  -замена названий и описаний птиц другими данными`,
   evaluationCriteria: [criteriaGroup1, criteriaGroup2],
   usefulLinks: ['task'],
   useJury: false,

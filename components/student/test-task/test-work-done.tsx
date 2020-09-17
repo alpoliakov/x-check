@@ -6,7 +6,9 @@ import {
   IMentor,
   ICheсk,
   TaskState,
+  CheckStateMentor,
   CheсkingPointState,
+  CheckState,
 } from '../../../interfaces/IWorkDone';
 
 const cheсkingComment1: IComment = {
@@ -64,25 +66,13 @@ const cheсkingPoint4: ICheсkingPoint = {
   refereeScore: 15,
   comments: [cheсkingComment2],
 };
-const cheсksReviewer1: ICheсk = {
-  checkerID: 'reviewsID 1',
-  state: 'draft',
-  cheсking: [cheсkingPoint1, cheсkingPoint2, cheсkingPoint3, cheсkingPoint4],
-  score: 50,
-  isAnonim: false,
-};
-
-const cheсksReviewer2: ICheсk = {
-  checkerID: 'reviewsID 2',
-  state: 'draft',
-  cheсking: [cheсkingPoint1, cheсkingPoint2, cheсkingPoint3, cheсkingPoint4],
-  score: 50,
-  isAnonim: false,
-};
 
 const mentor: IMentor = {
   id: 'Alex Alexsandrov 2183',
   name: 'Alex Alexsandrov',
+  state: CheckStateMentor.isMentorDraft,
+  cheсking: [cheсkingPoint1, cheсkingPoint2, cheсkingPoint3, cheсkingPoint4],
+  score: 30,
 };
 
 const student: IStudent = {
@@ -103,6 +93,22 @@ const reviews2: IStudent = {
   isAuditorAnonim: false,
 };
 
+const cheсksReviewer1: ICheсk = {
+  checkerID: 'reviewsID 1',
+  state: CheckState.isAuditorDraft,
+  cheсking: [cheсkingPoint1, cheсkingPoint2, cheсkingPoint3, cheсkingPoint4],
+  score: 30,
+  isAnonim: false,
+};
+
+const cheсksReviewer2: ICheсk = {
+  checkerID: 'reviewsID 2',
+  state: CheckState.isAuditorDraft,
+  cheсking: [cheсkingPoint1, cheсkingPoint2, cheсkingPoint3, cheсkingPoint4],
+  score: 30,
+  isAnonim: false,
+};
+
 export const checkingTask: IWorkDone = {
   id: 'Songbird Anna 1',
   taskID: 'Songbird 1',
@@ -114,6 +120,6 @@ export const checkingTask: IWorkDone = {
   mentor: mentor,
   checkers: [review1, reviews2],
   cheсks: [cheсksReviewer1, cheсksReviewer2],
-  sourceGithubRepoUrl: 'sourceGithubRepoUrl',
-  deployUrl: 'deployUrl',
+  sourceGithubRepoUrl: 'https://skaymant-songbird.netlify.app/',
+  deployUrl: 'https://skaymant-songbird.netlify.app/',
 };
