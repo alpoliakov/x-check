@@ -7,6 +7,7 @@ import { checkingTask } from '../../../components/student/test-task/test-work-do
 import { testTask } from '../../../components/student/test-task/test-task';
 import { ICourse } from '../../../interfaces/ICourse';
 import { ICheсk } from '../../../interfaces/IWorkDone';
+import { TypeTask } from '../../../interfaces/ITask';
 import { Role } from '../../../interfaces/IUser';
 
 interface PropsStudent {
@@ -73,6 +74,7 @@ const CrossCheckPage: React.FC<PropsStudent> = ({ changeAuthorization }) => {
   };
 
   const role = Role.student;
+  const typeTask = TypeTask.SubmitTask;
 
   return (
     <>
@@ -85,12 +87,13 @@ const CrossCheckPage: React.FC<PropsStudent> = ({ changeAuthorization }) => {
             <CheckTask
               task={testTask}
               checkingTask={checkingTask.cheсks[0]}
+              reviewer={checkingTask.student}
               onSave={onSave}
               onSubmit={onSubmit}
-              reviewer={checkingTask.checkers[0]}
               deployUrl={checkingTask.deployUrl}
               sourceGithubRepoUrl={checkingTask.sourceGithubRepoUrl}
               role={role}
+              typeTask={typeTask}
             />
           </Col>
         </Row>

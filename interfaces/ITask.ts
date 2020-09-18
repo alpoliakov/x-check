@@ -28,3 +28,8 @@ export interface ICriteriaPoint {
   isFine: boolean;
   isThisPointForAMentor: boolean;
 }
+
+export enum TypeTask {
+  SubmitTask,
+  ReviewTask,
+}

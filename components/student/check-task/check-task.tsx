@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ITask } from '../../../interfaces/ITask';
+import { ITask, TypeTask } from '../../../interfaces/ITask';
 import { Role } from '../../../interfaces/IUser';
 import {
   ICheсk,
@@ -19,6 +19,7 @@ type PropsCheckTask = {
   checkingTask?: ICheсk;
   reviewer: IStudent;
   role: Role;
+  typeTask: TypeTask;
   deployUrl: string;
   sourceGithubRepoUrl: string;
   onSave: (checkTask: ICheсk) => void;
@@ -30,6 +31,7 @@ function CheckTask({
   checkingTask,
   reviewer,
   role,
+  typeTask,
   deployUrl,
   sourceGithubRepoUrl,
   onSave,
@@ -42,6 +44,7 @@ function CheckTask({
 
     case Role.mentor:
       console.log('Mentor');
+      typeTask = TypeTask.ReviewTask;
       break;
   }
   const [stateCheckingTask, setCheckingTask] = useState<ICheсk>(
