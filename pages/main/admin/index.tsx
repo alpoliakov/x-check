@@ -1,6 +1,7 @@
 import React from 'react';
 import { Typography } from 'antd';
 import MainLayout from '../../../components/MainLayout';
+import SubmitRandom from './submit-random';
 
 interface PropsAdmin {}
 
@@ -13,6 +14,7 @@ const AdminPage: React.FC<PropsAdmin> = () => {
         <div className="nav__main">
           <div>
             <Title level={2}>Admin</Title>
+            <SubmitRandom />
           </div>
         </div>
         <div className="workspace">

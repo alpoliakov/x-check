@@ -20,7 +20,7 @@ const SubmitTasks = () => {
   return (
     <>
       <div>
-        <Button type="primary" htmlType="button" onClick={submitTasks}>
+        <Button type="primary" htmlType="button" onClick={submitTasks} disabled>
           Submit tasks
         </Button>
       </div>
