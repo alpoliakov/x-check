@@ -1,9 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
-import { Avatar, Menu, Dropdown, Button } from 'antd';
+import { Avatar, Menu, Dropdown, Button, Select, Layout } from 'antd';
 import { EyeOutlined, EditOutlined, LogoutOutlined } from '@ant-design/icons';
-import { auth, checkRef } from '../firebase';
+import { auth, db } from '../firebase';
 import { useRouter } from 'next/router';
+const { Footer } = Layout;
+
+const useRequest = () => {
+  const [userData, setUserData] = useState({ roles: [] });
+  const getUserData = async () => {
+    await db
+      .collection('users')
+      .get()
+      .then((snap) => {
+        snap.docs.map((doc) => {
+          // @ts-ignore
+          if (doc.data().uid === auth.currentUser.uid) {
+            // @ts-ignore
+            setUserData(doc.data());
+          }
+        });
+      });
+  };
+  return [userData, getUserData];
+};
 
 interface PropsML {
   children?: React.ReactNode;
@@ -13,6 +33,34 @@ interface PropsML {
 
 const MainLayout: React.FC<PropsML> = ({ children, title, changeAuthorization }) => {
   const router = useRouter();
+  const { Option } = Select;
+  const [currentRole, setCurrentRole] = useState('');
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [userData, getUserData] = useRequest();
+
+  const onChange = (value: string) => {
+    router.push(`/main/${value}`).catch((e) => new Error(e.message));
+    setCurrentRole(value);
+  };
+
+  // @ts-ignore
+  const { roles } = userData;
+
+  useEffect(() => {
+    const subscribe = auth.onAuthStateChanged((user): void => {
+      if (user) {
+        setLoggedIn(true);
+      } else {
+        setLoggedIn(false);
+      }
+    });
+    if (loggedIn) {
+      // @ts-ignore
+      getUserData().catch((e) => new Error(e.message));
+      // setCurrentRole(currentRole);
+    }
+    return () => subscribe();
+  }, [loggedIn, currentRole]);
 
   const logOut = () => {
     auth.signOut().then(
@@ -32,7 +80,6 @@ const MainLayout: React.FC<PropsML> = ({ children, title, changeAuthorization })
   const viewUser = () => {
     router.push(`/about/user`).catch((e) => new Error(e.message));
   };
-
   const editUser = () => {
     router.push(`/about/edit`).catch((e) => new Error(e.message));
   };
@@ -96,8 +143,25 @@ const MainLayout: React.FC<PropsML> = ({ children, title, changeAuthorization })
             </Dropdown>
           </div>
         </nav>
-
+        <section className={'select_role'}>
+          <Select
+            showSearch
+            defaultValue={''}
+            style={{ width: 200 }}
+            placeholder={roles.length !== 0 ? 'Select a role' : 'Loading...'}
+            optionFilterProp="children"
+            onChange={onChange}
+          >
+            <Option value={''}>choice a role</Option>
+            {roles.map((item: string) => (
+              <Option key={item} value={item}>
+                {item}
+              </Option>
+            ))}
+          </Select>
+        </section>
         <main>{children}</main>
+        <Footer>Footer</Footer>
       </section>
     </>
   );
