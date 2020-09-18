@@ -1,28 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
-import { Avatar, Menu, Dropdown, Button, Select } from 'antd';
+import { Avatar, Menu, Dropdown, Button, Select, Layout } from 'antd';
 import { EyeOutlined, EditOutlined, LogoutOutlined } from '@ant-design/icons';
-import { auth, checkRef, db } from '../firebase';
+import { auth, db } from '../firebase';
 import { useRouter } from 'next/router';
+const { Footer } = Layout;
 
 const useRequest = () => {
   const [userData, setUserData] = useState({ roles: [] });
-  // const getUserData = () => {
-  //   checkRef.on('value', (snapshot) => {
-  //     let users = snapshot.val();
-  //     for (let key in users) {
-  //       // @ts-ignore
-  //       if (users[key].uid === auth.currentUser.uid) {
-  //         setUserData(users[key]);
-  //       }
-  //     }
-  //   });
   const getUserData = async () => {
     await db
       .collection('users')
       .get()
       .then((snap) => {
-        const data = snap.docs.map((doc) => {
+        snap.docs.map((doc) => {
           // @ts-ignore
           if (doc.data().uid === auth.currentUser.uid) {
             // @ts-ignore
@@ -170,7 +161,7 @@ const MainLayout: React.FC<PropsML> = ({ children, title, changeAuthorization })
           </Select>
         </section>
         <main>{children}</main>
-        <footer>Footer</footer>
+        <Footer>Footer</Footer>
       </section>
     </>
   );

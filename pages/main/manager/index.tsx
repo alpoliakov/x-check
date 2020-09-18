@@ -9,6 +9,16 @@ const ManagerPage = () => {
   return (
     <MainLayout title={'main: manager'}>
       <Title level={1}>Course Manager Page</Title>
+      <main className={'main__box'}>
+        <div className="nav__main">
+          <div>
+            <Title level={2}>Manager</Title>
+          </div>
+        </div>
+        <div className="workspace">
+          <h1>Working Space</h1>
+        </div>
+      </main>
     </MainLayout>
   );
 };

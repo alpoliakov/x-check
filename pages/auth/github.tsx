@@ -3,7 +3,7 @@ import { GithubOutlined } from '@ant-design/icons';
 import { Button, Card, Divider, Typography, Modal } from 'antd';
 import { auth, db } from '../../firebase';
 import { useRouter } from 'next/router';
-import useAuthWithGitHub from '../../components/UseAuthWithGitHub';
+import useAuthWithGitHub from '../../hooks/UseAuthWithGitHub';
 
 const { Meta } = Card;
 const { Link, Text } = Typography;

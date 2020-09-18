@@ -55,7 +55,7 @@ const EditUser: React.FC<PropsEditUser> = ({ data }) => {
   };
 
   // @ts-ignore
-  if (!data.length) {
+  if (!data) {
     return (
       <>
         <MainLayout>

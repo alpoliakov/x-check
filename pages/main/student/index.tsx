@@ -19,8 +19,9 @@ const StudentPage: React.FC<PropsStudentPage> = ({ data }) => {
     <MainLayout title={'main: student'}>
       <Title level={1}>Student Page</Title>
       <main className={'main__box'}>
-        <div className="nav__student">
+        <div className="nav__main">
           <div>
+            <Title level={2}>Student</Title>
             <a onClick={goToUsers}>Users</a>
           </div>
         </div>
@@ -34,7 +35,7 @@ const StudentPage: React.FC<PropsStudentPage> = ({ data }) => {
 };
 
 export const getServerSideProps = async () => {
-  let data: firebase.firestore.DocumentData | undefined = [];
+  let data: any | undefined = [];
   await db
     .collection('users')
     .get()

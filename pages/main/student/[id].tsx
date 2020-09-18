@@ -3,6 +3,7 @@ import MainLayout from '../../../components/MainLayout';
 import { Typography } from 'antd';
 import { db } from '../../../firebase';
 const { Text, Title } = Typography;
+import Link from 'next/link';
 
 const UserData = ({ content }: any) => {
   const [user, setUser] = useState(null);
@@ -42,6 +43,11 @@ const UserData = ({ content }: any) => {
         <div>
           <Text>{html_url}</Text>
         </div>
+      </div>
+      <div>
+        <Link href={'/main/student'}>
+          <a>Return</a>
+        </Link>
       </div>
     </MainLayout>
   );
