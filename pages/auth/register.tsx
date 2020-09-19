@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { checkRef } from '../../firebase';
 import { QuestionCircleOutlined } from '@ant-design/icons';
-import { Form, Input, Tooltip, Checkbox, Button, Row, Col, Modal, Typography } from 'antd';
-import { auth } from '../../firebase';
+import { Form, Input, Tooltip, Checkbox, Button, Row, Modal, Typography } from 'antd';
+import { auth, db } from '../../firebase';
 import { gitUserAPI } from '../api/api';
 import { useRouter } from 'next/router';
 
-const { Link, Text } = Typography;
+const { Link } = Typography;
 
 const formItemLayout = {
   labelCol: {
@@ -102,23 +101,23 @@ const Register: React.FC<PropsRegister> = ({ changeAuthPage, changeAuthorization
       userData.login = login;
       return userData;
     });
-    await checkRef.push(userData);
+    await db.collection('users').doc(userData.uid).set(userData);
     await changeAuthorization();
     await router.push(`/main`);
   };
 
-  const subscribe = auth.onAuthStateChanged((user): void => {
-    if (user) {
-      setLoggedIn(true);
-    } else {
-      setLoggedIn(false);
-    }
-  });
-
   useEffect(() => {
+    const subscribe = auth.onAuthStateChanged((user): void => {
+      if (user) {
+        setLoggedIn(true);
+      } else {
+        setLoggedIn(false);
+      }
+    });
     if (loggedIn) {
       setUserDataInDB().catch((e) => new Error(e.message));
     }
+    return () => subscribe();
   }, [loggedIn]);
 
   const onReset = () => {

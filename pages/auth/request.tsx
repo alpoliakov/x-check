@@ -1,99 +1,39 @@
-import React, { useState, useEffect } from 'react';
-import { GithubOutlined } from '@ant-design/icons';
-import { Button, Card, Divider, Typography, Modal, Space } from 'antd';
-import firebase from '../../firebase';
-import { auth, checkRef } from '../../firebase';
-import { useRouter } from 'next/router';
+import React, { useEffect, useState } from 'react';
+import { FormOutlined, LoginOutlined } from '@ant-design/icons';
+import { Button, Card, Typography, Divider } from 'antd';
+import { auth } from '../../firebase';
 
 const { Meta } = Card;
 const { Link, Text } = Typography;
-
-interface PropsGHSignUp {
+interface PropsRequest {
   changeAuthPage: (data: string) => void;
+  changeAuthorization: () => void;
 }
 
-const GitHubSignUp: React.FC<PropsGHSignUp> = ({ changeAuthPage }) => {
-  const [userData, setUserData] = useState({});
+const RequestAuth: React.FC<PropsRequest> = ({ changeAuthPage, changeAuthorization }) => {
   const [loggedIn, setLoggedIn] = useState(false);
-  const [isNewUser, setIsNewUser] = useState(true);
-  const [errorMessage, setErrorMessage] = useState('');
-  const [visible, setVisible] = useState(false);
-  const router = useRouter();
-  const provider = new firebase.auth.GithubAuthProvider();
+
+  useEffect(() => {
+    const subscribe = auth.onAuthStateChanged((user): void => {
+      if (user) {
+        setLoggedIn(true);
+      } else {
+        setLoggedIn(false);
+      }
+    });
+    if (loggedIn) {
+      changeAuthorization();
+    }
+    return () => subscribe();
+  }, [loggedIn]);
 
   const handleClick = (data: string) => {
     changeAuthPage(data);
   };
-
-  const signUpWithGit = () => {
-    auth
-      .signInWithPopup(provider)
-      .then((result) => {
-        const user = result.user;
-        const userInfo = result.additionalUserInfo;
-        // @ts-ignore
-        const { name, email, html_url, location, avatar_url, login } = userInfo.profile;
-        // @ts-ignore
-        const { uid } = user;
-        // @ts-ignore
-        setIsNewUser(userInfo.isNewUser);
-
-        setUserData({
-          email: email,
-          html_url: html_url,
-          location: location,
-          name: name,
-          avatar_url: avatar_url,
-          nickname: login,
-          login: login,
-          roles: ['student', 'admin', 'mentor', 'manager'],
-          uid: uid,
-        });
-      })
-      .catch((error) => {
-        setErrorMessage(`${error.code} ${error.message}`);
-        console.log(errorMessage);
-        setVisible(true);
-      });
-  };
-
-  const subscribe = auth.onAuthStateChanged((user): void => {
-    if (user) {
-      setLoggedIn(true);
-    } else {
-      setLoggedIn(false);
-    }
-  });
-
-  const addUserDataInDB = () => {
-    if (isNewUser) {
-      checkRef.push(userData);
-      router.push('/main').catch((e) => new Error(e.message));
-      console.log('Add in DB');
-    } else {
-      router.push('/main').catch((e) => new Error(e.message));
-      console.log('Go to main page!');
-    }
-  };
-
-  const closeModal = () => {
-    setVisible(false);
-    setErrorMessage('');
-  };
-
-  useEffect(() => {
-    if (loggedIn) {
-      addUserDataInDB();
-    }
-  }, [loggedIn]);
-
   return (
     <>
       <main>
-        {!loggedIn && <Text>Logged out!</Text>}
-        <Modal visible={visible} centered title={'Error!'} onOk={closeModal} onCancel={closeModal}>
-          {errorMessage}
-        </Modal>
+        {loggedIn ? <div>Logged in, wait...</div> : <div>Logged out!</div>}
         <div className="login-form">
           <img
             className="login-image"
@@ -113,24 +53,35 @@ const GitHubSignUp: React.FC<PropsGHSignUp> = ({ changeAuthPage }) => {
             }
             actions={[
               <Button
-                id="register"
-                key={'register'}
-                onClick={signUpWithGit}
+                id="login"
+                key={'login'}
+                onClick={() => handleClick('login')}
                 size="large"
-                icon={<GithubOutlined />}
+                icon={<LoginOutlined />}
                 type="primary"
               >
-                Sign up with GitHub
+                Login
+              </Button>,
+
+              <Button
+                id="register"
+                key={'register'}
+                onClick={() => handleClick('register')}
+                size="large"
+                icon={<FormOutlined />}
+                type="primary"
+              >
+                Sign Up
               </Button>,
             ]}
           >
             <Meta
-              title="Please login via GitHub"
-              description="In order to access the RS School App, you need to login with your GitHub account"
+              title="Please login or sign up"
+              description="In order to access the X-Check RS School App, you need to login or sign up"
             />
             <Divider />
             <Text>
-              Or <Link onClick={() => handleClick('')}>return</Link>
+              Or sign up with <Link onClick={() => handleClick('github')}>GitHub</Link>
             </Text>
           </Card>
         </div>
@@ -139,4 +90,4 @@ const GitHubSignUp: React.FC<PropsGHSignUp> = ({ changeAuthPage }) => {
   );
 };
 
-export default GitHubSignUp;
+export default RequestAuth;
