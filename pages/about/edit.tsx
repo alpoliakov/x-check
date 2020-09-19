@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import MainLayout from '../../components/MainLayout';
-import { checkRef, auth } from '../../firebase';
+import { auth, db } from '../../firebase';
 import { useRouter } from 'next/router';
 import { Card, Col, Row, Avatar, Typography, Empty } from 'antd';
 import {
@@ -17,7 +17,11 @@ import {
   MailOutlined,
 } from '@ant-design/icons';
 
-const EditUser: React.FC = () => {
+interface PropsEditUser {
+  data?: object;
+}
+
+const EditUser: React.FC<PropsEditUser> = ({ data }) => {
   const [userData, setUserData] = useState({
     avatar_url: '',
     html_url: '',
@@ -26,41 +30,44 @@ const EditUser: React.FC = () => {
     name: '',
     email: '',
   });
-  const [userName, setUserName] = useState('');
-  const [userEmail, setUserEmail] = useState('');
-  const [userAvatar, setUserAvatar] = useState('');
-  const [login, setLogin] = useState('');
+  // @ts-ignore
+  const email = auth.currentUser.email;
 
   const { Title, Link, Text } = Typography;
   const router = useRouter();
 
-  const setDataUser = () => {
-    checkRef.on('value', (snapshot) => {
-      const users = snapshot.val();
-      for (let key in users) {
-        // @ts-ignore
-        if (users[key].uid === auth.currentUser.uid) {
-          setUserData(users[key]);
-          setUserName(users[key].name);
-          setUserEmail(users[key].email);
-          setUserAvatar(users[key].avatar_url);
-          setLogin(users[key].login);
-        }
+  const setEditDataUser = () => {
+    // @ts-ignore
+    data.forEach((item) => {
+      // @ts-ignore
+      if (item.uid === auth.currentUser.uid) {
+        return setUserData(item);
       }
     });
   };
 
   useEffect(() => {
-    setDataUser();
-  }, []);
+    setEditDataUser();
+  }, [data]);
 
   const backPage = () => {
     router.push(`/main`).catch((e) => new Error(e.message));
   };
 
+  // @ts-ignore
+  if (!data) {
+    return (
+      <>
+        <MainLayout>
+          <p>Loading...</p>
+        </MainLayout>
+      </>
+    );
+  }
+
   return (
     <>
-      <MainLayout title={`edit profile ${userName}`}>
+      <MainLayout title={`edit profile ${userData.name}`}>
         <div className="site-card-wrapper">
           <Row gutter={16}>
             <Col span={6}>
@@ -72,11 +79,11 @@ const EditUser: React.FC = () => {
                   <SettingOutlined key="setting-intro" />,
                 ]}
               >
-                <Avatar size={90} src={userAvatar || '/static/images/king.jpg'} />
-                <Title level={2}>{userName}</Title>
+                <Avatar size={90} src={userData.avatar_url || '/static/images/king.jpg'} />
+                <Title level={2}>{userData.name}</Title>
                 <Title level={5}>
                   <Link href={userData.html_url}>
-                    <GithubOutlined /> {`@${login}` || 'unknown'}
+                    <GithubOutlined /> {`@${userData.login}` || 'unknown'}
                   </Link>
                 </Title>
                 <div>
@@ -86,7 +93,7 @@ const EditUser: React.FC = () => {
                 </div>
                 <div>
                   <Text>
-                    <MailOutlined /> {userEmail}
+                    <MailOutlined /> {userData.email || email}
                   </Text>
                 </div>
               </Card>
@@ -185,6 +192,19 @@ const EditUser: React.FC = () => {
       </MainLayout>
     </>
   );
+};
+
+export const getServerSideProps = async () => {
+  let data: any | undefined = [];
+  await db
+    .collection('users')
+    .get()
+    .then((snap) => {
+      data = snap.docs.map((doc) => doc.data());
+    });
+  return {
+    props: { data },
+  };
 };
 
 export default EditUser;

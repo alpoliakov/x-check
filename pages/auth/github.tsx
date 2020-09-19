@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { GithubOutlined } from '@ant-design/icons';
 import { Button, Card, Divider, Typography, Modal } from 'antd';
-import firebase from '../../firebase';
-import { auth, checkRef } from '../../firebase';
+import { auth, db } from '../../firebase';
 import { useRouter } from 'next/router';
-import useAuthWithGitHub from '../../components/UseAuthWithGitHub';
+import useAuthWithGitHub from '../../hooks/UseAuthWithGitHub';
 
 const { Meta } = Card;
 const { Link, Text } = Typography;
@@ -31,7 +30,11 @@ const GitHubSignUp: React.FC<PropsGHSignUp> = ({ changeAuthPage }) => {
 
   const addUserDataInDB = () => {
     if (isNewUser) {
-      checkRef.push(userData);
+      // @ts-ignore
+      db.collection('users')
+        .doc(userData.uid)
+        .set(userData)
+        .catch((e) => new Error(e.message));
       router.push('/main').catch((e) => new Error(e.message));
       console.log('Add in DB');
     } else {

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import RequestAuth from './users/request';
-import Login from './users/login';
-import Register from './users/register';
-import GitHubSignUp from './users/github';
+import RequestAuth from './auth/request';
+import Login from './auth/login';
+import Register from './auth/register';
+import GitHubSignUp from './auth/github';
 
 interface Props {
   changeAuthorization: () => void;
