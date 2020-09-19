@@ -1,16 +1,63 @@
 import React, { useState, useEffect } from 'react';
-import { Row, Col, Card, Button, Space, Input } from 'antd';
+import { Row, Col, Card, Button, Space, Input, Modal } from 'antd';
 import CurrentStage from './CurrentStage/CurrentStage';
 import ActiveTask from './ActiveTask/ActiveTask';
 import { checkRef, databaseRef } from '../../firebase';
-import AdminStatisticTask from './AdminStatisticTask/AdminStatisticTask';
+import TaskInformation from './TaskInformation';
 import AssignRole from './AssignRole/AssignRole';
+import TableNewTask from './TableNewTask';
 
-const data = ['Virtual Keyboard', 'Gem Puzzle', 'English for kids', 'MovieSearch'];
+const data = [
+  {
+    id: '1',
+    name: 'Virtual Keyboard',
+    authorName: 'John Brown',
+    action: 'delete',
+    state: 'draft',
+    deadline: '2020-09-15',
+    start: '2020-09-15',
+  },
+  {
+    id: '2',
+    name: 'English for kids',
+    authorName: 'John Brown',
+    action: 'delete',
+    state: 'published',
+    deadline: '2020-09-15',
+    start: '2020-09-15',
+  },
+  {
+    id: '3',
+    name: 'MovieSearch',
+    authorName: 'John Brown',
+    action: 'delete',
+    state: 'published',
+    deadline: '2020-09-15',
+    start: '2020-09-15',
+  },
+  {
+    id: '4',
+    name: 'Gem Puzzle',
+    authorName: 'John Brown',
+    action: 'delete',
+    state: 'active',
+    deadline: '2020-09-15',
+    start: '2020-09-15',
+  },
+  {
+    id: '5',
+    name: 'Singolo',
+    authorName: 'John Brown',
+    action: 'delete',
+    state: 'draft',
+    deadline: '2020-09-15',
+    start: '2020-09-15',
+  },
+]; // rowSelection object indicates the need for row selection
 
 const AdminMain: React.FC = () => {
   const [users, setUser] = useState<any[]>([]);
-  const [task, setTask] = useState<string | null>(null);
+  const [visible, setVisible] = useState(false);
   useEffect(() => {
     /*      const changeRoleRef = checkRef.child('-MGoW-MfatwATMbO2Xh0').child('roles')
     changeRoleRef.transaction(function(currentRole) {
@@ -85,42 +132,45 @@ const AdminMain: React.FC = () => {
 
     console.log('result', createArray);
   };
+  const showModal = () => {
+    setVisible(true);
+  };
+
+  const handleOk = (e: any) => {
+    console.log(e);
+    setVisible(false);
+  };
+  const handleCancel = (e: any) => {
+    console.log(e);
+    setVisible(false);
+  };
   return (
     <div className="admin-wrapper">
-      <Card style={{ marginTop: 30 }}>
-        <Row>
-          <Col>
-            <ActiveTask data={data} />
-          </Col>
-        </Row>
-        <Row style={{ marginTop: 20 }}>
-          <CurrentStage />
-        </Row>
-        <Row style={{ marginTop: 40 }}>
-          <Col span={12}>
-            <AdminStatisticTask user={users} />
-          </Col>
-          <Col
-            span={12}
-            style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-          >
-            <Space align="end" direction="vertical">
-              <Button style={{ marginBottom: 20, width: 182 }} type="primary">
-                Distribute for inspection
-              </Button>
-              <Button style={{ marginBottom: 20, width: 182 }} type="primary">
-                Add grades to table
-              </Button>
-              <Button style={{ marginBottom: 10, width: 182 }} type="primary">
-                Conflicts
-              </Button>
-            </Space>
-          </Col>
-        </Row>
-      </Card>
+      <Row>
+        <TaskInformation tasks={data} users={users} />
+      </Row>
       <Row gutter={[8, 8]} style={{ margin: '0 30px' }}>
         <Col span={12} style={{ textAlign: 'center', margin: '20px 0' }}>
-          <Button type="primary">Start new task</Button>
+          <Button type="primary" onClick={showModal}>
+            Start new task
+          </Button>
+          <Modal
+            title="Course tasks"
+            width={1000}
+            visible={visible}
+            onOk={handleOk}
+            onCancel={handleCancel}
+            footer={[
+              <Button key="back" onClick={handleCancel}>
+                Return
+              </Button>,
+              <Button key="submit" type="primary" onClick={handleOk}>
+                Submit
+              </Button>,
+            ]}
+          >
+            <TableNewTask data={data} />
+          </Modal>
         </Col>
         <Col span={12} style={{ textAlign: 'center', margin: '20px 0' }}>
           <Button type="primary">Creat task</Button>
