@@ -1,8 +1,8 @@
 export interface UserBasic {
-  id: number;
+  id: string;
   githubAddress: string;
   name: string;
-  rank: 'student' | 'mentor' | 'admin';
+  role: Role;
 }
 
 export interface MentorBasic extends UserBasic {
@@ -14,13 +14,13 @@ export interface MentorBasic extends UserBasic {
 export interface StudentBasic extends UserBasic {
   isActive: boolean;
   mentor: MentorBasic | { id: number } | null;
-  courseId: number;
+  courseId: string;
   courseName: string;
   tasksID: ITaskInfo[];
 }
 
 export interface ITaskInfo {
-  taskID: number;
+  taskID: string;
   taskName: string;
 }
 

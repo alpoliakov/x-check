@@ -1,20 +1,32 @@
 import React from 'react';
 import CriteriaGroupTask from './criteria-group-task';
-import { ITask } from '../../../../interfaces/ITask';
-import { ICheсk, IComment } from '../../../../interfaces/IWorkDone';
+import { ITask, TypeTask } from '../../../../interfaces/ITask';
+import { Role } from '../../../../interfaces/IUser';
+import { CheckState, ICheсk, IComment } from '../../../../interfaces/IWorkDone';
+import styles from './criteria-task.module.css';
 
 type PropsCheckTask = {
   task: ITask;
   checkingTask: ICheсk;
+  role: Role;
+  typeTask: TypeTask;
+  stateCheck: CheckState;
   onChangeScore: (cheсkingPointID: string, score: number) => void;
   onChangeComment: (cheсkingPointID: string, comment: IComment) => void;
+  onAgreePoint: (cheсkingPointID: string) => void;
+  onDisagreePoint: (cheсkingPointID: string) => void;
 };
 
-function CriteriaTask({
+export default function CriteriaTask({
   task,
   checkingTask,
+  role,
+  typeTask,
+  stateCheck,
   onChangeScore,
   onChangeComment,
+  onAgreePoint,
+  onDisagreePoint,
 }: PropsCheckTask): JSX.Element {
   const criteriaGroupsTask = task.evaluationCriteria.map((item, index) => {
     const cheсkingPoints = item.criteriaPoints.map((point) => {
@@ -28,13 +40,16 @@ function CriteriaTask({
       <CriteriaGroupTask
         criteriaGroup={item}
         cheсkingPoints={cheсkingPoints}
+        role={role}
+        typeTask={typeTask}
+        stateCheck={stateCheck}
         onChangeScore={onChangeScore}
         onChangeComment={onChangeComment}
+        onAgreePoint={onAgreePoint}
+        onDisagreePoint={onDisagreePoint}
         key={index}
       />
     );
   });
-  return <>{criteriaGroupsTask}</>;
+  return <div className={styles.criteria}>{criteriaGroupsTask}</div>;
 }
-
-export default CriteriaTask;

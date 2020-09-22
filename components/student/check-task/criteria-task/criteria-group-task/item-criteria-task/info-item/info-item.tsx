@@ -1,22 +1,31 @@
 import React, { useState } from 'react';
-import { Input, Collapse, Form, Button, Comment, Avatar } from 'antd';
-import { IComment } from '../../../../../../../interfaces/IWorkDone';
+import { Input, Typography, Collapse, Form, Button, Comment, Avatar } from 'antd';
+import { CheckState, IComment } from '../../../../../../../interfaces/IWorkDone';
+import { TypeTask } from '../../../../../../../interfaces/ITask';
+import { Role } from '../../../../../../../interfaces/IUser';
 import styles from './info-item.module.css';
 
 type PropsInfoItem = {
   descriptionItem: string;
   commentsItem: IComment[];
+  role: Role;
+  typeTask: TypeTask;
+  stateCheck: CheckState;
   onChangeComment: (comment: IComment) => void;
 };
 
 export default function InfoItem({
   descriptionItem,
   commentsItem,
+  role,
+  typeTask,
+  stateCheck,
   onChangeComment,
 }: PropsInfoItem): JSX.Element {
   const { TextArea } = Input;
   const { Panel } = Collapse;
   const [stateComment, setComment] = useState<string>('');
+  const { Text, Title } = Typography;
 
   const handleSubmit = () => {
     if (!stateComment) {
@@ -55,10 +64,10 @@ export default function InfoItem({
   });
 
   return (
-    <>
-      <span> {descriptionItem}</span>
+    <div className={styles.info}>
+      <Text>{descriptionItem}</Text>
       <Collapse ghost>
-        <Panel header={<span>Comments</span>} key={0}>
+        <Panel header={<Text type="secondary">Comment</Text>} key={0}>
           {itemsComment}
           <Form.Item>
             <TextArea
@@ -75,6 +84,6 @@ export default function InfoItem({
           </Form.Item>
         </Panel>
       </Collapse>
-    </>
+    </div>
   );
 }

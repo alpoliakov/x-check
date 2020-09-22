@@ -1,7 +1,8 @@
 import React from 'react';
 import { Row, Col, Card } from 'antd';
-import { ICriteriaPoint } from '../../../../../../interfaces/ITask';
-import { ICheсkingPoint, IComment } from '../../../../../../interfaces/IWorkDone';
+import { ICriteriaPoint, TypeTask } from '../../../../../../interfaces/ITask';
+import { Role } from '../../../../../../interfaces/IUser';
+import { CheckState, ICheсkingPoint, IComment } from '../../../../../../interfaces/IWorkDone';
 import ChoiceScore from './choice-score-item';
 import MaxScoreItem from './max-score-item';
 import InfoItem from './info-item';
@@ -10,20 +11,38 @@ import styles from './item-criteria-task.module.css';
 type PropsItemCriteriaTask = {
   criteriaPoint: ICriteriaPoint;
   cheсkingPoint: ICheсkingPoint;
+  role: Role;
+  typeTask: TypeTask;
+  stateCheck: CheckState;
   onChangeScore: (cheсkingPointID: string, score: number) => void;
   onChangeComment: (cheсkingPointID: string, comment: IComment) => void;
+  onAgreePoint: (cheсkingPointID: string) => void;
+  onDisagreePoint: (cheсkingPointID: string) => void;
 };
 
 function ItemCriteriaTask({
   criteriaPoint,
   cheсkingPoint,
+  role,
+  typeTask,
+  stateCheck,
   onChangeScore,
   onChangeComment,
+  onAgreePoint,
+  onDisagreePoint,
 }: PropsItemCriteriaTask): JSX.Element {
   const nameInfoCard = 'Балл за выполнение';
   const gridStyle: React.CSSProperties = {
     width: '100%',
     textAlign: 'center',
+  };
+
+  const onClickAgree = () => {
+    onAgreePoint(cheсkingPoint.cheсkingPointID);
+  };
+
+  const onClickDisAgree = () => {
+    onDisagreePoint(cheсkingPoint.cheсkingPointID);
   };
   const onChangeScoreSwitch = (score: number) => {
     onChangeScore(cheсkingPoint.cheсkingPointID, score);
@@ -32,6 +51,9 @@ function ItemCriteriaTask({
   const onChangeCommentInfo = (comment: IComment) => {
     onChangeComment(cheсkingPoint.cheсkingPointID, comment);
   };
+
+  const score =
+    stateCheck === CheckState.SelfTest ? cheсkingPoint.autorScore : cheсkingPoint.auditorScore;
   return (
     <Card.Grid className={styles.mb10} style={gridStyle}>
       <Row gutter={8}>
@@ -45,14 +67,23 @@ function ItemCriteriaTask({
           <InfoItem
             descriptionItem={criteriaPoint.criteriaPointName}
             commentsItem={cheсkingPoint.comments}
+            role={role}
+            typeTask={typeTask}
+            stateCheck={stateCheck}
             onChangeComment={onChangeCommentInfo}
           />
         </Col>
         <Col span={6}>
           <ChoiceScore
             maxScore={criteriaPoint.criteriaPointScore}
-            score={cheсkingPoint.autorScore}
+            score={score}
+            role={role}
+            typeTask={typeTask}
+            stateCheck={stateCheck}
+            stateCheckPoint={cheсkingPoint.state}
             onChangeScore={onChangeScoreSwitch}
+            onClickAgree={onClickAgree}
+            onClickDisAgree={onClickDisAgree}
             key={criteriaPoint.criteriaPointID}
           />
         </Col>

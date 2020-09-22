@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card } from 'antd';
+import { Card, Typography } from 'antd';
 import styles from './max-score-item.module.css';
 
 type PropsMaxScoreItem = {
@@ -11,12 +11,13 @@ export default function MaxScoreItem({
   nameInfoCard,
   scoreInfoCard,
 }: PropsMaxScoreItem): JSX.Element {
+  const { Text } = Typography;
   return (
-    <>
-      <Card className={styles.maxCard}>
-        <span className={styles.maxName}>{nameInfoCard}</span>
-        <p className={styles.maxScore}>{scoreInfoCard}</p>
+    <div className={styles.cardMaxscore}>
+      <Card>
+        <p>{nameInfoCard}</p>
+        <Text className={styles.maxScore}>{scoreInfoCard}</Text>
       </Card>
-    </>
+    </div>
   );
 }

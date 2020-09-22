@@ -6,6 +6,7 @@ export interface IWorkDone {
   publishedAt: Date; // дата создания проверки
   deadline: Date; //возможно пригодится для расчёта штрафов за просроченный дедлайн
   finalScore: number; //набранные, масимальный будет браться из таска
+  selfTest: ICheсk; // оценки самопроверки
   mentor: IMentor; //возможно стоит оставить только поле auditorName если это будут отдельные объекты для каждого проверяющего
   reviewers: IStudent[]; //но если все проверки в одном объекте булут лежать, будет сложнее навигация, но можно сделать напримр просмотр всех оценок проверяющим со спецролью
   cheсks: ICheсk[]; //собственно сами пункты проверки на основе которых считать весь скор
@@ -14,12 +15,9 @@ export interface IWorkDone {
 }
 
 export enum TaskState {
-  isAutorDraft, // состояние самопроверки
-  isAutorCheck, // состояние ожидания проверки
-  isAuditorDraft, // состояние проверки всеми проверяющими
-  isAuditorCheck, // окончание проверки всеми проверяющими
-  isAcceptedDraft, // состояние оспаривание всеми проверяющими
-  isAcceptedCheck, // состояние принятие всеми проверяющими
+  isSelfTest, // состояние самопроверки
+  isCheking, // состояние кроссчека
+  isCompleted, //состояние выполненной проверки
 }
 
 export enum CheckStateMentor {
@@ -28,13 +26,21 @@ export enum CheckStateMentor {
 }
 
 export enum CheckState {
-  isAutorDraft, // состояние самопроверки
-  isAutorCheck, // состояние ожидания проверки
-  isAuditorDraft, // состояние проверки всеми проверяющими
-  isAuditorCheck, // окончание проверки всеми проверяющими
-  //конфликт
-  isAcceptedDraft, // состояние оспаривание всеми проверяющими
-  isAcceptedCheck, // состояние принятие всеми проверяющими
+  SelfTest, // только для поля в IworkDone
+  AuditorDraft, // состояние проверки проверяющим
+  NotVerified, // не подверждено проверяемым
+  Verified, // подверждено проверяемым
+  Negotiations, // общение проверяющего с проверяемым
+  Dispute, // обращение к рефери
+  DisputeClosed, // вердикт рефери
+}
+
+export enum CheсkingPointState {
+  NotVerified, // не подверждено проверяемым
+  Verified, // подверждено проверяемым
+  Negotiations, // общение проверяющего с проверяемым
+  Dispute, // обращение к рефери
+  DisputeClosed, // вердикт рефери
 }
 
 export interface IMentor {
@@ -68,15 +74,6 @@ export interface ICheсkingPoint {
   refereeScore?: number; //финальная оценка в случае если вмешался человек со спецролью
   comments: IComment[]; //массив всех комментариев
   state: CheсkingPointState; // в зависимости от статуса будут доступны такие кнопки как оспорить/редактировать и тд
-}
-
-export enum CheсkingPointState {
-  SelfCheck,
-  NotVerified,
-  Verified,
-  Negotiations,
-  Dispute,
-  DisputeClosed,
 }
 
 //отдельные комментарии

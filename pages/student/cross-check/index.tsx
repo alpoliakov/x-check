@@ -3,12 +3,12 @@ import MainLayout from '../../../components/MainLayout';
 import { Row, Col } from 'antd';
 import Sidebar from '../../../components/student/cross-check/Sidebar';
 import CheckTask from '../../..//components/student/check-task';
-import { checkingTask } from '../../../components/student/test-task/test-work-done';
+import { checkingTask, user } from '../../../components/student/test-task/test-work-done';
 import { testTask } from '../../../components/student/test-task/test-task';
+import { createTask } from '../../../components/student/check-task/common';
 import { ICourse } from '../../../interfaces/ICourse';
-import { ICheсk } from '../../../interfaces/IWorkDone';
+import { ICheсk, TaskState } from '../../../interfaces/IWorkDone';
 import { TypeTask } from '../../../interfaces/ITask';
-import { Role } from '../../../interfaces/IUser';
 
 interface PropsStudent {
   changeAuthorization: () => void;
@@ -73,27 +73,34 @@ const CrossCheckPage: React.FC<PropsStudent> = ({ changeAuthorization }) => {
     console.log('Change and save in Data', checkTask);
   };
 
-  const role = Role.student;
-  const typeTask = TypeTask.SubmitTask;
+  // если IworkDone будет пустой, то создаем его на основе Таска
+  const newCheckingTask = createTask(testTask, user);
+  console.log('newCheckingTask', newCheckingTask);
 
+  const role = user.role;
+  const typeTask = TypeTask.ReviewTask;
+  const [checkTask, reviewer] =
+    checkingTask.state === TaskState.isSelfTest
+      ? [checkingTask.selfTest, checkingTask.student]
+      : [checkingTask.cheсks[0], checkingTask.reviewers[0]];
   return (
     <>
       <MainLayout title="Student" changeAuthorization={changeAuthorization}>
-        <Row gutter={16}>
+        <Row>
           <Col span={5}>
             <Sidebar getTask={selectTask} taskList={taskList} isDeadline={isDeadline} />
           </Col>
           <Col span={18}>
             <CheckTask
               task={testTask}
-              checkingTask={checkingTask.cheсks[0]}
-              reviewer={checkingTask.student}
-              onSave={onSave}
-              onSubmit={onSubmit}
+              checkingTask={checkTask}
+              reviewer={reviewer}
               deployUrl={checkingTask.deployUrl}
               sourceGithubRepoUrl={checkingTask.sourceGithubRepoUrl}
               role={role}
               typeTask={typeTask}
+              onSave={onSave}
+              onSubmit={onSubmit}
             />
           </Col>
         </Row>
