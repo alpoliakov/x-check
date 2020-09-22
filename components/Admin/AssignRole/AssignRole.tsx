@@ -1,7 +1,6 @@
 import React, { useState, Key, useEffect, Props } from 'react';
 import { Card, Form, Input, Select, Button, Tag, Avatar } from 'antd';
 import { databaseRef, auth, checkRef } from '../../../firebase';
-import { values } from 'lodash';
 
 type tplotOptions = {
   [key: string]: any;
