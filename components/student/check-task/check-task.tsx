@@ -151,7 +151,7 @@ function CheckTask({
         case CheckState.AuditorDraft:
           return accumulator + currentValue.auditorScore;
         default:
-          return accumulator + currentValue.autorScore;
+          return accumulator + currentValue.auditorScore;
       }
     }, 0);
   };
@@ -239,6 +239,8 @@ function CheckTask({
       <ControlsTask
         isAnonim={stateCheckingTask.isAnonim}
         onChangeIsAnonim={onChangeIsAnonim}
+        typeTask={typeTask}
+        stateCheck={stateCheckingTask.state}
         onSave={onSaveCheckTask}
         onSubmit={onSubmitCheckTask}
       />

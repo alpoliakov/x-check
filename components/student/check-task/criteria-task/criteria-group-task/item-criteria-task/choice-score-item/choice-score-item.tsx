@@ -9,7 +9,6 @@ import styles from './choice-score-item.module.css';
 type PropsChoiceScore = {
   maxScore: number;
   score: number;
-  role: Role;
   typeTask: TypeTask;
   stateCheck: CheckState;
   stateCheckPoint: CheсkingPointState;
@@ -17,11 +16,14 @@ type PropsChoiceScore = {
   onClickAgree: () => void;
   onClickDisAgree: () => void;
 };
+type TstateScore = {
+  stateFlag: boolean;
+  stateScore: number;
+};
 
 export default function ChoiceScore({
   maxScore,
   score,
-  role,
   typeTask,
   stateCheck,
   stateCheckPoint,
@@ -31,7 +33,11 @@ export default function ChoiceScore({
 }: PropsChoiceScore): JSX.Element {
   const minScore = 0;
   const nameOptions = ['не выполнено', 'выполнено частично', 'выполнено полностью'];
-  const [choiceState, setChoiceState] = useState<boolean>(true);
+  const [choiceState, setChoiceState] = useState<TstateScore>({
+    stateFlag: score !== minScore && score !== maxScore / 2 && score !== maxScore,
+    stateScore:
+      score !== minScore && score !== maxScore / 2 && score !== maxScore ? score : minScore - 1,
+  });
 
   const onChangeInput = (value: string | number | undefined) => {
     if (typeof value === 'number') {
@@ -40,11 +46,15 @@ export default function ChoiceScore({
   };
 
   const onChangeRadio = (event: RadioChangeEvent) => {
-    if (event.target.value !== undefined) {
+    if (event.target.value !== choiceState.stateScore) {
       onChangeScore(event.target.value);
-      setChoiceState(true);
+      setChoiceState((prev) => {
+        return { ...prev, stateFlag: false };
+      });
     } else {
-      setChoiceState(false);
+      setChoiceState((prev) => {
+        return { ...prev, stateFlag: true };
+      });
     }
   };
 
@@ -55,6 +65,7 @@ export default function ChoiceScore({
   };
 
   let scoreJSX: JSX.Element;
+  let styleContainer = '';
   if (typeTask === TypeTask.SubmitTask && stateCheck !== CheckState.SelfTest) {
     let colorTag: string;
     let textToolTip: string;
@@ -116,6 +127,7 @@ export default function ChoiceScore({
         stateCheck === CheckState.NotVerified ||
         stateCheck === CheckState.Negotiations))
   ) {
+    styleContainer = styles.scoreContainer;
     scoreJSX = (
       <Radio.Group name="radiogroup" defaultValue={score} onChange={onChangeRadio}>
         <Radio style={radioStyle} value={minScore}>
@@ -127,19 +139,22 @@ export default function ChoiceScore({
         <Radio style={radioStyle} value={maxScore}>
           {nameOptions[2]}
         </Radio>
-        <Radio style={radioStyle}>
-          <InputNumber
-            min={minScore}
-            max={maxScore}
-            onChange={onChangeInput}
-            disabled={choiceState}
-            value={score}
-          />
+        <Radio style={radioStyle} value={choiceState.stateScore}>
+          Other
+          {choiceState.stateFlag ? (
+            <InputNumber
+              min={minScore}
+              max={maxScore}
+              onChange={onChangeInput}
+              value={score}
+              style={{ width: 100, marginLeft: 10 }}
+            />
+          ) : null}
         </Radio>
       </Radio.Group>
     );
   } else {
     scoreJSX = <span>Error(unforeseen situation)</span>;
   }
-  return <div className={styles.scoreContainer}>{scoreJSX}</div>;
+  return <div className={styleContainer}>{scoreJSX}</div>;
 }

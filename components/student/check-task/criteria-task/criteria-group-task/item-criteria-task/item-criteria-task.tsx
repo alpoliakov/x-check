@@ -77,7 +77,6 @@ function ItemCriteriaTask({
           <ChoiceScore
             maxScore={criteriaPoint.criteriaPointScore}
             score={score}
-            role={role}
             typeTask={typeTask}
             stateCheck={stateCheck}
             stateCheckPoint={cheсkingPoint.state}

@@ -64,6 +64,7 @@ export interface ICheсk {
   score: number; //набранные, максимальный будет браться из таска
   comment?: string; // для благодарностей
   isAnonim: boolean;
+  isNegotiation: boolean;
 }
 //результаты проверки по конкретным пунктам требований
 export interface ICheсkingPoint {

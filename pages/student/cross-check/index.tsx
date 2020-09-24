@@ -78,11 +78,12 @@ const CrossCheckPage: React.FC<PropsStudent> = ({ changeAuthorization }) => {
   console.log('newCheckingTask', newCheckingTask);
 
   const role = user.role;
-  const typeTask = TypeTask.ReviewTask;
+  const typeTask = TypeTask.SubmitTask;
+  // const typeTask = TypeTask.ReviewTask;
   const [checkTask, reviewer] =
     checkingTask.state === TaskState.isSelfTest
       ? [checkingTask.selfTest, checkingTask.student]
-      : [checkingTask.cheсks[0], checkingTask.reviewers[0]];
+      : [checkingTask.cheсks[1], checkingTask.reviewers[1]];
   return (
     <>
       <MainLayout title="Student" changeAuthorization={changeAuthorization}>

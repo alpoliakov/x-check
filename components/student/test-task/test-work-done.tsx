@@ -32,16 +32,16 @@ const cheсkingPoint1: ICheсkingPoint = {
   cheсkingPointID: 'cheсkingPoint 1',
   criteriaPointID: 'criteriaPoint 1',
   autorScore: 0,
-  auditorScore: 5,
+  auditorScore: 10,
   refereeScore: 10,
   comments: [cheсkingComment1],
-  state: CheсkingPointState.NotVerified,
+  state: CheсkingPointState.Verified,
 };
 
 const cheсkingPoint2: ICheсkingPoint = {
   cheсkingPointID: 'cheсkingPoint 2',
   criteriaPointID: 'criteriaPoint 2',
-  state: CheсkingPointState.NotVerified,
+  state: CheсkingPointState.Verified,
   autorScore: 5,
   auditorScore: 10,
   refereeScore: 15,
@@ -61,7 +61,7 @@ const cheсkingPoint3: ICheсkingPoint = {
 const cheсkingPoint4: ICheсkingPoint = {
   cheсkingPointID: 'cheсkingPoint 4',
   criteriaPointID: 'criteriaPoint 4',
-  state: CheсkingPointState.Dispute,
+  state: CheсkingPointState.NotVerified,
   autorScore: 15,
   auditorScore: 15,
   refereeScore: 15,
@@ -84,13 +84,13 @@ const student: IStudent = {
 
 const review1: IStudent = {
   id: 'reviewsID 1',
-  name: 'reviews 1',
+  name: 'reviews Пупкин',
   isAuditorAnonim: true,
 };
 
 const review2: IStudent = {
   id: 'reviewsID 2',
-  name: 'reviews 2',
+  name: 'reviews Пупкин',
   isAuditorAnonim: false,
 };
 
@@ -98,38 +98,43 @@ const cheсksReviewer1: ICheсk = {
   checkerID: 'reviewsID 1',
   state: CheckState.AuditorDraft,
   cheсking: [cheсkingPoint1, cheсkingPoint2, cheсkingPoint3, cheсkingPoint4],
-  score: 30,
+  score: 45,
   isAnonim: false,
+  isNegotiation: false,
 };
 
 const cheсksReviewer2: ICheсk = {
   checkerID: 'reviewsID 2',
   state: CheckState.NotVerified,
   cheсking: [cheсkingPoint1, cheсkingPoint2, cheсkingPoint3, cheсkingPoint4],
-  score: 30,
+  score: 45,
   isAnonim: false,
+  isNegotiation: false,
 };
 const cheсksReviewer3: ICheсk = {
   checkerID: 'reviewsID 3',
   state: CheckState.Verified,
   cheсking: [cheсkingPoint1, cheсkingPoint2, cheсkingPoint3, cheсkingPoint4],
-  score: 30,
+  score: 45,
   isAnonim: false,
+  isNegotiation: false,
 };
 
 const cheсksReviewer4: ICheсk = {
   checkerID: 'reviewsID 4',
   state: CheckState.Verified,
   cheсking: [cheсkingPoint1, cheсkingPoint2, cheсkingPoint3, cheсkingPoint4],
-  score: 30,
+  score: 45,
   isAnonim: false,
+  isNegotiation: false,
 };
 const cheсksReviewer5: ICheсk = {
   checkerID: 'reviewsID 5',
   state: CheckState.Dispute,
   cheсking: [cheсkingPoint1, cheсkingPoint2, cheсkingPoint3, cheсkingPoint4],
-  score: 30,
+  score: 45,
   isAnonim: false,
+  isNegotiation: false,
 };
 
 const selftest: ICheсk = {
@@ -138,6 +143,7 @@ const selftest: ICheсk = {
   cheсking: [cheсkingPoint1, cheсkingPoint2, cheсkingPoint3, cheсkingPoint4],
   score: 30,
   isAnonim: false,
+  isNegotiation: false,
 };
 
 export const checkingTask: IWorkDone = {
