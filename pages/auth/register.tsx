@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { checkRef } from '../../firebase';
 import { QuestionCircleOutlined } from '@ant-design/icons';
-import { Form, Input, Tooltip, Checkbox, Button, Row, Col, Modal } from 'antd';
-import { auth } from '../../firebase';
+import { Form, Input, Tooltip, Checkbox, Button, Row, Modal, Typography } from 'antd';
+import { auth, db } from '../../firebase';
 import { gitUserAPI } from '../api/api';
 import { useRouter } from 'next/router';
+
+const { Link } = Typography;
 
 const formItemLayout = {
   labelCol: {
@@ -94,29 +95,29 @@ const Register: React.FC<PropsRegister> = ({ changeAuthPage, changeAuthorization
     await setUserData(() => {
       userData.name = name;
       userData.avatar_url = avatar_url;
-      userData.location = location;
+      userData.location = location || 'unknown';
       userData.html_url = html_url;
       userData.uid = uid;
       userData.login = login;
       return userData;
     });
-    await checkRef.push(userData);
+    await db.collection('users').doc(userData.uid).set(userData);
     await changeAuthorization();
     await router.push(`/main`);
   };
 
-  const subscribe = auth.onAuthStateChanged((user): void => {
-    if (user) {
-      setLoggedIn(true);
-    } else {
-      setLoggedIn(false);
-    }
-  });
-
   useEffect(() => {
+    const subscribe = auth.onAuthStateChanged((user): void => {
+      if (user) {
+        setLoggedIn(true);
+      } else {
+        setLoggedIn(false);
+      }
+    });
     if (loggedIn) {
       setUserDataInDB().catch((e) => new Error(e.message));
     }
+    return () => subscribe();
   }, [loggedIn]);
 
   const onReset = () => {
@@ -259,7 +260,8 @@ const Register: React.FC<PropsRegister> = ({ changeAuthPage, changeAuthorization
             </Form.Item>
             <br />
             <p className={'login__now_text'}>
-              Or <a onClick={() => handleClick('login')}>login now!</a>
+              <Link onClick={() => handleClick('login')}>Login now</Link> or register with{' '}
+              <Link onClick={() => handleClick('github')}>GitHub</Link>
             </p>
           </Form>
         </div>

@@ -9,7 +9,6 @@ export default class extends Document {
       <html lang="en">
         <Head>
           <link rel="shortcut icon" href="https://rs.school/favicon.ico" />
-
           {this.enableGA && (
             <script async src="https://www.googletagmanager.com/gtag/js?id=UA-55428637-3" />
           )}
