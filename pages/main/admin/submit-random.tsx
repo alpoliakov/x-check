@@ -9,10 +9,10 @@ const SubmitRandom = () => {
   const submitRandomData = (e: any) => {
     e.preventDefault();
     random.forEach((data) => {
-      db.collection('random')
+      db.collection('user')
         .doc(data._id)
         .set(data)
-        .then(() => console.log('A new random data has been added!', 'Success!'))
+        .then(() => console.log('A new random data has been added!', 'Success!', data))
         .catch((e) => new Error(`Create random data failed! ${e.message}`));
     });
   };
@@ -20,7 +20,7 @@ const SubmitRandom = () => {
   return (
     <>
       <div>
-        <Button type="primary" htmlType="button" onClick={submitRandomData} disabled>
+        <Button type="primary" htmlType="button" onClick={submitRandomData}>
           Submit random data
         </Button>
       </div>
