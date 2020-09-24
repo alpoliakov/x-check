@@ -3,7 +3,7 @@ export interface ITask {
   id: string;
   name: string;
   authorName?: string;
-  publisherID: string; //id user 
+  publisherID: string; //id user
   state: 'draft' | 'published';
   publishedAt?: Date;
   demo?: string;
@@ -27,4 +27,9 @@ export interface ICriteriaPoint {
   criteriaPointScore: number;
   isFine: boolean;
   isThisPointForAMentor: boolean;
+}
+
+export enum TypeTask {
+  SubmitTask,
+  ReviewTask,
 }
