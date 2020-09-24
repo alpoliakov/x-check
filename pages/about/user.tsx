@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import MainLayout from '../../components/MainLayout';
-import { checkRef, auth } from '../../firebase';
+import { auth, db } from '../../firebase';
 import { useRouter } from 'next/router';
 import { Card, Col, Row, Avatar, Typography, Empty } from 'antd';
 import {
@@ -17,9 +17,10 @@ import {
 
 interface PropsUser {
   title: string;
+  data?: object;
 }
 
-const User: React.FC<PropsUser> = ({ title }) => {
+const User: React.FC<PropsUser> = ({ data }) => {
   const [userData, setUserData] = useState({
     avatar_url: '',
     html_url: '',
@@ -28,47 +29,53 @@ const User: React.FC<PropsUser> = ({ title }) => {
     name: '',
     email: '',
   });
-  const [email, setEmail] = useState('');
-  const [name, setName] = useState('');
-  const [avatar_url, setAvatar_url] = useState('');
-  const [login, setLogin] = useState('');
+
   const router = useRouter();
   const { Title, Link, Text } = Typography;
+  // @ts-ignore
+  const email = auth.currentUser.email;
 
-  useEffect(() => {
-    checkRef.on('value', (snapshot) => {
-      const users = snapshot.val();
+  const setDataUser = () => {
+    // @ts-ignore
+    data.forEach((item) => {
       // @ts-ignore
-      for (let key in users) {
-        // @ts-ignore
-        if (users[key].uid === auth.currentUser.uid) {
-          setUserData(users[key]);
-
-          setEmail(users[key].email);
-          setName(users[key].name);
-          setAvatar_url(users[key].avatar_url);
-          setLogin(users[key].login);
-        }
+      if (item.uid === auth.currentUser.uid) {
+        return setUserData(item);
       }
     });
-  }, []);
+  };
+
+  useEffect(() => {
+    setDataUser();
+  }, [data]);
 
   const returnToPage = () => {
     router.push(`/main`).catch((e) => new Error(e.message));
   };
 
+  // @ts-ignore
+  if (!data.length) {
+    return (
+      <>
+        <MainLayout>
+          <p>Loading...</p>
+        </MainLayout>
+      </>
+    );
+  }
+
   return (
     <>
-      <MainLayout title={`user profile ${name}`}>
+      <MainLayout title={`user profile ${userData.name}`}>
         <div className="site-card-wrapper">
           <Row gutter={16}>
             <Col span={6}>
               <Card bordered={true} className="intro">
-                <Avatar size={90} src={avatar_url || '/static/images/king.jpg'} />
-                <Title level={2}>{name}</Title>
+                <Avatar size={90} src={userData.avatar_url || '/static/images/king.jpg'} />
+                <Title level={2}>{userData.name}</Title>
                 <Title level={5}>
                   <Link href={userData.html_url}>
-                    <GithubOutlined /> {`@${login}` || 'unknown'}
+                    <GithubOutlined /> {`@${userData.login}` || 'unknown'}
                   </Link>
                 </Title>
                 <div>
@@ -177,6 +184,19 @@ const User: React.FC<PropsUser> = ({ title }) => {
       </MainLayout>
     </>
   );
+};
+
+export const getServerSideProps = async () => {
+  let data: any | undefined = [];
+  await db
+    .collection('users')
+    .get()
+    .then((snap) => {
+      data = snap.docs.map((doc) => doc.data());
+    });
+  return {
+    props: { data },
+  };
 };
 
 export default User;

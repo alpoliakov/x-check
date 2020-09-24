@@ -1,26 +1,39 @@
-import React from 'react';
-import { GithubOutlined } from '@ant-design/icons';
-import { Button, Card, Divider, Typography } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { FormOutlined, LoginOutlined } from '@ant-design/icons';
+import { Button, Card, Typography, Divider } from 'antd';
+import { auth } from '../../firebase';
 
 const { Meta } = Card;
-const { Title, Link, Text } = Typography;
-
-interface PropsGHSignUp {
+const { Link, Text } = Typography;
+interface PropsRequest {
   changeAuthPage: (data: string) => void;
+  changeAuthorization: () => void;
 }
 
-const GitHubSignUp: React.FC<PropsGHSignUp> = ({ changeAuthPage }) => {
+const RequestAuth: React.FC<PropsRequest> = ({ changeAuthPage, changeAuthorization }) => {
+  const [loggedIn, setLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const subscribe = auth.onAuthStateChanged((user): void => {
+      if (user) {
+        setLoggedIn(true);
+      } else {
+        setLoggedIn(false);
+      }
+    });
+    if (loggedIn) {
+      changeAuthorization();
+    }
+    return () => subscribe();
+  }, [loggedIn]);
+
   const handleClick = (data: string) => {
     changeAuthPage(data);
   };
-
-  const signUpWithGit = () => {
-    console.log('Sign Up with GitHub');
-  };
-
   return (
     <>
       <main>
+        {loggedIn ? <div>Logged in, wait...</div> : <div>Logged out!</div>}
         <div className="login-form">
           <img
             className="login-image"
@@ -40,24 +53,35 @@ const GitHubSignUp: React.FC<PropsGHSignUp> = ({ changeAuthPage }) => {
             }
             actions={[
               <Button
-                id="register"
-                key={'register'}
-                onClick={signUpWithGit}
+                id="login"
+                key={'login'}
+                onClick={() => handleClick('login')}
                 size="large"
-                icon={<GithubOutlined />}
+                icon={<LoginOutlined />}
                 type="primary"
               >
-                Sign up with GitHub
+                Login
+              </Button>,
+
+              <Button
+                id="register"
+                key={'register'}
+                onClick={() => handleClick('register')}
+                size="large"
+                icon={<FormOutlined />}
+                type="primary"
+              >
+                Sign Up
               </Button>,
             ]}
           >
             <Meta
-              title="Please login via GitHub"
-              description="In order to access the RS School App, you need to login with your GitHub account"
+              title="Please login or sign up"
+              description="In order to access the X-Check RS School App, you need to login or sign up"
             />
             <Divider />
             <Text>
-              Or <Link onClick={() => handleClick('')}>return</Link>
+              Or sign up with <Link onClick={() => handleClick('github')}>GitHub</Link>
             </Text>
           </Card>
         </div>
@@ -66,4 +90,4 @@ const GitHubSignUp: React.FC<PropsGHSignUp> = ({ changeAuthPage }) => {
   );
 };
 
-export default GitHubSignUp;
+export default RequestAuth;
