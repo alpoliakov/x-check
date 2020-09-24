@@ -4,7 +4,7 @@ export interface ITask {
   name: string;
   authorName?: string;
   publisherID: string; //id user
-  state: 'draft' | 'published';
+  state: StateTask;
   publishedAt?: Date;
   demo?: string;
   description: string;
@@ -13,6 +13,12 @@ export interface ITask {
   oldUrl?: string; // откуда импортировали таск
   useJury: boolean; //будет ли оценка жюри
   checkingType: 'crossCheck';
+}
+
+export enum StateTask {
+  draft,
+  active,
+  published,
 }
 //groupScore автоподсчётом
 export interface ICriteriaGroup {
