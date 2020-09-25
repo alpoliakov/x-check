@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Select, Button, DatePicker } from 'antd';
 const { Option } = Select;
-import { ITask } from '../../../interfaces/ITask';
-import { ICourse } from '../../../interfaces/ICourse';
 import { ITaskStep } from '../../../interfaces/ICourse';
 import moment from 'moment';
-import { db } from '../../../firebase';
+import { updateObjectField } from '../../../services/updateFirebase';
 
 interface PropsCurrentStage {
   activeTask: string | undefined;
@@ -49,18 +47,13 @@ const CurrentStage: React.FC<PropsCurrentStage> = ({
     }
   };
   const onFinish = (): void => {
-    const active: ITaskStep | undefined = crossCheckSession.find((e) => e.name === activeTask);
+    const active: ITaskStep = crossCheckSession.find((e) => e.name === activeTask);
     console.log(active);
-    db.collection('crossCheckSession')
-      .doc(active?.name)
-      .update({
-        taskStage: currentStage,
-        deadline: deadline,
-        start: start,
-      })
-      .then(function () {
-        console.log('Document successfully written!');
-      });
+    updateObjectField('crossCheckSession', active.name, {
+      taskStage: currentStage,
+      deadline: deadline,
+      start: start,
+    });
     getTaskStage(currentStage);
   };
   return (

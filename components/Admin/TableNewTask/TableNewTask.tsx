@@ -2,8 +2,8 @@
 import React, { useState } from 'react';
 import { Table, Radio, Divider, Tag, Button, Popconfirm, Space } from 'antd';
 import { ITask } from '../../../interfaces/ITask';
-import { ICourse } from '../../../interfaces/ICourse';
 import { db } from '../../../firebase';
+import { deleteDocument } from '../../../services/updateFirebase';
 
 interface PropsTableNewTask {
   tasks: ITask[];
@@ -17,9 +17,9 @@ interface Item {
 }
 
 const TableNewTask: React.FC<PropsTableNewTask> = ({ tasks }) => {
-  const [selectionType, setSelectionType] = useState('checkbox');
   const data: any = [];
   for (let i = 0; i < tasks.length; i++) {
+    console.log(i, tasks[i].id);
     data.push({
       key: i,
       id: tasks[i].id,
@@ -76,12 +76,11 @@ const TableNewTask: React.FC<PropsTableNewTask> = ({ tasks }) => {
     },
   ];
   const onClickDelete = (_: any, e: any) => {
-    console.log('delete', e);
     const dataSource = [...dataTasks];
     setDataTasks(dataSource.filter((item) => item.id !== _));
+    deleteDocument('tasks', e.id);
   };
   const onClickPublished = (_: any, e: any) => {
-    console.log(_, e);
     const dataSource = [...dataTasks];
     setDataTasks(
       dataSource.map((item: Item) => {
@@ -91,6 +90,14 @@ const TableNewTask: React.FC<PropsTableNewTask> = ({ tasks }) => {
         return item;
       })
     );
+    db.collection('tasks')
+      .doc(e.id)
+      .update({
+        state: 'published',
+      })
+      .then(function () {
+        console.log('Document successfully written!');
+      });
   };
   const onClickActive = (_: any, e: any) => {
     console.log(_, e);

@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Form, Select, Button, Tag, Avatar } from 'antd';
-import { db } from '../../../firebase';
 import firebase from 'firebase';
+import { updateObjectField } from '../../../services/updateFirebase';
 
-type tplotOptions = {
-  [key: string]: any;
-};
 interface IProps {
   users: any[];
 }
@@ -21,7 +18,6 @@ const AssignRole: React.FC<IProps> = ({ users }) => {
     setUser(users);
   }, [users]);
   const changeKeyUser = (value: any, event: any) => {
-    console.log(event.key, value);
     setUserKey(event.key);
   };
   const changeRole = (value: string) => {
@@ -33,28 +29,16 @@ const AssignRole: React.FC<IProps> = ({ users }) => {
       role !== null &&
       !usersData.filter((e) => e.uid === userKey).includes(role)
     ) {
-      db.collection('users')
-        .doc(userKey)
-        .update({
-          roles: firebase.firestore.FieldValue.arrayUnion(role),
-        })
-        .then(function () {
-          console.log('Document successfully written!');
-        });
+      updateObjectField('users', userKey, {
+        roles: firebase.firestore.FieldValue.arrayUnion(role),
+      });
     }
   };
   const deleteRole = (key: any) => {
-    console.log(key);
     const result: any = usersData.filter((e) => e.uid === userKey);
-    console.log(key, result);
-    db.collection('users')
-      .doc(result[0].uid)
-      .update({
-        roles: firebase.firestore.FieldValue.arrayRemove(key),
-      })
-      .then(function () {
-        console.log('Document successfully written!');
-      });
+    updateObjectField('users', result[0].uid, {
+      roles: firebase.firestore.FieldValue.arrayRemove(key),
+    });
   };
   return (
     <>
