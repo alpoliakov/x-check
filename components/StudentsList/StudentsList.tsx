@@ -2,35 +2,26 @@ import React, { useState, Key, useEffect } from 'react';
 import { Select, Avatar, Form } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { useForm } from 'antd/lib/form/Form';
-import Link from 'next/link';
-import { MentorBasic } from '../../interfaces/IUser';
-import { task } from '../../db/tasks';
+import { MentorBasic, StudentBasic } from '../../interfaces/IUser';
+import { ITask } from '../../interfaces/ITask';
 
 const { Option } = Select;
-type tplotOptions = {
-  [key: string]: any;
-};
-
-const layout = {
-  labelCol: { span: 8 },
-  wrapperCol: { span: 16 },
-};
 
 interface PropsStudentList {
   user: MentorBasic;
-  data: [];
+  data: StudentBasic[];
   getTask: (value: any) => void;
 }
 
 const StudentsList: React.FC<PropsStudentList> = ({ user, data, getTask }) => {
-  const [students, setStudent] = useState([]);
-  const [tasks, setSTask] = useState<any>([]);
-  const [isDisabled, setIsDisabled] = useState(true);
-  const [taskValue, setTaskValue] = useState<any>(null);
+  const [students, setStudent] = useState<StudentBasic[]>([]);
+  const [tasks, setSTask] = useState<ITask[]>([]);
+  const [isDisabled, setIsDisabled] = useState<boolean>(true);
+  const [taskValue, setTaskValue] = useState<string | undefined>(undefined);
   const [form] = useForm();
 
   useEffect(() => {
-    const mentorStudents = data.filter((i: any) => {
+    const mentorStudents = data.filter((i) => {
       let result: any;
       user.students.forEach((e) => {
         if (i.uid === e.id) {
@@ -43,7 +34,7 @@ const StudentsList: React.FC<PropsStudentList> = ({ user, data, getTask }) => {
   }, []);
 
   useEffect(() => {
-    setTaskValue(null);
+    setTaskValue(undefined);
     getTask(null);
   }, [tasks]);
   const handleProvinceChange = (value: Key, key: any) => {
@@ -52,7 +43,7 @@ const StudentsList: React.FC<PropsStudentList> = ({ user, data, getTask }) => {
     setIsDisabled(false);
   };
 
-  const onSecondCityChange = (value: Key) => {
+  const onSecondCityChange = (value: string) => {
     setTaskValue(value);
     getTask(value);
   };
