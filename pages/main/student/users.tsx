@@ -11,8 +11,8 @@ const Users: NextPage<PropsUsers> = ({ data }) => {
   const [listUsers, setListUsers] = useState([]);
 
   useEffect(() => {
-    let list = [];
-    for (let key in data) {
+    const list = [];
+    for (const key in data) {
       // @ts-ignore
       list.push(data[key]);
     }
