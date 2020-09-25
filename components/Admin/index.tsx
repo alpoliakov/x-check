@@ -4,6 +4,8 @@ import TaskInformation from './TaskInformation/TaskInformation';
 import AssignRole from './AssignRole/AssignRole';
 import TableNewTask from './TableNewTask/TableNewTask';
 import { distribute } from '../../services/distributeStudents';
+import { ITaskStep } from '../../interfaces/ICourse';
+import { ITask } from '../../interfaces/ITask';
 
 const tasks = [
   {
@@ -53,54 +55,34 @@ const tasks = [
   },
 ];
 
-const course = {
-  id: 1,
-  name: 'React',
-  tasks: [
-    {
-      taskID: 1,
-      name: 'Virtual Keyboard',
-      taskStage: 'REQUESTS_GATHERING',
-      deadline: '2020-01-20',
-      start: '2020-02-02',
-    },
-    {
-      taskID: 2,
-      name: 'English for kids',
-      taskStage: 'CROSS_CHECK',
-      deadline: '2020-05-20',
-      start: '2020-06-02',
-    },
-    {
-      taskID: 3,
-      name: 'MovieSearch',
-      taskStage: 'COMPLETED',
-      deadline: '2020-05-24',
-      start: '2020-06-20',
-    },
-  ],
-};
-
-const user = {};
-
 interface PropsAdminMain {
   dataUsers: [];
-  dataTasks: [];
+  dataTasks: ITask[];
+  crossCheckSession: ITaskStep[];
+  visibleModal: boolean;
+  getVisibleModal: (value: boolean) => void;
 }
 
-const AdminMain: React.FC<PropsAdminMain> = ({ dataUsers, dataTasks }) => {
+const AdminMain: React.FC<PropsAdminMain> = ({
+  dataUsers,
+  dataTasks,
+  visibleModal,
+  crossCheckSession,
+  getVisibleModal,
+}) => {
   const [users, setUser] = useState<any[]>(dataUsers);
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState<boolean>(visibleModal);
   useEffect(() => {
-    console.log('DATA', dataUsers, dataTasks);
-  }, [course]);
-  const showModal = () => {
-    setVisible(true);
-  };
+    console.log('DATA', dataUsers, dataTasks, crossCheckSession);
+    setVisible(visibleModal);
+  }, [visibleModal]);
+  useEffect(() => {
+    getVisibleModal(visible);
+  }, [visible]);
 
   const handleOk = (e: any) => {
-    console.log(e);
     setVisible(false);
+    console.log(visible);
   };
   const handleCancel = (e: any) => {
     console.log(e);
@@ -109,13 +91,10 @@ const AdminMain: React.FC<PropsAdminMain> = ({ dataUsers, dataTasks }) => {
   return (
     <div className="admin-wrapper">
       <Row>
-        <TaskInformation course={course} tasks={tasks} users={users} />
+        <TaskInformation crossCheckSession={crossCheckSession} tasks={tasks} users={users} />
       </Row>
-      <Row gutter={[8, 8]} style={{ margin: '0 30px' }}>
-        <Col span={12} style={{ textAlign: 'center', margin: '20px 0' }}>
-          <Button type="primary" onClick={showModal}>
-            Start new task
-          </Button>
+      <Row gutter={[8, 8]} style={{ margin: 0 }}>
+        <Col span={12} style={{ textAlign: 'center', margin: 0 }}>
           <Modal
             title="Course tasks"
             width={1000}
@@ -123,23 +102,18 @@ const AdminMain: React.FC<PropsAdminMain> = ({ dataUsers, dataTasks }) => {
             onOk={handleOk}
             onCancel={handleCancel}
             footer={[
-              <Button key="back" onClick={handleCancel}>
-                Return
-              </Button>,
               <Button key="submit" type="primary" onClick={handleOk}>
-                Submit
+                Ok
               </Button>,
             ]}
           >
-            <TableNewTask course={course} tasks={tasks} />
+            <TableNewTask tasks={tasks} />
           </Modal>
         </Col>
-        <Col span={12} style={{ textAlign: 'center', margin: '20px 0' }}>
-          <Button type="primary">Creat task</Button>
-        </Col>
+        <Col span={12} style={{ textAlign: 'center', margin: '20px 0' }}></Col>
       </Row>
       <Row>
-        <AssignRole user={users} />
+        <AssignRole users={users} />
       </Row>
     </div>
   );

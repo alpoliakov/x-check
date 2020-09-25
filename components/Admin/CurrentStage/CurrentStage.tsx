@@ -5,21 +5,26 @@ import { ITask } from '../../../interfaces/ITask';
 import { ICourse } from '../../../interfaces/ICourse';
 import { ITaskStep } from '../../../interfaces/ICourse';
 import moment from 'moment';
+import { db } from '../../../firebase';
 
 interface PropsCurrentStage {
   activeTask: string | undefined;
-  course: ICourse;
+  crossCheckSession: ITaskStep[];
   getTaskStage: (value: string | undefined) => void;
 }
 
-const CurrentStage: React.FC<PropsCurrentStage> = ({ activeTask, course, getTaskStage }) => {
+const CurrentStage: React.FC<PropsCurrentStage> = ({
+  activeTask,
+  crossCheckSession,
+  getTaskStage,
+}) => {
   const [currentStage, setCurrentStage] = useState<string | undefined>(undefined);
   const [start, setStart] = useState<string | null>(null);
   const [deadline, setDeadline] = useState<string | null>(null);
 
   useEffect(() => {
     if (activeTask !== undefined) {
-      const active: any = course.tasks.find((e) => e.name === activeTask);
+      const active: any = crossCheckSession.find((e) => e.name === activeTask);
       setStart(active.start);
       setDeadline(active.deadline);
       setCurrentStage(active.taskStage);
@@ -44,10 +49,18 @@ const CurrentStage: React.FC<PropsCurrentStage> = ({ activeTask, course, getTask
     }
   };
   const onFinish = (): void => {
-    const active: any = course.tasks.find((e) => e.name === activeTask);
-    active.taskStage = currentStage;
-    active.start = start;
-    active.deadline = deadline;
+    const active: ITaskStep | undefined = crossCheckSession.find((e) => e.name === activeTask);
+    console.log(active);
+    db.collection('crossCheckSession')
+      .doc(active?.name)
+      .update({
+        taskStage: currentStage,
+        deadline: deadline,
+        start: start,
+      })
+      .then(function () {
+        console.log('Document successfully written!');
+      });
     getTaskStage(currentStage);
   };
   return (

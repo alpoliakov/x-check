@@ -4,20 +4,20 @@ import AdminStatisticTask from '../AdminStatisticTask/index';
 import CurrentStage from '../CurrentStage/index';
 import ActiveTask from '../ActiveTask/index';
 import { ITask } from '../../../interfaces/ITask';
-import { ICourse } from '../../../interfaces/ICourse';
+import { ICourse, ITaskStep } from '../../../interfaces/ICourse';
 
 interface PropsTaskInformation {
   tasks: any[];
   users: any[];
-  course: ICourse;
+  crossCheckSession: ITaskStep[];
 }
 
-const TaskInformation: React.FC<PropsTaskInformation> = ({ tasks, users, course }) => {
+const TaskInformation: React.FC<PropsTaskInformation> = ({ tasks, users, crossCheckSession }) => {
   const [activeTask, setActiveTask] = useState<string | undefined>(undefined);
   const [taskStage, setTaskStage] = useState<string | undefined>();
   useEffect(() => {
     if (activeTask !== undefined) {
-      const active: any = course.tasks.find((e) => e.name === activeTask);
+      const active: any = crossCheckSession.find((e) => e.name === activeTask);
       setTaskStage(active.taskStage);
     }
     console.log('course');
@@ -33,11 +33,19 @@ const TaskInformation: React.FC<PropsTaskInformation> = ({ tasks, users, course 
       <Card style={{ marginTop: 30 }}>
         <Row>
           <Col>
-            <ActiveTask getActiveTask={getActiveTask} activeTask={activeTask} course={course} />
+            <ActiveTask
+              getActiveTask={getActiveTask}
+              activeTask={activeTask}
+              crossCheckSession={crossCheckSession}
+            />
           </Col>
         </Row>
         <Row style={{ marginTop: 20 }}>
-          <CurrentStage getTaskStage={getTaskStage} course={course} activeTask={activeTask} />
+          <CurrentStage
+            getTaskStage={getTaskStage}
+            crossCheckSession={crossCheckSession}
+            activeTask={activeTask}
+          />
         </Row>
         <Row style={{ marginTop: 40 }}>
           <Col span={12}>

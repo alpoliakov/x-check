@@ -1,24 +1,25 @@
-import React, { useState, Key, useEffect, Props } from 'react';
-import { Card, Form, Input, Select, Button, Tag, Avatar } from 'antd';
-import { databaseRef, auth, checkRef } from '../../../firebase';
+import React, { useState, useEffect } from 'react';
+import { Card, Form, Select, Button, Tag, Avatar } from 'antd';
+import { db } from '../../../firebase';
+import firebase from 'firebase';
 
 type tplotOptions = {
   [key: string]: any;
 };
 interface IProps {
-  user: any[];
+  users: any[];
 }
 
-const AssignRole: React.FC<IProps> = ({ user }) => {
+const AssignRole: React.FC<IProps> = ({ users }) => {
   const [form] = Form.useForm();
   const { Option } = Select;
-  const [users, setUser] = useState<any[]>(user);
+  const [usersData, setUser] = useState<any[]>(users);
   const [userKey, setUserKey] = useState<string>('');
   const [role, setRole] = useState<string | null>(null);
 
   useEffect(() => {
-    setUser(user);
-  }, [user]);
+    setUser(users);
+  }, [users]);
   const changeKeyUser = (value: any, event: any) => {
     console.log(event.key, value);
     setUserKey(event.key);
@@ -27,24 +28,37 @@ const AssignRole: React.FC<IProps> = ({ user }) => {
     setRole(value);
   };
   const onFinish = (): void => {
-    if (userKey !== '' && role !== null) {
-      const changeRoleRef = checkRef.child(userKey).child('roles');
-      changeRoleRef.transaction(function (currentRole) {
-        const result = currentRole.includes(role);
-        if (result) {
-          return currentRole;
-        } else {
-          return [role, ...currentRole];
-        }
-      });
+    if (
+      userKey !== '' &&
+      role !== null &&
+      !usersData.filter((e) => e.uid === userKey).includes(role)
+    ) {
+      db.collection('users')
+        .doc(userKey)
+        .update({
+          roles: firebase.firestore.FieldValue.arrayUnion(role),
+        })
+        .then(function () {
+          console.log('Document successfully written!');
+        });
     }
   };
-  const deleteRole = (event: any) => {
-    console.log(event);
+  const deleteRole = (key: any) => {
+    console.log(key);
+    const result: any = usersData.filter((e) => e.uid === userKey);
+    console.log(key, result);
+    db.collection('users')
+      .doc(result[0].uid)
+      .update({
+        roles: firebase.firestore.FieldValue.arrayRemove(key),
+      })
+      .then(function () {
+        console.log('Document successfully written!');
+      });
   };
   return (
     <>
-      <Card style={{ width: '100%' }}>
+      <Card style={{ width: 962 }}>
         <Form
           layout="inline"
           form={form}
@@ -62,24 +76,24 @@ const AssignRole: React.FC<IProps> = ({ user }) => {
                 option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
               }
             >
-              {Object.entries(users).map(([key, value]) => (
-                <Option key={key} value={value.nickname}>
+              {usersData.map((item: any) => (
+                <Option key={item.uid} value={item.nickname}>
                   <Avatar
                     size={20}
                     src={
-                      value.avatar_url
-                        ? value.avatar_url
+                      item.avatar_url
+                        ? item.avatar_url
                         : 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
                     }
                   />{' '}
-                  {value.nickname}{' '}
-                  {value.roles.map((userRoles: string, i: number) => (
+                  {item.nickname}{' '}
+                  {item.roles.map((userRoles: string, i: number) => (
                     <Tag
                       data-tag={userRoles}
                       key={i}
                       color="blue"
-                      closable={i == 0}
-                      onClose={deleteRole}
+                      closable={userKey === item.uid}
+                      onClose={() => deleteRole(userRoles)}
                     >
                       {userRoles}
                     </Tag>
@@ -89,7 +103,7 @@ const AssignRole: React.FC<IProps> = ({ user }) => {
             </Select>
           </Form.Item>
           <Form.Item label="Role">
-            <Select placeholder="Select a role..." style={{ width: 300 }} onChange={changeRole}>
+            <Select placeholder="Select a role..." style={{ width: 250 }} onChange={changeRole}>
               <Option value="manager">Manager</Option>
               <Option value="mentor">Mentor</Option>
               <Option value="student">Student</Option>

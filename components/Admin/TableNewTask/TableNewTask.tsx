@@ -3,10 +3,10 @@ import React, { useState } from 'react';
 import { Table, Radio, Divider, Tag, Button, Popconfirm, Space } from 'antd';
 import { ITask } from '../../../interfaces/ITask';
 import { ICourse } from '../../../interfaces/ICourse';
+import { db } from '../../../firebase';
 
-interface AProps {
-  tasks: any[];
-  course: ICourse;
+interface PropsTableNewTask {
+  tasks: ITask[];
 }
 interface Item {
   key: string;
@@ -15,18 +15,8 @@ interface Item {
   state: string;
   authorName: string;
 }
-/* const rowSelection = {
-  onChange: (selectedRowKeys: any, selectedRows: any) => {
-    console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-  },
-  getCheckboxProps: (record: { name: string }) => ({
-    disabled: record.name === 'Disabled User',
-    // Column configuration not to be checked
-    name: record.name,
-  }),
-}; */
 
-const TableNewTask: React.FC<AProps> = ({ tasks, course }) => {
+const TableNewTask: React.FC<PropsTableNewTask> = ({ tasks }) => {
   const [selectionType, setSelectionType] = useState('checkbox');
   const data: any = [];
   for (let i = 0; i < tasks.length; i++) {
@@ -105,13 +95,18 @@ const TableNewTask: React.FC<AProps> = ({ tasks, course }) => {
   const onClickActive = (_: any, e: any) => {
     console.log(_, e);
     const dataSource = [...dataTasks];
-    course.tasks.push({
-      taskID: e.id,
-      name: e.name,
-      taskStage: null,
-      deadline: null,
-      start: null,
-    });
+    db.collection('crossCheckSession')
+      .doc(e.name)
+      .set({
+        taskID: e.id,
+        name: e.name,
+        taskStage: null,
+        deadline: null,
+        start: null,
+      })
+      .then(function () {
+        console.log('Document successfully written!');
+      });
     setDataTasks(
       dataSource.map((item: Item) => {
         if (item.id === _) {
@@ -124,13 +119,7 @@ const TableNewTask: React.FC<AProps> = ({ tasks, course }) => {
 
   return (
     <div>
-      <Table
-        /*   rowSelection={{
-          ...rowSelection,
-        }} */
-        columns={columns}
-        dataSource={dataTasks}
-      />
+      <Table columns={columns} dataSource={dataTasks} />
     </div>
   );
 };
