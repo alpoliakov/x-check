@@ -53,51 +53,43 @@ function ItemCriteriaTask({
   };
   const score =
     stateCheck === CheckState.SelfTest ? cheсkingPoint.autorScore : cheсkingPoint.auditorScore;
-  let itemJSX: JSX.Element;
-  if (
-    (role === Role.mentor && criteriaPoint.isThisPointForAMentor) ||
-    (role === Role.student && !criteriaPoint.isThisPointForAMentor)
-  ) {
-    itemJSX = (
-      <>
-        <Card.Grid className={styles.mb10} style={gridStyle}>
-          <Row gutter={8}>
-            <Col span={3}>
-              <MaxScoreItem
-                nameInfoCard={nameInfoCard}
-                scoreInfoCard={criteriaPoint.criteriaPointScore}
-              />
-            </Col>
-            <Col span={15}>
-              <InfoItem
-                descriptionItem={criteriaPoint.criteriaPointName}
-                commentsItem={cheсkingPoint.comments}
-                role={role}
-                typeTask={typeTask}
-                stateCheck={stateCheck}
-                onChangeComment={onChangeCommentInfo}
-              />
-            </Col>
-            <Col span={6}>
-              <ChoiceScore
-                maxScore={criteriaPoint.criteriaPointScore}
-                score={score}
-                typeTask={typeTask}
-                stateCheck={stateCheck}
-                stateCheckPoint={cheсkingPoint.state}
-                onChangeScore={onChangeScoreSwitch}
-                onClickAgree={onClickAgree}
-                onClickDisAgree={onClickDisAgree}
-                key={criteriaPoint.criteriaPointID}
-              />
-            </Col>
-          </Row>
-        </Card.Grid>
-      </>
-    );
-  } else {
-    <></>;
-  }
+  const itemJSX = (
+    <>
+      <Card.Grid className={styles.mb10} style={gridStyle}>
+        <Row gutter={8}>
+          <Col span={3}>
+            <MaxScoreItem
+              nameInfoCard={nameInfoCard}
+              scoreInfoCard={criteriaPoint.criteriaPointScore}
+            />
+          </Col>
+          <Col span={15}>
+            <InfoItem
+              descriptionItem={criteriaPoint.criteriaPointName}
+              commentsItem={cheсkingPoint.comments}
+              role={role}
+              typeTask={typeTask}
+              stateCheck={stateCheck}
+              onChangeComment={onChangeCommentInfo}
+            />
+          </Col>
+          <Col span={6}>
+            <ChoiceScore
+              maxScore={criteriaPoint.criteriaPointScore}
+              score={score}
+              typeTask={typeTask}
+              stateCheck={stateCheck}
+              stateCheckPoint={cheсkingPoint.state}
+              onChangeScore={onChangeScoreSwitch}
+              onClickAgree={onClickAgree}
+              onClickDisAgree={onClickDisAgree}
+              key={criteriaPoint.criteriaPointID}
+            />
+          </Col>
+        </Row>
+      </Card.Grid>
+    </>
+  );
   return <>{itemJSX}</>;
 }
 

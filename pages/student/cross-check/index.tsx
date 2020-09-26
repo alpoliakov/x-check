@@ -8,7 +8,7 @@ import { testTask } from '../../../components/student/test-task/test-task';
 import { selfCheckingTask } from '../../../components/student/test-task/selftest-work-done';
 import { dataCourse } from '../../../components/student/test-task/test-course';
 import {
-  createCheckOnReviwer,
+  createCheckOnReviewer,
   createMentorCheck,
   createTask,
 } from '../../../components/student/check-task/common';
@@ -55,9 +55,9 @@ const CrossCheckPage: React.FC<PropsStudent> = ({ changeAuthorization }) => {
   // /* 1. До Сабмита (Создания IwokDone)
   // если IworkDone будет пустой, то создаем его на основе Таска*/
 
-  // const newCheckingTask = createTask(testTask, user);
-  // const typeTask = TypeTask.SubmitTask;
-  // const [checkTask, reviewer] = [newCheckingTask.selfTest, newCheckingTask.student];
+  const newCheckingTask = createTask(testTask, user);
+  const typeTask = TypeTask.SubmitTask;
+  const [checkTask, reviewer] = [newCheckingTask.selfTest, newCheckingTask.student];
 
   // /* 2. До сабмита (правка IwokDone)  своя работа */
 
@@ -67,7 +67,7 @@ const CrossCheckPage: React.FC<PropsStudent> = ({ changeAuthorization }) => {
   // /* 3. После сабмита (создания IwokDone.checks по reviewers) */
   // const typeTask = TypeTask.ReviewTask;
   // const [checkTask, reviewer] = [
-  //   createCheckOnReviwer(selfCheckingTask, selfCheckingTask.reviewers[1]),
+  //   createCheckOnReviewer(testTask, selfCheckingTask, selfCheckingTask.reviewers[1]),
   //   selfCheckingTask.reviewers[1],
   // ];
 
@@ -77,44 +77,68 @@ const CrossCheckPage: React.FC<PropsStudent> = ({ changeAuthorization }) => {
   // const [checkTask, reviewer] = [createMentorCheck(selfCheckingTask), selfCheckingTask.mentor];
 
   // /* 4. Проверка чужой работа */
-  const typeTask = TypeTask.ReviewTask;
-  const [checkTask, reviewer] = [
-    createCheckOnReviwer(selfCheckingTask, selfCheckingTask.reviewers[0]),
-    selfCheckingTask.reviewers[0],
-  ];
+  // const typeTask = TypeTask.ReviewTask;
+  // const [checkTask, reviewer] = [
+  //   createCheckOnReviewer(testTask, selfCheckingTask, selfCheckingTask.reviewers[0]),
+  //   selfCheckingTask.reviewers[0],
+  // ];
 
-  // /* 4.1. Проверка своей работа */
+  // /* 4.1. Проверка своей работа, когда ее не проверили*/
   // const typeTask = TypeTask.SubmitTask;
   // const [checkTask, reviewer] = [
-  //   createCheckOnReviwer(selfCheckingTask, selfCheckingTask.reviewers[0]),
-  //   selfCheckingTask.reviewers[0],
+  //   createCheckOnReviewer(testTask, selfCheckingTask, checkingTask.reviewers[2]),
+  //   checkingTask.reviewers[2],
   // ];
 
   // /* 5. Согласование оценки (своя работа) */
   // const typeTask = TypeTask.SubmitTask;
   // const [checkTask, reviewer] = [
-  //   createCheckOnReviwer(checkingTask, checkingTask.reviewers[1]),
-  //   checkingTask.reviewers[1],
+  //   createCheckOnReviewer(testTask, selfCheckingTask, selfCheckingTask.reviewers[0]),
+  //   selfCheckingTask.reviewers[0],
   // ];
+
+  // /* 5.1 Согласование оценки ментора (своя работа) */
+  // role = Role.mentor;
+  // const typeTask = TypeTask.SubmitTask;
+  // const [checkTask, reviewer] = [createMentorCheck(selfCheckingTask), selfCheckingTask.mentor];
 
   // /* 6. Согласовано (своя работа) */
   // const typeTask = TypeTask.SubmitTask;
   // const [checkTask, reviewer] = [
-  //   createCheckOnReviwer(checkingTask, checkingTask.reviewers[2]),
-  //   checkingTask.reviewers[2],
+  //   createCheckOnReviewer(testTask, checkingTask, checkingTask.reviewers[1]),
+  //   checkingTask.reviewers[1],
   // ];
 
-  // /* 7. Согласовано (чужая работа) */
+  // /* 6.1 Согласовано (чужая работа) */
   // const typeTask = TypeTask.ReviewTask;
   // const [checkTask, reviewer] = [
-  //   createCheckOnReviwer(checkingTask, checkingTask.reviewers[2]),
+  //   createCheckOnReviewer(testTask, checkingTask, checkingTask.reviewers[1]),
+  //   checkingTask.reviewers[1],
+  // ];
+
+  // /* 6.2. Согласовано Ментор (чужая работа) */
+  // role = Role.mentor;
+  // const typeTask = TypeTask.ReviewTask;
+  // const [checkTask, reviewer] = [createMentorCheck(checkingTask), checkingTask.mentor];
+
+  /* 7. Dispute (своя работа) */
+  // const typeTask = TypeTask.SubmitTask;
+  // const [checkTask, reviewer] = [
+  //   createCheckOnReviewer(testTask, checkingTask, checkingTask.reviewers[2]),
   //   checkingTask.reviewers[2],
   // ];
 
-  /* 8. Ментор (своя работа) */
+  // /* 7.1 Dispute (чужая работа) */
+  // const typeTask = TypeTask.ReviewTask;
+  // const [checkTask, reviewer] = [
+  //   createCheckOnReviewer(testTask, checkingTask, checkingTask.reviewers[2]),
+  //   checkingTask.reviewers[2],
+  // ];
+
+  // /* 7.2. Dispute Ментор (чужая работа) */
   // role = Role.mentor;
   // const typeTask = TypeTask.ReviewTask;
-  // const [checkTask, reviewer] = [checkingTask.selfTest, checkingTask.mentor];
+  // const [checkTask, reviewer] = [createMentorCheck(checkingTask), checkingTask.mentor];
 
   return (
     <>

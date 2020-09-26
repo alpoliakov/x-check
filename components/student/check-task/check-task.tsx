@@ -14,6 +14,7 @@ import HeaderTask from './header-task';
 import ControlsTask from './controls-task';
 import CriteriaTask from './criteria-task';
 import styles from './check-task.module.css';
+import { filterTaskOnRole } from './common';
 
 type PropsCheckTask = {
   task: ITask; // из него берется описание критериев
@@ -38,18 +39,14 @@ function CheckTask({
   onSave,
   onSubmit,
 }: PropsCheckTask): JSX.Element {
-  if (
-    role === Role.student &&
-    typeTask === TypeTask.SubmitTask &&
-    checkingTask.state === CheckState.AuditorDraft
-  ) {
+  if (typeTask === TypeTask.SubmitTask && checkingTask.state === CheckState.AuditorDraft) {
     return (
       <div className={styles.test}>
-        <p>Check yet</p>
+        <p>In the process of checking</p>
       </div>
     );
   }
-
+  task = filterTaskOnRole(task, role, checkingTask.state);
   const [stateCheckingTask, setCheckingTask] = useState<ICheсk>(checkingTask);
   console.log('stateCheckingTask', stateCheckingTask);
   const onAgreeAllPoint = () => {

@@ -1,11 +1,11 @@
-import { ITask, ICriteriaGroup, ICriteriaPoint } from '../../../interfaces/ITask';
+import { ITask, ICriteriaGroup, ICriteriaPoint, StateTask } from '../../../interfaces/ITask';
 
 const criteriaPoint1: ICriteriaPoint = {
   criteriaPointID: 'criteriaPoint 1',
   criteriaPointName: 'минимальная ширина, при которой приложение отображается корректно – 320 рх',
   criteriaPointScore: 10,
   isFine: false,
-  isThisPointForAMentor: false,
+  isThisPointForAMentor: true,
 };
 
 const criteriaPoint2: ICriteriaPoint = {
@@ -72,7 +72,7 @@ export const testTask: ITask = {
   name: 'Songbird',
   authorName: 'Alex Alexsandrov',
   publisherID: 'publisherID',
-  state: 'draft',
+  state: StateTask.draft,
   publishedAt: new Date(),
   description: `Допускается:
   -другая тематика приложения (не птицы)

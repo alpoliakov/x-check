@@ -159,7 +159,7 @@ export default function ChoiceScore({
     );
   } else {
     scoreJSX = (
-      <Radio.Group name="radiogroup" defaultValue={score} onChange={onChangeRadio} disabled={true}>
+      <Radio.Group name="radiogroup" defaultValue={score} onChange={onChangeRadio} disabled>
         <Radio style={radioStyle} value={minScore}>
           {nameOptions[0]}
         </Radio>
@@ -178,6 +178,7 @@ export default function ChoiceScore({
               onChange={onChangeInput}
               value={score}
               style={{ width: 100, marginLeft: 10 }}
+              disabled
             />
           ) : null}
         </Radio>

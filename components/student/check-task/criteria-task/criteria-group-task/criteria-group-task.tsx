@@ -51,7 +51,15 @@ function CriteriaGroupTask({
 
   let colorTag: string;
   let textToolTip: string;
-  if (role === Role.student && stateCheck === CheckState.SelfTest) {
+  if (
+    (role === Role.student &&
+      (stateCheck === CheckState.SelfTest ||
+        ((stateCheck === CheckState.AuditorDraft || stateCheck === CheckState.NotVerified) &&
+          typeTask === TypeTask.ReviewTask))) ||
+    (role === Role.mentor &&
+      (stateCheck === CheckState.AuditorDraft || stateCheck === CheckState.NotVerified) &&
+      typeTask === TypeTask.ReviewTask)
+  ) {
     [colorTag, textToolTip] =
       scoreGroup < maxGroupScore
         ? ['orange', 'выполнено не полностью']

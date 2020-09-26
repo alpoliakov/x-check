@@ -126,14 +126,14 @@ const selftest: ICheсk = {
     cheсkingPoint5,
     cheсkingPoint6,
   ],
-  score: 55,
+  score: 65,
   isAnonim: false,
   isNegotiation: false,
 };
 
 const mentorCheck: ICheсk = {
   checkerID: 'reviewsID 1',
-  state: CheckState.AuditorDraft,
+  state: CheckState.NotVerified,
   cheсking: [
     cheсkingPoint1,
     cheсkingPoint2,
@@ -149,16 +149,9 @@ const mentorCheck: ICheсk = {
 
 const cheсksReviewer1: ICheсk = {
   checkerID: 'reviewsID 1',
-  state: CheckState.AuditorDraft,
-  cheсking: [
-    cheсkingPoint1,
-    cheсkingPoint2,
-    cheсkingPoint3,
-    cheсkingPoint4,
-    cheсkingPoint5,
-    cheсkingPoint6,
-  ],
-  score: 70,
+  state: CheckState.NotVerified,
+  cheсking: [cheсkingPoint4, cheсkingPoint5, cheсkingPoint6],
+  score: 35,
   isAnonim: false,
   isNegotiation: false,
 };
@@ -171,7 +164,7 @@ export const selfCheckingTask: IWorkDone = {
   deadline: new Date(),
   finalScore: 20,
   selfTest: selftest,
-  mentorCheck: {} as ICheсk,
+  mentorCheck: mentorCheck,
   mentor: mentor,
   reviewers: [review1, review2, review3],
   cheсks: [cheсksReviewer1],

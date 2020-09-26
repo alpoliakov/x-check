@@ -39,12 +39,10 @@ function ControlsTask({
       : [onSave, <>{isSelfTest}</>, 'Save', 'Submit'];
   let controlsJSX: JSX.Element;
   if (
-    stateCheck === CheckState.AuditorDraft ||
     stateCheck === CheckState.SelfTest ||
+    stateCheck === CheckState.AuditorDraft ||
     stateCheck === CheckState.NotVerified ||
-    stateCheck === CheckState.Negotiations ||
-    stateCheck === CheckState.Dispute ||
-    stateCheck === CheckState.DisputeClosed
+    stateCheck === CheckState.Negotiations
   ) {
     controlsJSX = (
       <Row>

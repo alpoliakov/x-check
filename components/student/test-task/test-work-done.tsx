@@ -60,7 +60,7 @@ const cheсkingPoint3: ICheсkingPoint = {
 const cheсkingPoint4: ICheсkingPoint = {
   cheсkingPointID: 'cheсkingPoint 4',
   criteriaPointID: 'criteriaPoint 4',
-  state: CheсkingPointState.NotVerified,
+  state: CheсkingPointState.Verified,
   autorScore: 15,
   auditorScore: 15,
   refereeScore: 15,
@@ -70,7 +70,7 @@ const cheсkingPoint4: ICheсkingPoint = {
 const cheсkingPoint5: ICheсkingPoint = {
   cheсkingPointID: 'cheсkingPoint 5',
   criteriaPointID: 'criteriaPoint 5',
-  state: CheсkingPointState.NotVerified,
+  state: CheсkingPointState.Verified,
   autorScore: 10,
   auditorScore: 5,
   refereeScore: 10,
@@ -80,7 +80,7 @@ const cheсkingPoint5: ICheсkingPoint = {
 const cheсkingPoint6: ICheсkingPoint = {
   cheсkingPointID: 'cheсkingPoint 6',
   criteriaPointID: 'criteriaPoint 6',
-  state: CheсkingPointState.NotVerified,
+  state: CheсkingPointState.Dispute,
   autorScore: 15,
   auditorScore: 15,
   refereeScore: 15,
@@ -125,14 +125,14 @@ const cheсksReviewer1: ICheсk = {
     cheсkingPoint5,
     cheсkingPoint6,
   ],
-  score: 70,
+  score: 35,
   isAnonim: false,
   isNegotiation: false,
 };
 
 const mentorCheck: ICheсk = {
   checkerID: 'Alex Alexsandrov',
-  state: CheckState.AuditorDraft,
+  state: CheckState.Verified,
   cheсking: [
     cheсkingPoint1,
     cheсkingPoint2,
@@ -148,31 +148,17 @@ const mentorCheck: ICheсk = {
 
 const cheсksReviewer2: ICheсk = {
   checkerID: 'reviewsID 2',
-  state: CheckState.NotVerified,
-  cheсking: [
-    cheсkingPoint1,
-    cheсkingPoint2,
-    cheсkingPoint3,
-    cheсkingPoint4,
-    cheсkingPoint5,
-    cheсkingPoint6,
-  ],
-  score: 70,
+  state: CheckState.Verified,
+  cheсking: [cheсkingPoint4, cheсkingPoint5, cheсkingPoint6],
+  score: 35,
   isAnonim: false,
   isNegotiation: false,
 };
 const cheсksReviewer3: ICheсk = {
   checkerID: 'reviewsID 3',
-  state: CheckState.Verified,
-  cheсking: [
-    cheсkingPoint1,
-    cheсkingPoint2,
-    cheсkingPoint3,
-    cheсkingPoint4,
-    cheсkingPoint5,
-    cheсkingPoint6,
-  ],
-  score: 70,
+  state: CheckState.Dispute,
+  cheсking: [cheсkingPoint4, cheсkingPoint5, cheсkingPoint6],
+  score: 35,
   isAnonim: false,
   isNegotiation: false,
 };

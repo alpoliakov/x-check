@@ -21,6 +21,7 @@ export default function createTask(task: ITask, user: StudentBasic): IWorkDone {
     finalScore: 0,
     selfTest: selfTest,
     mentor: mentor,
+    mentorCheck: selfTest,
     reviewers: [],
     cheсks: [],
     sourceGithubRepoUrl: '',
