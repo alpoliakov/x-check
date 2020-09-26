@@ -35,29 +35,7 @@ const MyCriteria: React.FC<ICriteriaGroup> = (id, criteria) => {
   
   const [form] = Form.useForm();
 
-
-
-
-  {/*
-    const { Panel } = Collapse;
-    const { Title } = Typography;
-
-    const nameGroup = (
-        <Row justify="space-between">
-          <Col span={21}>
-            <Title level={5}>
-                <Input placeholder="hh" style={{ width: '100%' }}  />
-            </Title>
-          </Col>
-          <Col span={3}>
-            <Tag >
-              1/1
-            </Tag>
-          </Col>
-        </Row>
-      );
-    */}  
-    return (
+  return (
 
   <React.Fragment>
         
@@ -67,7 +45,7 @@ const MyCriteria: React.FC<ICriteriaGroup> = (id, criteria) => {
                   <div>
                     {fields.map((field) => (
                         <Space key={field.key} style={{ display: 'flex', marginBottom: 8 }} align="start">
-                            <Form.Item label={'Criteria group'} name={[field.name,"criteria"]} required={false} style={{ width: '700px' }}>
+                            <Form.Item label={'Criteria group'} name={[field.name,"groupName"]} required={false} style={{ width: '600px' }}>
                                <Input placeholder="hh" style={{ width: '100%' }} onChange={handleChange} />
                             </Form.Item>
                             <MinusCircleOutlined
@@ -102,55 +80,3 @@ const MyCriteria: React.FC<ICriteriaGroup> = (id, criteria) => {
 };
 
 export default MyCriteria;
-
-
-
-
-/*
-        <div>
-      <Collapse>
-        <Panel header={nameGroup} key={111}>
-          {criteriaGroup.criteriaPoints.map((item, index) => {
-            return (
-              <MyCriteriaItem
-                //criteriaPoint={item}
-                itemID='' 
-                itemName={item} 
-                itemScore={0}
-               //cheсkingPoint={cheсkingPoints[index]}
-                //role={role}
-                //typeTask={typeTask}
-                //stateCheck={stateCheck}
-                //onChangeScore={onChangeScore}
-                //onChangeComment={onChangeComment}
-                //onAgreePoint={onAgreePoint}
-                //onDisagreePoint={onDisagreePoint}
-                key={index}
-              />
-            );
-          })}
-        </Panel>
-      </Collapse>
-    </div>
-
-
-
-        );
-};
-
-export default MyCriteria; */
-
-
-
-
-{/*
-        
-      <React.Fragment>
-      <Form.Item label="Criteria" name="criteria">
-        <Input name="criteria" value={criteria} placeholder="add your criteria" /> 
-      </Form.Item>
-      <MyCriteriaItem itemID='' itemName='' itemScore={0}  />
-      </React.Fragment>
-
-*/}
-        

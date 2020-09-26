@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 //import { List, Select } from 'antd';
-import { Form, Input, Button, Space, Checkbox } from 'antd';
+import { Form, Input, Button, Space } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 import MyCriteria from './Criteria';
 import MyCriteriaItem from './CriteriaItem';
@@ -50,20 +50,55 @@ interface ICriteriaPoint {
 
 const Myform: React.FC<ITask> = (props) => {
 
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [demo, setDemo] = useState('');
-  const [criteria, setCriteria] = useState('');
-
-
+  const [state, setState] = useState(false);
+  
   const onFinish = (values: any) => {
     console.log('Received values of form:', values);
     const formValues = values;
-    const task = {name: values.name, description: values.description,
+    if (values.ifPublish) 
+          setState (true) ;
+    const collectGroupName = values.criteriagroup.map ((v:any) => v.groupName);
+    console.log(collectGroupName);
+    const u = values.criteria1.map ((v:any) => v.groupName);
+    console.log(u);
     
-    }
+    const collectItemName = values.criteria1.filter( (v:any, index:any) => {return v.groupName == collectGroupName[0]});
+    console.log(collectItemName);
+    
+   
+    const x2 = 
+      values.criteriagroup.map ((v:any, index:any) => 
+           v.groupName.concat (
+            values.criteria1.filter( (i:any) => {return i.groupName == collectGroupName[index]})
+            )
+          
+        
+           
+          );
+    console.log(x2);  
+     const x = values.criteriagroup.forEach(function(item:any, i:any) {
+          item: {
+            values.criteria1.forEach (function(item2:any,j:any) {
+                  item2: {values.criteria1.filter( (v:any, index:any) => {return v.groupName == collectGroupName[i]})
+                   }
 
-    db.collection('tasks').add(values);
+             },
+            )
+          }
+        })
+      ;
+    console.log(x);
+
+    const taskValues = {name: values.name, id: values.id, description: values.description,
+                        demo: values.demo, usefulLinks:values.usefulLinks,
+                        evaluationCriteria: {groupName: collectGroupName, criteriaPointName: collectItemName},
+                        
+                        state: state
+    };
+    
+    
+    console.log('taskValues:', taskValues);
+    //db.collection('tasks').add(values);
   };
   
   
@@ -74,22 +109,27 @@ const Myform: React.FC<ITask> = (props) => {
     <Form name="create-task" id={props.id} onFinish={onFinish}>
       <h2>Create a new task:</h2>  
       <Form.Item label="Name" name="name">
-        <Input name="name" placeholder="your name" /> 
+        <Input name="name" placeholder="Task name" /> 
+      </Form.Item>
+      <Form.Item label="ID" name="id">
+        <Input name="id" placeholder="Task id" /> 
       </Form.Item>
       <Form.Item label="Description" name="description">
         <Input name="description" placeholder="This task is ..." /> 
       </Form.Item>
       <Form.Item label="Demo" name="demo">
-        <Input name="demo"  placeholder="link at your demo" /> 
+        <Input name="demo"  placeholder="Link to your demo" /> 
+      </Form.Item>
+      <Form.Item label="Useful links" name="usefulLinks">
+        <Input name="usefulLinks" placeholder="Your links" /> 
       </Form.Item>
       <h3>Requirements:</h3>
-       
       <MyCriteria  />
-
-    
-
+      <Form.Item label="Publish your task?" name="ifPublish" style={{ width: '110px' }}>
+        <Input name="ifPublish" placeholder="true or false" />
+      </Form.Item>
       <Form.Item>
-        <Button type="primary" htmlType="submit">
+        <Button type="primary" htmlType="submit" >
           Submit
         </Button>
       </Form.Item>

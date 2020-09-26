@@ -28,17 +28,17 @@ const MyCriteriaItem: React.FC<ICriteriaPoint> = (props) => {
               <div>
                 {fields.map((field) => (
                   <Space key={field.key} style={{ display: 'flex', marginBottom: 8 }} align="start">
-                    <Form.Item label={'CriteriaItem'} name={[field.name,"criteriaItem"]} required={false} style={{ width: '700px' }}>
+                    <Form.Item label={'Criteria item'} name={[field.name,"criteriaPointName"]} required={false} style={{ width: '600px' }}>
                       <Input placeholder="hh" style={{ width: '100%' }} />
                     </Form.Item>
-                    <Form.Item label={'Score'} name={[field.name, "score"]} required={false} style={{ width: '110px' }}>
+                    <Form.Item label={'Score'} name={[field.name, "criteriaPointScore"]} required={false} style={{ width: '100px' }}>
                       <Input placeholder="10" style={{ width: '100%' }} />
                     </Form.Item>
-                    <Form.Item label={'Mentor'} name={[field.name, "mentor"]} required={false} style={{ width: '110px' }}>
-                      <Input placeholder="m" style={{ width: '100%' }} />
+                    <Form.Item label={'For mentor'} name={[field.name, "isThisPointForAMentor"]} required={false} style={{ width: '180px' }}>
+                      <Input placeholder="true or false" style={{ width: '100%' }} />
                     </Form.Item>
-                    <Form.Item label={'Group'} name={[field.name, "group"]} required={false} style={{ width: '110px' }}>
-                      <Input placeholder="1" style={{ width: '100%' }} />
+                    <Form.Item label={'Criteria group'} name={[field.name, "groupName"]} required={false} style={{ width: '380px' }}>
+                      <Input placeholder="copy" style={{ width: '100%' }} />
                     </Form.Item>
                     {/*<Form.Item label={'For mentor'} name="if" required={false}>
                       <Checkbox style={{ width: '10%' }} />
