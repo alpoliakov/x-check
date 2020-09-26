@@ -99,12 +99,16 @@ export default function ChoiceScore({
         <></>
       ) : (
         <div className={styles.scoreButton}>
-          <Button htmlType="submit" onClick={onClickAgree} type="primary">
-            Agree
-          </Button>
-          <Button htmlType="submit" danger onClick={onClickDisAgree} type="primary">
-            Dispute
-          </Button>
+          <Tooltip title="Если согласен с замечаниями">
+            <Button htmlType="submit" onClick={onClickAgree} type="primary">
+              Agree
+            </Button>
+          </Tooltip>
+          <Tooltip title="Если не договорились (вызвать при крайней необходиомсти)">
+            <Button htmlType="submit" danger onClick={onClickDisAgree} type="primary">
+              Dispute
+            </Button>
+          </Tooltip>
         </div>
       );
 
@@ -154,7 +158,31 @@ export default function ChoiceScore({
       </Radio.Group>
     );
   } else {
-    scoreJSX = <span>Error(unforeseen situation)</span>;
+    scoreJSX = (
+      <Radio.Group name="radiogroup" defaultValue={score} onChange={onChangeRadio} disabled={true}>
+        <Radio style={radioStyle} value={minScore}>
+          {nameOptions[0]}
+        </Radio>
+        <Radio style={radioStyle} value={maxScore / 2}>
+          {nameOptions[1]}
+        </Radio>
+        <Radio style={radioStyle} value={maxScore}>
+          {nameOptions[2]}
+        </Radio>
+        <Radio style={radioStyle} value={choiceState.stateScore}>
+          Other
+          {choiceState.stateFlag ? (
+            <InputNumber
+              min={minScore}
+              max={maxScore}
+              onChange={onChangeInput}
+              value={score}
+              style={{ width: 100, marginLeft: 10 }}
+            />
+          ) : null}
+        </Radio>
+      </Radio.Group>
+    );
   }
   return <div className={styleContainer}>{scoreJSX}</div>;
 }

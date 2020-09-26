@@ -88,7 +88,7 @@ const cheсkingPoint6: ICheсkingPoint = {
 };
 
 const mentor: IMentor = {
-  id: 'Alex Alexsandrov',
+  id: 'Alex Alexsandrov 2183',
   name: 'Mentor Mentor',
 };
 
@@ -110,102 +110,9 @@ const review2: IStudent = {
   isAuditorAnonim: false,
 };
 const review3: IStudent = {
-  id: 'reviewsID 3',
+  id: 'reviewsID 2',
   name: 'reviews Пупкин',
   isAuditorAnonim: false,
-};
-const cheсksReviewer1: ICheсk = {
-  checkerID: '',
-  state: CheckState.AuditorDraft,
-  cheсking: [
-    cheсkingPoint1,
-    cheсkingPoint2,
-    cheсkingPoint3,
-    cheсkingPoint4,
-    cheсkingPoint5,
-    cheсkingPoint6,
-  ],
-  score: 70,
-  isAnonim: false,
-  isNegotiation: false,
-};
-
-const mentorCheck: ICheсk = {
-  checkerID: 'Alex Alexsandrov',
-  state: CheckState.AuditorDraft,
-  cheсking: [
-    cheсkingPoint1,
-    cheсkingPoint2,
-    cheсkingPoint3,
-    cheсkingPoint4,
-    cheсkingPoint5,
-    cheсkingPoint6,
-  ],
-  score: 70,
-  isAnonim: false,
-  isNegotiation: false,
-};
-
-const cheсksReviewer2: ICheсk = {
-  checkerID: 'reviewsID 2',
-  state: CheckState.NotVerified,
-  cheсking: [
-    cheсkingPoint1,
-    cheсkingPoint2,
-    cheсkingPoint3,
-    cheсkingPoint4,
-    cheсkingPoint5,
-    cheсkingPoint6,
-  ],
-  score: 70,
-  isAnonim: false,
-  isNegotiation: false,
-};
-const cheсksReviewer3: ICheсk = {
-  checkerID: 'reviewsID 3',
-  state: CheckState.Verified,
-  cheсking: [
-    cheсkingPoint1,
-    cheсkingPoint2,
-    cheсkingPoint3,
-    cheсkingPoint4,
-    cheсkingPoint5,
-    cheсkingPoint6,
-  ],
-  score: 70,
-  isAnonim: false,
-  isNegotiation: false,
-};
-
-const cheсksReviewer4: ICheсk = {
-  checkerID: 'reviewsID 4',
-  state: CheckState.Verified,
-  cheсking: [
-    cheсkingPoint1,
-    cheсkingPoint2,
-    cheсkingPoint3,
-    cheсkingPoint4,
-    cheсkingPoint5,
-    cheсkingPoint6,
-  ],
-  score: 70,
-  isAnonim: false,
-  isNegotiation: false,
-};
-const cheсksReviewer5: ICheсk = {
-  checkerID: 'reviewsID 5',
-  state: CheckState.Dispute,
-  cheсking: [
-    cheсkingPoint1,
-    cheсkingPoint2,
-    cheсkingPoint3,
-    cheсkingPoint4,
-    cheсkingPoint5,
-    cheсkingPoint6,
-  ],
-  score: 70,
-  isAnonim: false,
-  isNegotiation: false,
 };
 
 const selftest: ICheсk = {
@@ -224,7 +131,38 @@ const selftest: ICheсk = {
   isNegotiation: false,
 };
 
-export const checkingTask: IWorkDone = {
+const mentorCheck: ICheсk = {
+  checkerID: 'reviewsID 1',
+  state: CheckState.AuditorDraft,
+  cheсking: [
+    cheсkingPoint1,
+    cheсkingPoint2,
+    cheсkingPoint3,
+    cheсkingPoint4,
+    cheсkingPoint5,
+    cheсkingPoint6,
+  ],
+  score: 70,
+  isAnonim: false,
+  isNegotiation: false,
+};
+
+const cheсksReviewer1: ICheсk = {
+  checkerID: 'reviewsID 1',
+  state: CheckState.AuditorDraft,
+  cheсking: [
+    cheсkingPoint1,
+    cheсkingPoint2,
+    cheсkingPoint3,
+    cheсkingPoint4,
+    cheсkingPoint5,
+    cheсkingPoint6,
+  ],
+  score: 70,
+  isAnonim: false,
+  isNegotiation: false,
+};
+export const selfCheckingTask: IWorkDone = {
   id: 'Songbird Anna 1',
   taskID: 'Songbird 1',
   state: TaskState.isCheking,
@@ -233,10 +171,10 @@ export const checkingTask: IWorkDone = {
   deadline: new Date(),
   finalScore: 20,
   selfTest: selftest,
+  mentorCheck: {} as ICheсk,
   mentor: mentor,
-  mentorCheck: mentorCheck,
   reviewers: [review1, review2, review3],
-  cheсks: [cheсksReviewer1, cheсksReviewer2, cheсksReviewer3, cheсksReviewer4, cheсksReviewer5],
+  cheсks: [cheсksReviewer1],
   sourceGithubRepoUrl: 'https://skaymant-songbird.netlify.app/',
   deployUrl: 'https://skaymant-songbird.netlify.app/',
 };

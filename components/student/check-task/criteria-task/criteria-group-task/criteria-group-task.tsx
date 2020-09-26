@@ -1,8 +1,13 @@
 import React from 'react';
-import { Collapse, Row, Col, Typography, Tag } from 'antd';
+import { Collapse, Row, Col, Typography, Tag, Tooltip } from 'antd';
 import { ICriteriaGroup, ICriteriaPoint, TypeTask } from '../../../../../interfaces/ITask';
 import { Role } from '../../../../../interfaces/IUser';
-import { CheckState, ICheсkingPoint, IComment } from '../../../../../interfaces/IWorkDone';
+import {
+  CheckState,
+  CheсkingPointState,
+  ICheсkingPoint,
+  IComment,
+} from '../../../../../interfaces/IWorkDone';
 import ItemCriteriaTask from './item-criteria-task';
 import styles from './criteria-group-task.module.css';
 
@@ -44,17 +49,60 @@ function CriteriaGroupTask({
     0
   );
 
-  const colorTag = scoreGroup < maxGroupScore ? 'orange' : 'green';
-
+  let colorTag: string;
+  let textToolTip: string;
+  if (role === Role.student && stateCheck === CheckState.SelfTest) {
+    [colorTag, textToolTip] =
+      scoreGroup < maxGroupScore
+        ? ['orange', 'выполнено не полностью']
+        : ['green', 'выполнено полностью'];
+  } else {
+    switch (
+      cheсkingPoints.reduce((sum: CheсkingPointState, cheсkingPoint: ICheсkingPoint) => {
+        if (cheсkingPoint.state === CheсkingPointState.NotVerified) {
+          sum = cheсkingPoint.state;
+        } else if (
+          cheсkingPoint.state !== CheсkingPointState.Verified &&
+          sum !== CheсkingPointState.NotVerified
+        ) {
+          sum = cheсkingPoint.state;
+        }
+        return sum;
+      }, cheсkingPoints[0].state)
+    ) {
+      case CheсkingPointState.NotVerified:
+        colorTag = 'orange';
+        textToolTip = 'The group is not verified';
+        break;
+      case CheсkingPointState.Verified:
+        colorTag = 'green';
+        textToolTip = 'The group is verified';
+        break;
+      case CheсkingPointState.Negotiations:
+        colorTag = 'processing';
+        textToolTip = 'The group has negotiations';
+        break;
+      case CheсkingPointState.Dispute:
+        colorTag = 'red';
+        textToolTip = 'The group has dispute';
+        break;
+      case CheсkingPointState.DisputeClosed:
+        colorTag = 'gold';
+        textToolTip = 'The group has сlosed dispute';
+        break;
+    }
+  }
   const nameGroup = (
     <Row justify="space-between">
       <Col span={21}>
         <Title level={5}>{criteriaGroup.groupName}</Title>
       </Col>
       <Col span={3}>
-        <Tag color={colorTag}>
-          {scoreGroup}/{maxGroupScore}
-        </Tag>
+        <Tooltip title={textToolTip}>
+          <Tag color={colorTag}>
+            {scoreGroup}/{maxGroupScore}
+          </Tag>
+        </Tooltip>
       </Col>
     </Row>
   );

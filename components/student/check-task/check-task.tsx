@@ -13,7 +13,6 @@ import {
 import HeaderTask from './header-task';
 import ControlsTask from './controls-task';
 import CriteriaTask from './criteria-task';
-import { createCheckOnTask } from './common';
 import styles from './check-task.module.css';
 
 type PropsCheckTask = {
@@ -50,10 +49,20 @@ function CheckTask({
       </div>
     );
   }
-  const [stateCheckingTask, setCheckingTask] = useState<ICheсk>(
-    checkingTask || createCheckOnTask(task)
-  );
-  console.log(stateCheckingTask);
+
+  const [stateCheckingTask, setCheckingTask] = useState<ICheсk>(checkingTask);
+  console.log('stateCheckingTask', stateCheckingTask);
+  const onAgreeAllPoint = () => {
+    setCheckingTask((prev) => {
+      const newCheckingPointState = prev.cheсking.map((item) => {
+        if (item.state === CheсkingPointState.NotVerified) {
+          item.state = CheсkingPointState.Verified;
+        }
+        return item;
+      });
+      return { ...prev, cheсking: newCheckingPointState };
+    });
+  };
 
   const onAgreePoint = (cheсkingPointID: string) => {
     setCheckingTask((prev) => {
@@ -185,36 +194,88 @@ function CheckTask({
     }
   };
 
-  const onSubmitCheckTask = () => {
-    setCheckingTask((prev) => {
-      if (prev.state === CheckState.SelfTest) {
-        return {
-          ...prev,
-          state: CheckState.AuditorDraft,
-          cheсking: changeStatePoint(prev, CheсkingPointState.NotVerified),
-        };
-      } else if (prev.state === CheckState.AuditorDraft) {
-        return {
-          ...prev,
-          state: CheckState.NotVerified,
-          cheсking: changeStatePoint(prev, CheсkingPointState.Verified),
-        };
-      } else if (prev.state === CheckState.Negotiations) {
-        return {
-          ...prev,
-          state: CheckState.Negotiations,
-        };
-      } else {
-        return {
-          ...prev,
-          state: CheckState.Negotiations,
-          cheсking: changeStatePoint(prev, CheсkingPointState.NotVerified),
-        };
+  const changeStateCheck = (checkTask: ICheсk) => {
+    const bufStatePoints = checkTask.cheсking.reduce(
+      (sum: CheсkingPointState, cheсkingPoint: ICheсkingPoint) => {
+        if (cheсkingPoint.state === CheсkingPointState.NotVerified) {
+          sum = cheсkingPoint.state;
+        } else if (
+          cheсkingPoint.state !== CheсkingPointState.Verified &&
+          sum !== CheсkingPointState.NotVerified
+        ) {
+          sum = cheсkingPoint.state;
+        }
+        return sum;
+      },
+      checkTask.cheсking[0].state
+    );
+    switch (bufStatePoints) {
+      case CheсkingPointState.NotVerified: {
+        return CheckState.NotVerified;
       }
-    });
-    onSubmit(stateCheckingTask);
+      case CheсkingPointState.Verified: {
+        return CheckState.Verified;
+      }
+      case CheсkingPointState.Dispute: {
+        return CheckState.Dispute;
+      }
+      case CheсkingPointState.DisputeClosed: {
+        return CheckState.DisputeClosed;
+      }
+      default: {
+        return CheckState.NotVerified;
+      }
+    }
   };
 
+  const onSubmitCheckTask = () => {
+    setCheckingTask((prev) => {
+      switch (prev.state) {
+        case CheckState.SelfTest: {
+          const current = {
+            ...prev,
+            state: CheckState.AuditorDraft,
+            cheсking: changeStatePoint(prev, CheсkingPointState.NotVerified),
+          };
+          onSubmit(current);
+          return current;
+        }
+        case CheckState.AuditorDraft: {
+          const current = {
+            ...prev,
+            state: CheckState.NotVerified,
+            cheсking: changeStatePoint(prev, CheсkingPointState.Verified),
+          };
+          onSubmit(current);
+          return current;
+        }
+        case CheckState.NotVerified: {
+          const current = {
+            ...prev,
+            state: changeStateCheck(prev),
+          };
+          onSubmit(current);
+          return current;
+        }
+        case CheckState.Dispute: {
+          const current = {
+            ...prev,
+            state: changeStateCheck(prev),
+          };
+          onSubmit(current);
+          return current;
+        }
+        default: {
+          const current = {
+            ...prev,
+            state: changeStateCheck(prev),
+          };
+          onSubmit(current);
+          return current;
+        }
+      }
+    });
+  };
   return (
     <div className={styles.test}>
       <HeaderTask
@@ -237,12 +298,14 @@ function CheckTask({
         onDisagreePoint={onDisagreePoint}
       />
       <ControlsTask
+        role={role}
         isAnonim={stateCheckingTask.isAnonim}
         onChangeIsAnonim={onChangeIsAnonim}
         typeTask={typeTask}
         stateCheck={stateCheckingTask.state}
         onSave={onSaveCheckTask}
         onSubmit={onSubmitCheckTask}
+        onAgree={onAgreeAllPoint}
       />
     </div>
   );

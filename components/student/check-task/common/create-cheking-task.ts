@@ -1,6 +1,7 @@
 import { ITask } from '../../../../interfaces/ITask';
 import { StudentBasic } from '../../../../interfaces/IUser';
-import { ICheсk, IStudent, IMentor, IWorkDone, TaskState } from '../../../../interfaces/IWorkDone';
+import { IStudent, IMentor, IWorkDone, TaskState } from '../../../../interfaces/IWorkDone';
+import createCheckOnTask from './create-check-on-task';
 
 export default function createTask(task: ITask, user: StudentBasic): IWorkDone {
   const student: IStudent = {
@@ -8,13 +9,12 @@ export default function createTask(task: ITask, user: StudentBasic): IWorkDone {
     name: user.name,
   };
 
+  const selfTest = createCheckOnTask(task, `${task.id}_${user.id}`);
   const mentor = {} as IMentor;
-  const selfTest = {} as ICheсk;
-
   return {
     id: `${task.id}_${user.id}`,
     taskID: task.id,
-    state: TaskState.isCheking,
+    state: TaskState.isSelfTest,
     student: student,
     publishedAt: new Date(),
     deadline: new Date(),

@@ -8,6 +8,7 @@ export interface IWorkDone {
   finalScore: number; //набранные, масимальный будет браться из таска
   selfTest: ICheсk; // оценки самопроверки
   mentor: IMentor; //возможно стоит оставить только поле auditorName если это будут отдельные объекты для каждого проверяющего
+  mentorCheck: ICheсk;
   reviewers: IStudent[]; //но если все проверки в одном объекте булут лежать, будет сложнее навигация, но можно сделать напримр просмотр всех оценок проверяющим со спецролью
   cheсks: ICheсk[]; //собственно сами пункты проверки на основе которых считать весь скор
   sourceGithubRepoUrl: string;
@@ -18,11 +19,6 @@ export enum TaskState {
   isSelfTest, // состояние самопроверки
   isCheking, // состояние кроссчека
   isCompleted, //состояние выполненной проверки
-}
-
-export enum CheckStateMentor {
-  isMentorDraft,
-  isMentorCheck,
 }
 
 export enum CheckState {
@@ -46,9 +42,6 @@ export enum CheсkingPointState {
 export interface IMentor {
   id: string;
   name: string;
-  state: CheckStateMentor;
-  cheсking: ICheсkingPoint[];
-  score: number;
 }
 
 export interface IStudent {
