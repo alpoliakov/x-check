@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { Button, Row, Typography, Table } from 'antd';
+import { Button, Row, Typography } from 'antd';
 import MainLayout from '../../../components/MainLayout';
 import SubmitRandom from './submit-random';
 import { db } from '../../../firebase';
 import AdminMain from '../../../components/Admin/index';
+
+import TableData from '../../../components/TableData';
 
 interface PropsAdmin {
   dataUsers: [];
@@ -22,31 +24,6 @@ const AdminPage: React.FC<PropsAdmin> = ({ dataUsers, dataTasks, crossCheckSessi
   const getVisibleModal = (value: boolean) => {
     setVisibleModal(value);
   };
-
-  const column = [
-    {
-      title: 'User',
-      dataIndex: 'user',
-      key: 'user',
-      // sorter: (a, b) => a.user < b.user,
-      sortDirections: ['descend', 'ascend'],
-    },
-    {
-      title: 'Task',
-      dataIndex: 'task',
-      key: 'task',
-    },
-    {
-      title: 'Reviewer',
-      dataIndex: 'reviewer',
-      key: 'reviewer',
-    },
-    {
-      title: 'Score',
-      dataIndex: 'score',
-      key: 'score',
-    },
-  ];
 
   return (
     <MainLayout title={'main: admin'}>
@@ -76,7 +53,7 @@ const AdminPage: React.FC<PropsAdmin> = ({ dataUsers, dataTasks, crossCheckSessi
             dataUsers={dataUsers}
             crossCheckSession={crossCheckSession}
           />
-          <Table dataSource={dataRow} columns={column} />
+          <TableData dataRow={dataRow} />
         </div>
       </main>
     </MainLayout>
