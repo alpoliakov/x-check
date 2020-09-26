@@ -98,7 +98,7 @@ const Myform: React.FC<ITask> = (props) => {
     
     
     console.log('taskValues:', taskValues);
-    //db.collection('tasks').add(values);
+    db.collection('tasks').add(values);
   };
   
   
