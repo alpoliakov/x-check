@@ -1,3 +1,4 @@
+import { ICriteriaGroup, ICriteriaPoint } from '../interfaces/ITask';
 export default function importTaskMD(task: string): any {
   task.replace('`', "'");
   const md2json = require('md-2-json');
@@ -13,7 +14,6 @@ export default function importTaskMD(task: string): any {
     demo: demo,
     evaluationCriteria: evaluationCriteria,
   };
-  console.log(newTask);
   return newTask;
 }
 
@@ -36,7 +36,6 @@ export function bigImportTaskMD(task: string): any {
     evaluationCriteria: evaluationCriteria,
     usefulLinks: usefulLinks,
   };
-  console.log(newTask);
   return newTask;
 }
 
@@ -136,4 +135,56 @@ function getdescriptionDingy(incomingJSON: any): any {
   delete incomingJSON[Object.keys(incomingJSON)[0]]['Useful links'];
   const descriptionDingy = incomingJSON[Object.keys(incomingJSON)[0]];
   return descriptionDingy;
+}
+
+export function importTaskRSSChecklist(RSSChecklist: any): any {
+  RSSChecklist = JSON.parse(RSSChecklist);
+  const group: ICriteriaGroup = {
+    groupID: '',
+    groupName: '',
+    criteriaPoints: [],
+  };
+
+  const criteriaPoint: ICriteriaPoint= {
+    criteriaPointID: '',
+    criteriaPointName: '',
+    criteriaPointScore: 0,
+    isFine: false,
+    isThisPointForAMentor: false,
+  };
+
+  const evaluationCriteria = [];
+
+  RSSChecklist.criteria.foreach((item) => {
+    if (item.type === 'title') {
+      if (group.groupID !== '') {
+        evaluationCriteria.push(group);
+        group.criteriaPoints = [];
+      }
+      group.groupID = item.title;
+      group.groupName = item.title;
+    } else if (item.type === 'subtask') {
+      criteriaPoint.criteriaPointID = item.text;
+      criteriaPoint.criteriaPointName = item.text;
+      criteriaPoint.criteriaPointScore = item.max;
+      criteriaPoint.isFine = false;
+      criteriaPoint.isThisPointForAMentor = false;
+      group.criteriaPoints.push(criteriaPoint);
+    } else if (item.type === 'penalty') {
+      criteriaPoint.criteriaPointID = item.text;
+      criteriaPoint.criteriaPointName = item.text;
+      criteriaPoint.criteriaPointScore = item.max * -1;
+      criteriaPoint.isFine = true;
+      criteriaPoint.isThisPointForAMentor = false;
+      group.criteriaPoints.push(criteriaPoint);
+    }
+  });
+  evaluationCriteria.push(group);
+
+  const newTask = {
+    id: RSSChecklist.taskName,
+    name: RSSChecklist.taskName,
+    evaluationCriteria: evaluationCriteria,
+  };
+  return newTask;
 }
