@@ -104,7 +104,17 @@ function getCriteriaPoint(criteriaPointsDingy: type) {
 function getDemoLink(incomingJSON: any): string {
   const demoDescription = getCategory(incomingJSON, 'Демо', 'Demo');
   const urlStart = demoDescription.indexOf('http');
-  const urlEnd = demoDescription.indexOf('\n' || ',' || ' ' || '\r\n', urlStart);
+  const urlEndEnter = demoDescription.indexOf('\n', urlStart);
+  const urlEndSpace = demoDescription.indexOf(' ', urlStart);
+  let urlEnd;
+  if (urlEndEnter.lenght > urlEndSpace.lendht){
+    urlEnd = urlEndSpace;
+  } else {
+    urlEnd = urlEndEnter;
+  }
+  if (urlEnd[urlEnd.lenght - 1] === '.' || urlEnd[urlEnd.lenght - 1] === ',') {
+    urlEnd = urlEnd.slice(0, -1);
+  }
   const demoLink = demoDescription.slice(urlStart, urlEnd);
   return demoLink;
 }
