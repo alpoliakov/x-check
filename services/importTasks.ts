@@ -39,6 +39,58 @@ export function bigImportTaskMD(task: string): any {
   return newTask;
 }
 
+export function importTaskRSSChecklist(RSSChecklist: any): any {
+  RSSChecklist = JSON.parse(RSSChecklist);
+  const group: ICriteriaGroup = {
+    groupID: '',
+    groupName: '',
+    criteriaPoints: [],
+  };
+
+  const criteriaPoint: ICriteriaPoint = {
+    criteriaPointID: '',
+    criteriaPointName: '',
+    criteriaPointScore: 0,
+    isFine: false,
+    isThisPointForAMentor: false,
+  };
+
+  const evaluationCriteria = [];
+
+  RSSChecklist.criteria.foreach((item: any) => {
+    if (item.type === 'title') {
+      if (group.groupID !== '') {
+        evaluationCriteria.push(group);
+        group.criteriaPoints = [];
+      }
+      group.groupID = item.title;
+      group.groupName = item.title;
+    } else if (item.type === 'subtask') {
+      criteriaPoint.criteriaPointID = item.text;
+      criteriaPoint.criteriaPointName = item.text;
+      criteriaPoint.criteriaPointScore = item.max;
+      criteriaPoint.isFine = false;
+      criteriaPoint.isThisPointForAMentor = false;
+      group.criteriaPoints.push(criteriaPoint);
+    } else if (item.type === 'penalty') {
+      criteriaPoint.criteriaPointID = item.text;
+      criteriaPoint.criteriaPointName = item.text;
+      criteriaPoint.criteriaPointScore = item.max * -1;
+      criteriaPoint.isFine = true;
+      criteriaPoint.isThisPointForAMentor = false;
+      group.criteriaPoints.push(criteriaPoint);
+    }
+  });
+  evaluationCriteria.push(group);
+
+  const newTask = {
+    id: RSSChecklist.taskName,
+    name: RSSChecklist.taskName,
+    evaluationCriteria: evaluationCriteria,
+  };
+  return newTask;
+}
+
 function getCategory(incomingJSON: any, ruTitle: string, enTitle: string) {
   const categoryDingy = incomingJSON[Object.keys(incomingJSON)[0]][ruTitle]
     ? incomingJSON[Object.keys(incomingJSON)[0]][ruTitle].raw
@@ -83,7 +135,7 @@ function evaluationCriteriaParse(incomingJSON: any): any {
   return newArray;
 }
 
-function getCriteriaPoint(criteriaPointsDingy: type) {
+function getCriteriaPoint(criteriaPointsDingy: string) {
   const endDescription = criteriaPointsDingy.indexOf('+');
   const text = criteriaPointsDingy.slice(0, endDescription);
 
@@ -94,7 +146,7 @@ function getCriteriaPoint(criteriaPointsDingy: type) {
   return {
     criteriaPointID: text,
     criteriaPointName: text,
-    criteriaPointScore: criteriaPointScore,
+    criteriaPointScore: Number(criteriaPointScore),
     isFine: false,
     isThisPointForAMentor: false,
   };
@@ -106,7 +158,7 @@ function getDemoLink(incomingJSON: any): string {
   const urlEndEnter = demoDescription.indexOf('\n', urlStart);
   const urlEndSpace = demoDescription.indexOf(' ', urlStart);
   let urlEnd;
-  if (urlEndEnter.lenght > urlEndSpace.lendht){
+  if (urlEndEnter.lenght > urlEndSpace.lendht) {
     urlEnd = urlEndSpace;
   } else {
     urlEnd = urlEndEnter;
@@ -135,56 +187,4 @@ function getdescriptionDingy(incomingJSON: any): any {
   delete incomingJSON[Object.keys(incomingJSON)[0]]['Useful links'];
   const descriptionDingy = incomingJSON[Object.keys(incomingJSON)[0]];
   return descriptionDingy;
-}
-
-export function importTaskRSSChecklist(RSSChecklist: any): any {
-  RSSChecklist = JSON.parse(RSSChecklist);
-  const group: ICriteriaGroup = {
-    groupID: '',
-    groupName: '',
-    criteriaPoints: [],
-  };
-
-  const criteriaPoint: ICriteriaPoint= {
-    criteriaPointID: '',
-    criteriaPointName: '',
-    criteriaPointScore: 0,
-    isFine: false,
-    isThisPointForAMentor: false,
-  };
-
-  const evaluationCriteria = [];
-
-  RSSChecklist.criteria.foreach((item) => {
-    if (item.type === 'title') {
-      if (group.groupID !== '') {
-        evaluationCriteria.push(group);
-        group.criteriaPoints = [];
-      }
-      group.groupID = item.title;
-      group.groupName = item.title;
-    } else if (item.type === 'subtask') {
-      criteriaPoint.criteriaPointID = item.text;
-      criteriaPoint.criteriaPointName = item.text;
-      criteriaPoint.criteriaPointScore = item.max;
-      criteriaPoint.isFine = false;
-      criteriaPoint.isThisPointForAMentor = false;
-      group.criteriaPoints.push(criteriaPoint);
-    } else if (item.type === 'penalty') {
-      criteriaPoint.criteriaPointID = item.text;
-      criteriaPoint.criteriaPointName = item.text;
-      criteriaPoint.criteriaPointScore = item.max * -1;
-      criteriaPoint.isFine = true;
-      criteriaPoint.isThisPointForAMentor = false;
-      group.criteriaPoints.push(criteriaPoint);
-    }
-  });
-  evaluationCriteria.push(group);
-
-  const newTask = {
-    id: RSSChecklist.taskName,
-    name: RSSChecklist.taskName,
-    evaluationCriteria: evaluationCriteria,
-  };
-  return newTask;
 }
