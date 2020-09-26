@@ -1,4 +1,23 @@
-export default function importTaskMD(task: string): string {
+export default function importTaskMD(task: string): any {
+  task.replace('`', "'");
+  const md2json = require('md-2-json');
+  const incomingJSON = md2json.parse(task);
+
+  const name = Object.keys(incomingJSON)[0];
+  const demo = getDemoLink(incomingJSON);
+  const evaluationCriteria = evaluationCriteriaParse(incomingJSON);
+
+  const newTask = {
+    id: name,
+    name: name,
+    demo: demo,
+    evaluationCriteria: evaluationCriteria,
+  };
+  console.log(newTask);
+  return newTask;
+}
+
+export function bigImportTaskMD(task: string): any {
   task.replace('`', "'");
   const md2json = require('md-2-json');
   const incomingJSON = md2json.parse(task);
@@ -48,7 +67,7 @@ function evaluationCriteriaParse(incomingJSON: any): any {
   }
   evaluationCriteriaArray.push(newEvaluationCriteria);
 
-  const newArray = [];
+  const newArray: any = [];
 
   evaluationCriteriaArray.forEach((criteria) => {
     const nameStart = criteria.indexOf('**');
