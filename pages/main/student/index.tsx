@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { Typography } from 'antd';
-import Users from './users';
+import React from 'react';
+import { List, Typography } from 'antd';
 import { db } from '../../../firebase';
 import MainLayout from '../../../components/MainLayout';
+import Link from 'next/link';
 
 interface PropsStudentPage {
   data?: [];
@@ -10,10 +10,8 @@ interface PropsStudentPage {
 
 const StudentPage: React.FC<PropsStudentPage> = ({ data }) => {
   const { Title } = Typography;
-  const [toUsers, setToUsers] = useState(false);
-  const goToUsers = () => {
-    setToUsers(!toUsers);
-  };
+  console.log(data);
+  const dataTest: Array<string> = ['Cross-check', 'Tasks'];
 
   return (
     <MainLayout title={'main: student'}>
@@ -22,13 +20,20 @@ const StudentPage: React.FC<PropsStudentPage> = ({ data }) => {
         <div className="nav__main">
           <div>
             <Title level={2}>Student</Title>
-            <a onClick={goToUsers}>Users</a>
+            <List
+              bordered
+              dataSource={dataTest}
+              renderItem={(item) => (
+                <List.Item key={item}>
+                  <Link href={`./student/${item.toLowerCase()}`}>
+                    <a>{item}</a>
+                  </Link>
+                </List.Item>
+              )}
+            />
           </div>
         </div>
-        <div className="workspace">
-          <h1>Working Space</h1>
-          {toUsers && <Users data={data} />}
-        </div>
+        <div className="workspace"></div>
       </main>
     </MainLayout>
   );

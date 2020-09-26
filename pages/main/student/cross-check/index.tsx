@@ -1,26 +1,28 @@
 import React from 'react';
-import MainLayout from '../../../components/MainLayout';
+import MainLayout from '../../../../components/MainLayout';
+import { db } from '../../../../firebase';
 import { Row, Col } from 'antd';
-import Sidebar from '../../../components/student/cross-check/Sidebar';
-import CheckTask from '../../..//components/student/check-task';
-import { checkingTask, user } from '../../../components/student/test-task/test-work-done';
-import { testTask } from '../../../components/student/test-task/test-task';
-import { selfCheckingTask } from '../../../components/student/test-task/selftest-work-done';
-import { dataCourse } from '../../../components/student/test-task/test-course';
+import Sidebar from '../../../../components/student/cross-check/Sidebar';
+import CheckTask from '../../../../components/student/check-task';
+import { checkingTask, user } from '../../../../components/student/test-task/test-work-done';
+import { testTask } from '../../../../components/student/test-task/test-task';
+import { selfCheckingTask } from '../../../../components/student/test-task/selftest-work-done';
+import { dataCourse } from '../../../../components/student/test-task/test-course';
 import {
   createCheckOnReviewer,
   createMentorCheck,
   createTask,
-} from '../../../components/student/check-task/common';
-import { ICheсk, TaskState } from '../../../interfaces/IWorkDone';
-import { TypeTask } from '../../../interfaces/ITask';
-import { Role } from '../../../interfaces/IUser';
+} from '../../../../components/student/check-task/common';
+import { ICheсk, TaskState } from '../../../../interfaces/IWorkDone';
+import { TypeTask } from '../../../../interfaces/ITask';
+import { Role } from '../../../../interfaces/IUser';
 
-interface PropsStudent {
-  changeAuthorization: () => void;
+interface PropsCrossCheckPage {
+  data?: [];
 }
 
-const CrossCheckPage: React.FC<PropsStudent> = ({ changeAuthorization }) => {
+const CrossCheckPage: React.FC<PropsCrossCheckPage> = ({ data }) => {
+  console.log(data);
   const tasksData = dataCourse.tasks;
   const taskList = tasksData.map((el) => el.name);
 
@@ -142,7 +144,7 @@ const CrossCheckPage: React.FC<PropsStudent> = ({ changeAuthorization }) => {
 
   return (
     <>
-      <MainLayout title="Student" changeAuthorization={changeAuthorization}>
+      <MainLayout title="Student">
         <Row>
           <Col span={5}>
             <Sidebar getTask={selectTask} taskList={taskList} isDeadline={isDeadline} />
@@ -167,3 +169,17 @@ const CrossCheckPage: React.FC<PropsStudent> = ({ changeAuthorization }) => {
 };
 
 export default CrossCheckPage;
+
+export const getServerSideProps = async () => {
+  let data: any | undefined = [];
+  await db
+    .collection('task')
+    .get()
+    .then((snap) => {
+      data = snap.docs.map((doc) => doc.data());
+    });
+
+  return {
+    props: { data },
+  };
+};
