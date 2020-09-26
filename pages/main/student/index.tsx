@@ -42,6 +42,7 @@ export const getServerSideProps = async () => {
     .then((snap) => {
       data = snap.docs.map((doc) => doc.data());
     });
+
   return {
     props: { data },
   };
