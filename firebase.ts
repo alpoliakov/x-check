@@ -29,5 +29,6 @@ export const db = firebase.firestore();
 export const auth = firebase.auth();
 export const databaseRef = firebase.database().ref();
 export const checkRef = databaseRef.child(USERS);
+export const taskRef = databaseRef.child(TASKS);
 
 export default firebase;

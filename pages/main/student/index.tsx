@@ -17,6 +17,7 @@ const StudentPage: React.FC<PropsStudentPage> = ({ data }) => {
     setStateStudent(user);
   };
   const nameStudent = stateStudent.name !== undefined ? stateStudent.name : 'Student Page';
+
   return (
     <MainLayout title={''}>
       <Title level={1}>Student Page</Title>
@@ -44,5 +45,18 @@ export const getServerSideProps = async () => {
     props: { data },
   };
 };
+
+//export const getServerSideProps2 = async () => {
+let data2: any | undefined = [];
+//  await db
+db.collection('tasks')
+  .get()
+  .then((snap) => {
+    data2 = snap.docs.map((doc) => doc.data());
+  });
+//  return {
+//    props: { data2 },
+//  };
+//};
 
 export default StudentPage;
