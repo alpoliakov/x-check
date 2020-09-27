@@ -35,14 +35,13 @@ const StudentPage: React.FC<PropsStudentPage> = ({ data }) => {
           <div>
             <Title level={2}>Student</Title>
             <a onClick={goToUsers}>Users</a>
+            <div>
+              <a onClick={goToTasks}>Tasks</a>
+              <br />
+              <a onClick={goToNewTask}>Create task</a>
+            </div>
           </div>
         </div>
-        <div>
-          <a onClick={goToTasks}>Tasks</a>
-          <br />
-          <a onClick={goToNewTask}>Create task</a>
-        </div>
-
         <div className="workspace">
           <h1>Working Space</h1>
           {toUsers && <Users data={data} />}
