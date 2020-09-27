@@ -1,46 +1,16 @@
 import React from 'react';
 import { Select, Input, Table } from 'antd';
-
+import { ITask } from '../../../interfaces/ITask';
+import styles from './sidebar.module.css';
 interface PropsSidebar {
   taskList: string[];
+  isComplited: boolean;
   isDeadline: boolean;
-  getTask: (value: string) => void;
+  getTask: (task: string) => void;
 }
 
-const Sidebar: React.FC<PropsSidebar> = ({ getTask, taskList, isDeadline }) => {
+const Sidebar: React.FC<PropsSidebar> = ({ getTask, taskList, isComplited, isDeadline }) => {
   const { Option } = Select;
-
-  const columns = [
-    {
-      title: 'Reviewers',
-      dataIndex: 'Reviewers',
-      key: 'Reviewers',
-    },
-    {
-      title: 'Status',
-      dataIndex: 'Status',
-      key: 'Status',
-    },
-  ];
-
-  const data = [
-    {
-      key: '1',
-      Reviewers: 'Reviewer 1',
-      Status: 'Draft',
-    },
-    {
-      key: '2',
-      Reviewers: 'Reviewer 2',
-      Status: 'Accepted',
-    },
-    {
-      key: '3',
-      Reviewers: 'Reviewer 3',
-      Status: 'Disputed',
-    },
-  ];
-
   const handleClick = (value: string) => {
     getTask(value);
   };
@@ -54,24 +24,20 @@ const Sidebar: React.FC<PropsSidebar> = ({ getTask, taskList, isDeadline }) => {
     </div>
   );
 
-  const table = (
-    <div>
-      <Table columns={columns} dataSource={data} pagination={false} />
-    </div>
-  );
+  // const table = <div>{<Table columns={columns} dataSource={data} pagination={false} />}</div>;
 
   return (
-    <div>
-      <div>
+    <div className={styles.sideBar}>
+      <div className={styles.mb5}>
         <Select placeholder="Select the task" onChange={handleClick}>
           {taskList.map((item) => (
-            <Option key={item} value={`${item}`}>
+            <Option key={item} value={item}>
               {item}
             </Option>
           ))}
         </Select>
       </div>
-      {isDeadline ? table : inputs}
+      {isDeadline ? <></> : inputs}
     </div>
   );
 };

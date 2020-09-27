@@ -1,29 +1,29 @@
 import { ICourse } from '../../../interfaces/ICourse';
 
 export const dataCourse: ICourse = {
-  id: 123,
+  id: 'course1',
   name: 'course1',
   tasks: [
     {
-      taskID: 123,
-      name: 'task1',
+      taskID: 'Songbird 1',
+      name: 'Songbird',
       taskStage: 'stage',
-      deadline: new Date(0),
-      start: new Date(),
+      deadline: new Date(2021, 0, 1).getTime(),
+      start: new Date(0).getTime(),
     },
     {
-      taskID: 567,
-      name: 'task2',
+      taskID: 'Songbird 1',
+      name: 'Songbird 2',
       taskStage: 'stage',
-      deadline: new Date(2021, 0, 1),
-      start: new Date(),
+      deadline: new Date(2021, 0, 1).getTime(),
+      start: new Date().getTime(),
     },
     {
-      taskID: 438,
-      name: 'task3',
+      taskID: 'Songbird 1',
+      name: 'Songbird 3',
       taskStage: 'stage',
-      deadline: new Date(0),
-      start: new Date(),
+      deadline: new Date(0).getTime(),
+      start: new Date().getTime(),
     },
   ],
 };

@@ -5,7 +5,7 @@ export interface ITask {
   authorName?: string;
   publisherID: string; //id user
   state: StateTask;
-  publishedAt?: Date;
+  publishedAt?: number;
   demo?: string;
   description: string;
   evaluationCriteria: ICriteriaGroup[];

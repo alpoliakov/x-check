@@ -2,7 +2,7 @@ import React from 'react';
 import MainLayout from '../../../../components/MainLayout';
 import { db } from '../../../../firebase';
 import { Row, Col } from 'antd';
-import Sidebar from '../../../../components/student/cross-check/Sidebar';
+import Sidebar from '../../../../components/student/cross-check/sidebar';
 import CheckTask from '../../../../components/student/check-task';
 import { checkingTask, user } from '../../../../components/student/test-task/test-work-done';
 import { testTask } from '../../../../components/student/test-task/test-task';
@@ -145,11 +145,11 @@ const CrossCheckPage: React.FC<PropsCrossCheckPage> = ({ data }) => {
   return (
     <>
       <MainLayout title="Student">
-        <Row>
-          <Col span={5}>
+        <main className={'main__box'}>
+          <div className="nav__main">
             <Sidebar getTask={selectTask} taskList={taskList} isDeadline={isDeadline} />
-          </Col>
-          <Col span={18}>
+          </div>
+          <div className="workspace">
             <CheckTask
               task={testTask}
               checkingTask={checkTask}
@@ -161,8 +161,8 @@ const CrossCheckPage: React.FC<PropsCrossCheckPage> = ({ data }) => {
               onSave={onSave}
               onSubmit={onSubmit}
             />
-          </Col>
-        </Row>
+          </div>
+        </main>
       </MainLayout>
     </>
   );

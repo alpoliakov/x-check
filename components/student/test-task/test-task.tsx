@@ -73,7 +73,7 @@ export const testTask: ITask = {
   authorName: 'Alex Alexsandrov',
   publisherID: 'publisherID',
   state: StateTask.draft,
-  publishedAt: new Date(),
+  publishedAt: new Date().getTime(),
   description: `Допускается:
   -другая тематика приложения (не птицы)
   -использование вместо изображений видео
