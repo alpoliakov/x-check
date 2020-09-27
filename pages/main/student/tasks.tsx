@@ -26,9 +26,9 @@ const Tasks: NextPage<PropsUsers> = ({ data2 }) => {
       <ul>
         {listTasks.map((item) => (
           <li key={`${item['uid']}`}>
-            <Link href="./task/[id]" as={'./task/' + item['uid']}>
-              <a>{item['name']}</a>
-            </Link>
+            {/* <Link href="./task/[id]" as={'./task/' + item['uid']}> */}
+              <a onClick={() => console.log(item)}>{item['name']}</a>
+            {/* </Link> */}
           </li>
         ))}
       </ul>
