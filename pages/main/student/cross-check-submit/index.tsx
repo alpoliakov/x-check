@@ -37,9 +37,9 @@ const CrossCheckPage: React.FC<PropsCrossCheckPage> = ({
   const [isComplited, setIsComplited] = React.useState(false);
 
   console.log(task, isComplited, isDeadline);
-  // console.log('tasksData', tasksData);
-  // console.log('courseData', courseData);
-  // console.log('completedTasksData', completedTasksData);
+  console.log('tasksData', tasksData);
+  console.log('courseData', courseData);
+  console.log('completedTasksData', completedTasksData);
   let checkTask: ICheсk;
   let reviewer: IStudent;
   let newCheckingTask: IWorkDone;
@@ -47,15 +47,12 @@ const CrossCheckPage: React.FC<PropsCrossCheckPage> = ({
     newCheckingTask = createTask(testTask, user);
     [checkTask, reviewer] = [newCheckingTask.selfTest, newCheckingTask.student];
   } else if (isComplited && !isDeadline) {
+    const select = tasksData?.filter((taskData) => taskData.name === task);
     const curCheckingTask = completedTasksData?.filter(
-      (completedTask) => completedTask.name === select
+      (completedTask) => completedTask.taskID === select[0].id
     )[0];
     console.log('curCheckingTask', curCheckingTask);
     [checkTask, reviewer] = [curCheckingTask.selfTest, curCheckingTask.student];
-  } else if (isComplited && !isDeadline) {
-    const newCheckingTask = createTask(testTask, user);
-    console.log('newCheckingTask', newCheckingTask);
-    [checkTask, reviewer] = [newCheckingTask.selfTest, newCheckingTask.student];
   } else {
     const newCheckingTask = createTask(testTask, user);
     console.log('newCheckingTask', newCheckingTask);
@@ -74,6 +71,7 @@ const CrossCheckPage: React.FC<PropsCrossCheckPage> = ({
     // deleteDocument('tasks', testTask.id);
 
     const select = tasksData?.filter((taskData) => taskData.name === selectTask);
+    console.log('select', select[0].id);
     setTask(selectTask);
 
     const selectTaskDeadline = dataCourse.tasks
@@ -83,7 +81,8 @@ const CrossCheckPage: React.FC<PropsCrossCheckPage> = ({
     const date = new Date().getTime();
 
     setIsComplited(
-      completedTasksData?.filter((completedTask) => completedTask.name === select).length !== 0
+      completedTasksData?.filter((completedTask) => completedTask.taskID === select[0].id)
+        .length !== 0
     );
 
     if (selectTaskDeadline < date) {
