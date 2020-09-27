@@ -1,0 +1,8 @@
+.test {
+  margin-left: 50px;
+}
+
+.test > p {
+  text-align: center;
+  font-size: 20px;
+}
