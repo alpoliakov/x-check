@@ -12,7 +12,6 @@ interface AProps {
 
 const ActiveTask: React.FC<AProps> = ({ crossCheckSession, getActiveTask }) => {
   const onSelected = (value: string) => {
-    console.log(value);
     getActiveTask(value);
   };
   return (
