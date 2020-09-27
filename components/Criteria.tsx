@@ -39,7 +39,7 @@ const MyCriteria: React.FC<ICriteriaGroup> = (id, criteria) => {
 
   <React.Fragment>
         
-        <Form.List name="criteriagroup">
+        {/* <Form.List name="criteriagroup">
             {(fields, { add, remove }) => {
                 return (
                   <div>
@@ -73,7 +73,7 @@ const MyCriteria: React.FC<ICriteriaGroup> = (id, criteria) => {
                   </div>
                 );
              }}
-        </Form.List>
+        </Form.List> */}
         <MyCriteriaItem  />
   </React.Fragment>
   );

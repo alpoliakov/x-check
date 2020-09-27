@@ -22,22 +22,50 @@ const MyCriteriaItem: React.FC<ICriteriaPoint> = (props) => {
     return (
 
         
-       <Form.List name="criteria1" >
+       <Form.List name="criterias" >
         {(fields, { add, remove }) => {
             return (
               <div>
                 {fields.map((field) => (
                   <Space key={field.key} style={{ display: 'flex', marginBottom: 8 }} align="start">
-                    <Form.Item label={'Criteria item'} name={[field.name,"criteriaPointName"]} required={false} style={{ width: '600px' }}>
+                    <Form.Item
+                      label={'Criteria item'}
+                      name={[field.name, 'criteriaPointName']}
+                      required={false}
+                      style={{ width: '600px' }}
+                    >
                       <Input placeholder="hh" style={{ width: '100%' }} />
                     </Form.Item>
-                    <Form.Item label={'Score'} name={[field.name, "criteriaPointScore"]} required={false} style={{ width: '100px' }}>
+                    <Form.Item
+                      label={'Score'}
+                      name={[field.name, 'criteriaPointScore']}
+                      required={false}
+                      style={{ width: '100px' }}
+                    >
                       <Input placeholder="10" style={{ width: '100%' }} />
                     </Form.Item>
-                    <Form.Item label={'For mentor'} name={[field.name, "isThisPointForAMentor"]} required={false} style={{ width: '180px' }}>
+                    <Form.Item
+                      label={'For mentor'}
+                      name={[field.name, 'isThisPointForAMentor']}
+                      required={false}
+                      style={{ width: '180px' }}
+                    >
                       <Input placeholder="true or false" style={{ width: '100%' }} />
                     </Form.Item>
-                    <Form.Item label={'Criteria group'} name={[field.name, "groupName"]} required={false} style={{ width: '380px' }}>
+                    <Form.Item
+                      label={'is Fine?'}
+                      name={[field.name, 'isFine']}
+                      required={false}
+                      style={{ width: '180px' }}
+                    >
+                      <Input placeholder="true or false" style={{ width: '100%' }} />
+                    </Form.Item>
+                    <Form.Item
+                      label={'Criteria group'}
+                      name={[field.name, 'groupName']}
+                      required={false}
+                      style={{ width: '380px' }}
+                    >
                       <Input placeholder="copy" style={{ width: '100%' }} />
                     </Form.Item>
                     {/*<Form.Item label={'For mentor'} name="if" required={false}>
