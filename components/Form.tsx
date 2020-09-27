@@ -6,7 +6,7 @@ import TextArea from 'antd/lib/input/TextArea';
 import MyCriteria from './Criteria';
 import MyCriteriaItem from './CriteriaItem';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { db, taskRef } from "../firebase";
+import { db, taskRef } from '../firebase';
 //import { useForm } from "react-hook-form";
 
 // interface ITask {
@@ -24,7 +24,7 @@ import { db, taskRef } from "../firebase";
 //   useJury?: boolean; //будет ли оценка жюри
 //   checkingType?: 'crossCheck',
 //   //setFieldsValue: (values:any) => void
-// 
+//
 // export enum StateTask {
 //   draft,
 //   active,
@@ -45,11 +45,10 @@ import { db, taskRef } from "../firebase";
 // }
 
 const Myform: React.FC<ITask> = (props) => {
-
   // const [state, setState] = useState(false);
   const onFinish = (values: any) => {
     // console.log('Received values of form:', values);
-    let evaluationCriteria: any = [];
+    const evaluationCriteria: any = [];
 
     for (let i = 0; i < values.criterias.length; i++) {
       const criteriaPoint = {
@@ -129,15 +128,15 @@ const Myform: React.FC<ITask> = (props) => {
 
   return (
     <Form name="create-task" id={props.id} onFinish={onFinish}>
-      <h2>Create a new task:</h2>  
+      <h2>Create a new task:</h2>
       <Form.Item label="Name" name="name">
-        <Input name="name" placeholder="Task name" /> 
+        <Input name="name" placeholder="Task name" />
       </Form.Item>
       {/* <Form.Item label="ID" name="id">
         <Input name="id" placeholder="Task id" /> 
       </Form.Item> */}
       <Form.Item label="Description" name="description">
-        <Input name="description" placeholder="This task is ..." /> 
+        <Input name="description" placeholder="This task is ..." />
       </Form.Item>
       {/* <Form.Item label="Demo" name="demo">
         <Input name="demo"  placeholder="Link to your demo" /> 
@@ -146,19 +145,17 @@ const Myform: React.FC<ITask> = (props) => {
         <Input name="usefulLinks" placeholder="Your links" /> 
       </Form.Item> */}
       <h3>Requirements:</h3>
-      <MyCriteria  />
+      <MyCriteria />
       <Form.Item label="Save as draft?" name="ifPublish" style={{ width: '110px' }}>
         <Input name="ifPublish" placeholder="true or false" />
       </Form.Item>
       <Form.Item>
-        <Button type="primary" htmlType="submit" >
+        <Button type="primary" htmlType="submit">
           Submit
         </Button>
       </Form.Item>
-     
     </Form>
   );
 };
 
 export default Myform;
-

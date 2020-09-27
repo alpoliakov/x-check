@@ -1,13 +1,13 @@
 export interface ICourse {
-  id: number;
+  id: string;
   name: string;
   tasks: ITaskStep[]; //таски, которые как будто уже в процессе выполнения
 }
 
 export interface ITaskStep {
-  taskID: number;
+  taskID: string;
   name: string;
   taskStage: string;
-  deadline: Date;
-  start: Date;
+  deadline: number;
+  start: number;
 }

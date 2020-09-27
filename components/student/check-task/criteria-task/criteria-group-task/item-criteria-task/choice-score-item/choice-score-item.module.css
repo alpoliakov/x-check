@@ -1,0 +1,20 @@
+.scoreContainer {
+  text-align: left;
+}
+
+.score {
+  margin: 20px;
+}
+
+.scoreChoice {
+  margin: 20px;
+}
+
+.score span {
+  font-size: 1.6vw;
+  padding: 0.8vw;
+}
+
+.scoreButton button {
+  margin-top: 5px;
+}
