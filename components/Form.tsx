@@ -7,6 +7,8 @@ import MyCriteria from './Criteria';
 import MyCriteriaItem from './CriteriaItem';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { db, taskRef } from '../firebase';
+import { ITask } from '../interfaces/ITask';
+
 //import { useForm } from "react-hook-form";
 
 // interface ITask {

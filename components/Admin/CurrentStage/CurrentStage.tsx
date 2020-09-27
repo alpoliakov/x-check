@@ -47,7 +47,7 @@ const CurrentStage: React.FC<PropsCurrentStage> = ({
     }
   };
   const onFinish = (): void => {
-    const active: ITaskStep = crossCheckSession.find((e) => e.name === activeTask);
+    const active: any = crossCheckSession.find((e) => e.name === activeTask);
     console.log(active);
     updateObjectField('crossCheckSession', active.name, {
       taskStage: currentStage,
