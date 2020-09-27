@@ -46,3 +46,4 @@ pids
 # Optional eslint cache
 .eslintcache
 
+package-lock.json
