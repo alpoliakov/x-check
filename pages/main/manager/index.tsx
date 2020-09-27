@@ -1,6 +1,7 @@
 import React from 'react';
 import MainLayout from '../../../components/MainLayout';
 import { Typography } from 'antd';
+import { db } from '../../../firebase';
 
 interface PropsManager {}
 

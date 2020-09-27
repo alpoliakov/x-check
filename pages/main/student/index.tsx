@@ -8,7 +8,7 @@ import Myform from '../../../components/Form';
 
 interface PropsStudentPage {
   data?: [];
-  data2?: []
+  data2?: [];
 }
 
 const StudentPage: React.FC<PropsStudentPage> = ({ data }) => {
@@ -20,7 +20,7 @@ const StudentPage: React.FC<PropsStudentPage> = ({ data }) => {
   const goToUsers = () => {
     setToUsers(!toUsers);
   };
-  const goToNewTask =() => {
+  const goToNewTask = () => {
     setToNewTask(true);
   };
   const goToTasks = () => {
@@ -36,19 +36,18 @@ const StudentPage: React.FC<PropsStudentPage> = ({ data }) => {
             <Title level={2}>Student</Title>
             <a onClick={goToUsers}>Users</a>
           </div>
-         </div>
+        </div>
         <div>
-            <a onClick={goToTasks}>Tasks</a><br/>
-            <a onClick={goToNewTask}>Create task</a>
-          </div>
-      
-
+          <a onClick={goToTasks}>Tasks</a>
+          <br />
+          <a onClick={goToNewTask}>Create task</a>
+        </div>
 
         <div className="workspace">
           <h1>Working Space</h1>
           {toUsers && <Users data={data} />}
           {toTasks && <Tasks data2={data2} />}
-          {toNewTask && <Myform  />}
+          {toNewTask && <Myform />}
         </div>
       </main>
     </MainLayout>
@@ -67,18 +66,16 @@ export const getServerSideProps = async () => {
   return {
     props: { data },
   };
-  
 };
 
 //export const getServerSideProps2 = async () => {
-  let data2: any | undefined = [];
+let data2: any | undefined = [];
 //  await db
-   db
-    .collection('tasks')
-    .get()
-    .then((snap) => {
-      data2 = snap.docs.map((doc) => doc.data());
-    });
+db.collection('tasks')
+  .get()
+  .then((snap) => {
+    data2 = snap.docs.map((doc) => doc.data());
+  });
 //  return {
 //    props: { data2 },
 //  };
