@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { Button, Row, Typography } from 'antd';
+import { Button, Modal, Row, Typography } from 'antd';
 import MainLayout from '../../../components/MainLayout';
 import SubmitRandom from './submit-random';
 import { db } from '../../../firebase';
 import AdminMain from '../../../components/Admin/index';
-
+import Form from '../../../components/Form';
 import TableData from '../../../components/TableData';
 
 interface PropsAdmin {
@@ -12,19 +12,40 @@ interface PropsAdmin {
   dataTasks: [];
   crossCheckSession: [];
   dataRow?: [];
+  dataSession: [];
 }
 
-const AdminPage: React.FC<PropsAdmin> = ({ dataUsers, dataTasks, crossCheckSession, dataRow }) => {
+const AdminPage: React.FC<PropsAdmin> = ({
+  dataUsers,
+  dataTasks,
+  crossCheckSession,
+  dataRow,
+  dataSession,
+}) => {
   const { Title } = Typography;
   const [visibleModal, setVisibleModal] = useState<boolean>(false);
+  const [visitableCreateTask, setVisitableCreateTask] = useState(false);
+  const [visitableTable, setVisitableTable] = useState(false);
+
+  const showModalCreateTask = () => {
+    setVisitableCreateTask(true);
+  };
+
+  const showTable = () => {
+    setVisitableTable(true);
+  };
   const showModal = () => {
-    console.log(visibleModal);
     setVisibleModal(true);
   };
   const getVisibleModal = (value: boolean) => {
     setVisibleModal(value);
   };
-
+  const handleOk = (e: any) => {
+    setVisitableCreateTask(false);
+  };
+  const handleOkTable = (e: any) => {
+    setVisitableTable(false);
+  };
   return (
     <MainLayout title={'main: admin'}>
       <Title level={1}>Admin Page</Title>
@@ -34,13 +55,22 @@ const AdminPage: React.FC<PropsAdmin> = ({ dataUsers, dataTasks, crossCheckSessi
             {/*    <Title level={2}>Admin</Title>
             <SubmitRandom /> */}
             <Row>
-              <Button type="primary" style={{ width: 150, marginTop: 20 }}>
+              <Button
+                type="primary"
+                style={{ width: 150, marginTop: 20 }}
+                onClick={showModalCreateTask}
+              >
                 Creat task
               </Button>
             </Row>
             <Row>
               <Button type="primary" style={{ width: 150, marginTop: 20 }} onClick={showModal}>
                 Start new task
+              </Button>
+            </Row>
+            <Row>
+              <Button type="primary" style={{ width: 150, marginTop: 20 }} onClick={showTable}>
+                Table results
               </Button>
             </Row>
           </div>
@@ -52,8 +82,26 @@ const AdminPage: React.FC<PropsAdmin> = ({ dataUsers, dataTasks, crossCheckSessi
             dataTasks={dataTasks}
             dataUsers={dataUsers}
             crossCheckSession={crossCheckSession}
+            dataSession={dataSession}
           />
-          <TableData dataRow={dataRow} />
+          <Modal
+            title="Create tasks"
+            width={'auto'}
+            onCancel={() => setVisitableCreateTask(false)}
+            visible={visitableCreateTask}
+            onOk={handleOk}
+          >
+            <Form />
+          </Modal>
+          <Modal
+            title="Create tasks"
+            width={'auto'}
+            onCancel={() => setVisitableTable(false)}
+            visible={visitableTable}
+            onOk={handleOkTable}
+          >
+            <TableData dataRow={dataRow} />
+          </Modal>
         </div>
       </main>
     </MainLayout>
@@ -66,6 +114,13 @@ export const getServerSideProps = async () => {
   let crossCheckSession: any | undefined = [];
   // let courseUser: any | undefined = [];
   // let courseCrossCheckTasks: any | undefined = [];
+  let dataSession: any | undefined = [];
+  await db
+    .collection('sessions')
+    .get()
+    .then((snap) => {
+      dataSession = snap.docs.map((doc) => doc.data());
+    });
 
   await db
     .collection('users')
@@ -87,15 +142,15 @@ export const getServerSideProps = async () => {
       crossCheckSession = snap.docs.map((doc) => doc.data());
     });
 
-  // await db
-  //   .collection('course')
-  //   .get()
-  //   .then((snap) => {
-  //     courseCrossCheckTasks = snap.docs
-  //       .map((doc) => doc.data())
-  //       .filter((el) => el.name === activeCourse)[0]
-  //       .map((task) => task.checkingType === 'crossCheck');
-  //   });
+  /*   await db
+    .collection('course')
+    .get()
+    .then((snap) => {
+      courseCrossCheckTasks = snap.docs
+        .map((doc) => doc.data())
+        .filter((el) => el.name === activeCourse)[0]
+        .map((task) => task.checkingType === 'crossCheck');
+    }); */
 
   const courseUser = [
     {
@@ -306,7 +361,7 @@ export const getServerSideProps = async () => {
   // ];
 
   return {
-    props: { dataUsers, dataTasks, crossCheckSession, dataRow },
+    props: { dataUsers, dataTasks, crossCheckSession, dataRow, dataSession },
   };
 };
 export default AdminPage;
