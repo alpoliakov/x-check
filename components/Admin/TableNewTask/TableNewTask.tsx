@@ -19,7 +19,6 @@ interface Item {
 const TableNewTask: React.FC<PropsTableNewTask> = ({ tasks }) => {
   const data: any = [];
   for (let i = 0; i < tasks.length; i++) {
-    console.log(i, tasks[i].id);
     data.push({
       key: i,
       id: tasks[i].id,
@@ -100,7 +99,6 @@ const TableNewTask: React.FC<PropsTableNewTask> = ({ tasks }) => {
       });
   };
   const onClickActive = (_: any, e: any) => {
-    console.log(_, e);
     const dataSource = [...dataTasks];
     db.collection('crossCheckSession')
       .doc(e.name)
