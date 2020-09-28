@@ -31,6 +31,8 @@ const useAuthWithGitHub = () => {
           login: login,
           roles: ['student', 'admin', 'mentor', 'manager'],
           uid: uid,
+          studentsid: [],
+          tasksID: [],
         });
       })
       .catch((error) => {

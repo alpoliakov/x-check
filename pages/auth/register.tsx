@@ -54,6 +54,7 @@ const Register: React.FC<PropsRegister> = ({ changeAuthPage, changeAuthorization
     uid: '',
     login: '',
     tasksID: [],
+    studentsid: [],
   });
   const [userDataFromGit, setUserDataFromGit] = useState({});
 
@@ -78,6 +79,7 @@ const Register: React.FC<PropsRegister> = ({ changeAuthPage, changeAuthorization
       email: email,
       roles: roles,
       tasksID: [],
+      studentsid: [],
     });
     auth.createUserWithEmailAndPassword(email, password).catch((error) => {
       const errorCode = error.code;
