@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react';
 import MainLayout from '../../../components/MainLayout';
 import { Button, Form, Input, Space, Typography } from 'antd';
 import SubmitTasks from './submit';
-import StudentList from '../../../components/StudentsList/index';
-import { db } from '../../../firebase';
+import StudentList from '../../../components/Mentor/StudentsList/index';
+import { auth, db } from '../../../firebase';
 import Work from '../../../components/Work';
 import { Role } from '../../../interfaces/IUser';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import AddStudents from '../../../components/Mentor/StudentsList/AddStudents';
 
 const userData = {
   uid: '1',
@@ -50,15 +51,28 @@ const userData = {
   // ],
 };
 interface PropsMentorPage {
-  data: [];
+  userData: [];
 }
 
-const MentorPage: React.FC<PropsMentorPage> = ({ data }) => {
+const MentorPage: React.FC<PropsMentorPage> = ({ userData }) => {
   const { Title, Link, Text } = Typography;
   const [task, setTask] = useState();
+  const [myUid, setMyUid] = useState<any>();
   useEffect(() => {
-    console.log('ren');
-  }, [task]);
+    const waitForCurrentUser = setInterval(() => {
+      // @ts-ignore
+      const uid = auth.currentUser;
+      if (uid !== null) {
+        clearInterval(waitForCurrentUser);
+        const myuid = uid.uid;
+        setMyUid(myuid);
+        return uid;
+      } else {
+        console.log('Wait for it');
+      }
+    }, 300);
+  }, []);
+
   const getTask = (value: any) => {
     setTask(value);
   };
@@ -70,7 +84,8 @@ const MentorPage: React.FC<PropsMentorPage> = ({ data }) => {
         <div className="nav__main">
           {/*    <Title level={2}>Mentor</Title>
           <SubmitTasks /> */}
-          <StudentList user={userData} getTask={getTask} data={data} />
+          {/* <AddStudents users={userData} myUid={myUid} /> */}
+          <StudentList user={userData} myUid={myUid} getTask={getTask} />
         </div>
         <div className="workspace">
           <h1>Working Space</h1>
@@ -81,15 +96,16 @@ const MentorPage: React.FC<PropsMentorPage> = ({ data }) => {
   );
 };
 export const getServerSideProps = async () => {
-  let data: any | undefined = [];
+  let userData: any | undefined = [];
   await db
     .collection('users')
     .get()
     .then((snap) => {
-      data = snap.docs.map((doc) => doc.data());
+      userData = snap.docs.map((doc) => doc.data());
     });
+
   return {
-    props: { data },
+    props: { userData },
   };
 };
 export default MentorPage;
