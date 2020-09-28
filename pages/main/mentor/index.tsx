@@ -5,48 +5,49 @@ import SubmitTasks from './submit';
 import StudentList from '../../../components/StudentsList/index';
 import { db } from '../../../firebase';
 import Work from '../../../components/Work';
+import { Role } from '../../../interfaces/IUser';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 
 const userData = {
-  id: '1',
+  uid: '1',
   githubAddress: 'string',
   name: 'Petrov',
-  rank: 'mentor',
-  students: [
-    {
-      id: '41iPtdzIYHV5XxwnXRgOm1Nr14H3',
-      githubAddress: 'string',
-      name: 'Petrov',
-      rank: 'student',
-      tasksID: [
-        { taskID: 1, taskName: 'Task1' },
-        { taskID: 2, taskName: 'Task2' },
-        { taskID: 3, taskName: 'Task3' },
-      ],
-    },
-    {
-      id: '5iwVTjafzVayLNusWyaxqbaTB6u1',
-      githubAddress: 'string',
-      name: 'Ivanov',
-      rank: 'student',
-      tasksID: [
-        { taskID: 1, taskName: 'Task4' },
-        { taskID: 2, taskName: 'Task5' },
-        { taskID: 3, taskName: 'Task6' },
-      ],
-    },
-    {
-      id: 'sZvSHsJdnRQyaNkAERz9eaj0ra03',
-      githubAddress: 'string',
-      name: 'Sidorov',
-      rank: 'student',
-      tasksID: [
-        { taskID: 1, taskName: 'Task7' },
-        { taskID: 2, taskName: 'Task8' },
-        { taskID: 3, taskName: 'Task9' },
-      ],
-    },
-  ],
+  role: Role.mentor,
+  students: ['', ''],
+  // {
+  //   id: '41iPtdzIYHV5XxwnXRgOm1Nr14H3',
+  //   githubAddress: 'string',
+  //   name: 'Petrov',
+  //   rank: 'student',
+  //   tasksID: [
+  //     { taskID: 1, taskName: 'Task1' },
+  //     { taskID: 2, taskName: 'Task2' },
+  //     { taskID: 3, taskName: 'Task3' },
+  //   ],
+  // },
+  // {
+  //   id: '5iwVTjafzVayLNusWyaxqbaTB6u1',
+  //   githubAddress: 'string',
+  //   name: 'Ivanov',
+  //   rank: 'student',
+  //   tasksID: [
+  //     { taskID: 1, taskName: 'Task4' },
+  //     { taskID: 2, taskName: 'Task5' },
+  //     { taskID: 3, taskName: 'Task6' },
+  //   ],
+  // },
+  // {
+  //   id: 'sZvSHsJdnRQyaNkAERz9eaj0ra03',
+  //   githubAddress: 'string',
+  //   name: 'Sidorov',
+  //   rank: 'student',
+  //   tasksID: [
+  //     { taskID: 1, taskName: 'Task7' },
+  //     { taskID: 2, taskName: 'Task8' },
+  //     { taskID: 3, taskName: 'Task9' },
+  //   ],
+  //   // },
+  // ],
 };
 interface PropsMentorPage {
   data: [];

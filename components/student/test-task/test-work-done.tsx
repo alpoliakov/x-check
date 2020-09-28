@@ -233,7 +233,7 @@ const taskInfo1: ITaskInfo = {
 };
 
 export const user: StudentBasic = {
-  id: 'sdasd11',
+  uid: 'sdasd11',
   name: 'Sam Shpakau',
   isActive: true,
   githubAddress: 'https://github.com/SkaymanT',

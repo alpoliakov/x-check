@@ -100,7 +100,8 @@ const AdminPage: React.FC<PropsAdmin> = ({
             visible={visitableTable}
             onOk={handleOkTable}
           >
-            <TableData dataRow={dataRow} />
+             {/* dataRow={dataRow} */}
+            <TableData />
           </Modal>
         </div>
       </main>
@@ -330,35 +331,35 @@ export const getServerSideProps = async () => {
     },
   ];
 
-  const dataRow = courseCrossCheckTasks
-    .filter((task) => task.checkingType === 'crossCheck')
-    .map((taskName) =>
-      courseUser
-        .filter((user) => user[taskName.name])
-        .map((user, index) => ({
-          key: index,
-          user: user.nickname,
-          task: taskName.name,
-          reviewer: 'ant',
-          score: 0,
-        }))
-    )
-    .flat(Infinity);
+  // const dataRow = courseCrossCheckTasks
+  //   .filter((task) => task.checkingType === 'crossCheck')
+  //   .map((taskName) =>
+  //     courseUser
+  //       .filter((user) => user[taskName.name])
+  //       .map((user, index) => ({
+  //         key: index,
+  //         user: user.nickname,
+  //         task: taskName.name,
+  //         reviewer: 'ant',
+  //         score: 0,
+  //       }))
+  //   )
+  //   .flat(Infinity);
 
-  // const dataRow = [
-  //   {
-  //     key: '1',
-  //     user: 'Mike',
-  //     task: '32',
-  //     reviewer: 'Stas',
-  //   },
-  //   {
-  //     key: '2',
-  //     user: 'John',
-  //     task: 42,
-  //     reviewer: '10 Downing Street',
-  //   },
-  // ];
+  const dataRow = [
+    {
+      key: '1',
+      user: 'Mike',
+      task: '32',
+      reviewer: 'Stas',
+    },
+    {
+      key: '2',
+      user: 'John',
+      task: 42,
+      reviewer: '10 Downing Street',
+    },
+  ];
 
   return {
     props: { dataUsers, dataTasks, crossCheckSession, dataRow, dataSession },

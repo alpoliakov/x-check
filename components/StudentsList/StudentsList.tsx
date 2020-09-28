@@ -24,7 +24,7 @@ const StudentsList: React.FC<PropsStudentList> = ({ user, data, getTask }) => {
     const mentorStudents = data.filter((i) => {
       let result: any;
       user.students.forEach((e) => {
-        if (i.uid === e.id) {
+        if (i.uid === e) {
           return (result = i);
         }
       });
@@ -38,7 +38,7 @@ const StudentsList: React.FC<PropsStudentList> = ({ user, data, getTask }) => {
     getTask(null);
   }, [tasks]);
   const handleProvinceChange = (value: Key, key: any) => {
-    const userTasks: any = user.students.filter((i) => i.id === key.key);
+    const userTasks: any = user.students.filter((i) => i === key.key);
     setSTask(userTasks[0].tasksID);
     setIsDisabled(false);
   };
