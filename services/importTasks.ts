@@ -34,7 +34,7 @@ export function bigImportTaskMD(task: string): any {
     demo: demo,
     description: description,
     evaluationCriteria: evaluationCriteria,
-    usefulLinks: usefulLinks,
+    usefulLinks: usefulLinks ? usefulLinks : '',
   };
   return newTask;
 }
