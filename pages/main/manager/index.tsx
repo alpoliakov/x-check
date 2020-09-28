@@ -1,12 +1,13 @@
 import React from 'react';
 import MainLayout from '../../../components/MainLayout';
 import { Typography } from 'antd';
-import { db } from '../../../firebase';
+import { db, checkRef } from '../../../firebase';
 
 interface PropsManager {}
 
 const ManagerPage = () => {
   const { Title, Link, Text } = Typography;
+
   return (
     <MainLayout title={'main: manager'}>
       <Title level={1}>Course Manager Page</Title>

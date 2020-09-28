@@ -1,16 +1,16 @@
 export interface UserBasic {
-  id: string;
+  uid: string;
   githubAddress: string;
   name: string;
   role: Role;
+  avatar_url?: string | undefined;
 }
 
 export interface MentorBasic extends UserBasic {
-  students: (StudentBasic | { id: number })[];
-  courseId: number;
-  courseName: string;
+  students: string[];
+  courseId?: number;
+  courseName?: string;
 }
-
 export interface StudentBasic extends UserBasic {
   isActive: boolean;
   mentor: MentorBasic | { id: number } | null;

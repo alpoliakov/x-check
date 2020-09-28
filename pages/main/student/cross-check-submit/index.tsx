@@ -2,7 +2,6 @@ import React from 'react';
 import MainLayout from '../../../../components/MainLayout';
 import { db } from '../../../../firebase';
 import { Row, Col } from 'antd';
-import Sidebar from '../../../../components/student/cross-check/sidebar';
 import CheckTask from '../../../../components/student/check-task';
 import { checkingTask, user } from '../../../../components/student/test-task/test-work-done';
 import { testTask } from '../../../../components/student/test-task/test-task';
@@ -17,11 +16,13 @@ import { ICheсk, IStudent, IWorkDone, TaskState } from '../../../../interfaces/
 import { ITask, TypeTask } from '../../../../interfaces/ITask';
 import { Role } from '../../../../interfaces/IUser';
 import { deleteDocument, setDocument } from '../../../../services/updateFirebase';
+import Sidebar from '../../../../components/student/cross-check/Sidebar';
+import { ICourse } from '../../../../interfaces/ICourse';
 
 interface PropsCrossCheckPage {
-  tasksData?: [];
-  courseData?: [];
-  completedTasksData?: [];
+  tasksData: ITask[];
+  courseData?: ICourse[];
+  completedTasksData: IWorkDone[];// была проблема в 56 строки, ты присваивал свойство от undefined
 }
 
 const CrossCheckPage: React.FC<PropsCrossCheckPage> = ({
@@ -47,12 +48,13 @@ const CrossCheckPage: React.FC<PropsCrossCheckPage> = ({
     newCheckingTask = createTask(testTask, user);
     [checkTask, reviewer] = [newCheckingTask.selfTest, newCheckingTask.student];
   } else if (isComplited && !isDeadline) {
-    const curCheckingTask = completedTasksData?.filter(
-      (completedTask) => completedTask.name === select
+    const curCheckingTask = completedTasksData.filter( // тут нельзя делать проверку на наличие, 
+      //ибо через 2 строки ты можешь обратиться к свойствам undefined
+      (completedTask) => completedTask.taskID === 'select' //заглушил, необъявленная переменная
     )[0];
-    console.log('curCheckingTask', curCheckingTask);
+    // console.log('curCheckingTask', curCheckingTask);
     [checkTask, reviewer] = [curCheckingTask.selfTest, curCheckingTask.student];
-  } else if (isComplited && !isDeadline) {
+  } else if (isComplited && isDeadline) { // проверь условие или тут была или в предыдущем ошибка
     const newCheckingTask = createTask(testTask, user);
     console.log('newCheckingTask', newCheckingTask);
     [checkTask, reviewer] = [newCheckingTask.selfTest, newCheckingTask.student];
@@ -73,7 +75,7 @@ const CrossCheckPage: React.FC<PropsCrossCheckPage> = ({
     // setDocument('tasks', testTask.id, testTask);
     // deleteDocument('tasks', testTask.id);
 
-    const select = tasksData?.filter((taskData) => taskData.name === selectTask);
+    const select = tasksData.filter((taskData) => taskData.name === selectTask);
     setTask(selectTask);
 
     const selectTaskDeadline = dataCourse.tasks
@@ -83,7 +85,8 @@ const CrossCheckPage: React.FC<PropsCrossCheckPage> = ({
     const date = new Date().getTime();
 
     setIsComplited(
-      completedTasksData?.filter((completedTask) => completedTask.name === select).length !== 0
+      completedTasksData?.filter((completedTask) => completedTask.taskID === select[0].id)
+        .length !== 0
     );
 
     if (selectTaskDeadline < date) {

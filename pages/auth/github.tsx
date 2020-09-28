@@ -4,6 +4,7 @@ import { Button, Card, Divider, Typography, Modal } from 'antd';
 import { auth, db } from '../../firebase';
 import { useRouter } from 'next/router';
 import useAuthWithGitHub from '../../hooks/UseAuthWithGitHub';
+import { UserBasic } from '../../interfaces/IUser';
 
 const { Meta } = Card;
 const { Link, Text } = Typography;
@@ -15,14 +16,9 @@ interface PropsGHSignUp {
 const GitHubSignUp: React.FC<PropsGHSignUp> = ({ changeAuthPage }) => {
   const [loggedIn, setLoggedIn] = useState(false);
   const router = useRouter();
-  const {
-    userData,
-    isNewUser,
-    errorMessage,
-    visible,
-    signUpWithGit,
-    closeModal,
-  } = useAuthWithGitHub();
+
+  let userData: UserBasic;
+  const { isNewUser, errorMessage, visible, signUpWithGit, closeModal } = useAuthWithGitHub();
 
   const handleClick = (data: string) => {
     changeAuthPage(data);
