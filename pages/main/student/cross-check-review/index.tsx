@@ -2,7 +2,6 @@ import React from 'react';
 import MainLayout from '../../../../components/MainLayout';
 import { db } from '../../../../firebase';
 import { Row, Col } from 'antd';
-import Sidebar from '../../../../components/student/cross-check/sidebar';
 import CheckTask from '../../../../components/student/check-task';
 import { checkingTask, user } from '../../../../components/student/test-task/test-work-done';
 import { testTask } from '../../../../components/student/test-task/test-task';
@@ -16,11 +15,11 @@ import {
 import { ICheсk, TaskState } from '../../../../interfaces/IWorkDone';
 import { TypeTask } from '../../../../interfaces/ITask';
 import { Role } from '../../../../interfaces/IUser';
+import Sidebar from '../../../../components/student/cross-check/Sidebar';
 
 interface PropsCrossCheckPage {
   data?: [];
 }
-
 const CrossCheckPage: React.FC<PropsCrossCheckPage> = ({ data }) => {
   console.log(data);
   const tasksData = dataCourse.tasks;
@@ -28,7 +27,7 @@ const CrossCheckPage: React.FC<PropsCrossCheckPage> = ({ data }) => {
 
   const [task, setTask] = React.useState('');
   const [isDeadline, setIsDeadline] = React.useState(false);
-
+  const [isComplited, setIsComplited] = React.useState(false);
   const selectTask = (task: string) => {
     setTask(task);
 
@@ -36,13 +35,13 @@ const CrossCheckPage: React.FC<PropsCrossCheckPage> = ({ data }) => {
       .filter((el) => el.name === task)
       .map((el) => el.deadline)[0];
 
-    const date = new Date();
+    // const date = new Date();
 
-    if (selectTaskDeadline.getTime() < date.getTime()) {
-      setIsDeadline(true);
-    } else {
-      setIsDeadline(false);
-    }
+    // if (selectTaskDeadline.getTime() < date.getTime()) {
+    //   setIsDeadline(true);
+    // } else {
+    //   setIsDeadline(false);
+    // }
   };
 
   const onSave = (checkTask: ICheсk) => {
@@ -147,7 +146,12 @@ const CrossCheckPage: React.FC<PropsCrossCheckPage> = ({ data }) => {
       <MainLayout title="Student">
         <main className={'main__box'}>
           <div className="nav__main">
-            <Sidebar getTask={selectTask} taskList={taskList} isDeadline={isDeadline} />
+            <Sidebar
+              getTask={selectTask}
+              taskList={taskList}
+              isDeadline={isDeadline}
+              isComplited={isComplited}
+            />
           </div>
           <div className="workspace">
             <CheckTask

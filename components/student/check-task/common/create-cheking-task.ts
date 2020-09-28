@@ -5,14 +5,14 @@ import createCheckOnTask from './create-check-on-task';
 
 export default function createTask(task: ITask, user: StudentBasic): IWorkDone {
   const student: IStudent = {
-    id: user.id,
+    id: user.uid,
     name: user.name,
   };
 
-  const selfTest = createCheckOnTask(task, `${task.id}_${user.id}`);
+  const selfTest = createCheckOnTask(task, `${task.id}_${user.uid}`);
   const mentor = {} as IMentor;
   return {
-    id: `${task.id}_${user.id}`,
+    id: `${task.id}_${user.uid}`,
     taskID: task.id,
     state: TaskState.isSelfTest,
     student: student,

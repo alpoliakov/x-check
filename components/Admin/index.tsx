@@ -11,6 +11,7 @@ interface PropsAdminMain {
   dataUsers: [];
   dataTasks: ITask[];
   crossCheckSession: ITaskStep[];
+  dataSession: any;
   visibleModal: boolean;
   getVisibleModal: (value: boolean) => void;
 }
@@ -20,12 +21,13 @@ const AdminMain: React.FC<PropsAdminMain> = ({
   dataTasks,
   visibleModal,
   crossCheckSession,
+  dataSession,
   getVisibleModal,
 }) => {
   const [users, setUser] = useState<any[]>(dataUsers);
   const [visible, setVisible] = useState<boolean>(visibleModal);
   useEffect(() => {
-    console.log('DATA', dataUsers, dataTasks, crossCheckSession);
+    console.log('DATA', dataUsers, dataTasks, crossCheckSession, dataSession);
     setVisible(visibleModal);
   }, [visibleModal]);
   useEffect(() => {
@@ -44,9 +46,10 @@ const AdminMain: React.FC<PropsAdminMain> = ({
         <Col span={12} style={{ textAlign: 'center', margin: 0 }}>
           <Modal
             title="Course tasks"
-            width={1000}
+            width={'auto'}
             visible={visible}
             onOk={handleOk}
+            onCancel={() => setVisible(false)}
             footer={[
               <Button key="submit" type="primary" onClick={handleOk}>
                 Ok
