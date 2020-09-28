@@ -1,0 +1,18 @@
+.cardMaxscore {
+  width: 8vw;
+}
+
+.cardMaxscore div {
+  padding: 5px;
+}
+.cardMaxscore p {
+  margin: 2px;
+  font-size: 1vw;
+  font-weight: 500;
+  margin: 0 auto;
+}
+
+.maxScore {
+  font-size: 2.5vw;
+  margin: 0;
+}
