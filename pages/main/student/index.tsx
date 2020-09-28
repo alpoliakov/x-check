@@ -3,7 +3,7 @@ import { Typography } from 'antd';
 import { db } from '../../../firebase';
 import MainLayout from '../../../components/MainLayout';
 import SidebarTask from '../../../components/student/sidebar-task-cross-check';
-import { StudentBasic } from '../../../interfaces/IUser';
+import { UserBasic } from '../../../interfaces/IUser';
 
 interface PropsStudentPage {
   data: [];
@@ -12,11 +12,11 @@ interface PropsStudentPage {
 const StudentPage: React.FC<PropsStudentPage> = ({ data }) => {
   const { Title } = Typography;
   const nameButton: Array<string> = ['Cross-check: Submit', 'Cross-check: Review'];
-  const [stateStudent, setStateStudent] = useState<StudentBasic>({} as StudentBasic);
-  const getUser = (user: StudentBasic) => {
+  const [stateStudent, setStateStudent] = useState<UserBasic>({} as UserBasic);
+  const getUser = (user: UserBasic) => {
     setStateStudent(user);
   };
-  const nameStudent = stateStudent.name !== undefined ? stateStudent.name : 'Student Page';
+  const nameStudent = stateStudent.nickname !== undefined ? stateStudent.nickname : 'Student Page';
 
   return (
     <MainLayout title={''}>
@@ -45,18 +45,5 @@ export const getServerSideProps = async () => {
     props: { data },
   };
 };
-
-//export const getServerSideProps2 = async () => {
-let data2: any | undefined = [];
-//  await db
-db.collection('tasks')
-  .get()
-  .then((snap) => {
-    data2 = snap.docs.map((doc) => doc.data());
-  });
-//  return {
-//    props: { data2 },
-//  };
-//};
 
 export default StudentPage;

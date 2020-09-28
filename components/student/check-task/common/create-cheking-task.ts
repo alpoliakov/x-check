@@ -1,12 +1,12 @@
 import { ITask } from '../../../../interfaces/ITask';
-import { StudentBasic } from '../../../../interfaces/IUser';
+import { UserBasic } from '../../../../interfaces/IUser';
 import { IStudent, IMentor, IWorkDone, TaskState } from '../../../../interfaces/IWorkDone';
 import createCheckOnTask from './create-check-on-task';
 
-export default function createTask(task: ITask, user: StudentBasic): IWorkDone {
+export default function createTask(task: ITask, user: UserBasic): IWorkDone {
   const student: IStudent = {
     id: user.uid,
-    name: user.name,
+    name: user.nickname,
   };
 
   const selfTest = createCheckOnTask(task, `${task.id}_${user.uid}`);

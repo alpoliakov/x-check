@@ -2,7 +2,7 @@ import React, { useState, Key, useEffect } from 'react';
 import { Select, Avatar, Form } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { useForm } from 'antd/lib/form/Form';
-import { MentorBasic, StudentBasic, UserBasic } from '../../../interfaces/IUser';
+import { UserBasic } from '../../../interfaces/IUser';
 import { ITask } from '../../../interfaces/ITask';
 
 const { Option } = Select;
@@ -14,7 +14,7 @@ interface PropsStudentList {
 }
 
 const StudentsList: React.FC<PropsStudentList> = ({ user, getTask, myUid }) => {
-  const [students, setStudent] = useState<StudentBasic[]>([]);
+  const [students, setStudent] = useState<UserBasic[]>([]);
   const [tasks, setSTask] = useState<ITask[]>([]);
   const [isDisabled, setIsDisabled] = useState<boolean>(true);
   const [taskValue, setTaskValue] = useState<string | undefined>(undefined);

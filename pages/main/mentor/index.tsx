@@ -12,43 +12,10 @@ import AddStudents from '../../../components/Mentor/StudentsList/AddStudents';
 const userData = {
   uid: '1',
   githubAddress: 'string',
-  name: 'Petrov',
+  nickname: 'Petrov',
   role: Role.mentor,
-  students: ['', ''],
-  // {
-  //   id: '41iPtdzIYHV5XxwnXRgOm1Nr14H3',
-  //   githubAddress: 'string',
-  //   name: 'Petrov',
-  //   rank: 'student',
-  //   tasksID: [
-  //     { taskID: 1, taskName: 'Task1' },
-  //     { taskID: 2, taskName: 'Task2' },
-  //     { taskID: 3, taskName: 'Task3' },
-  //   ],
-  // },
-  // {
-  //   id: '5iwVTjafzVayLNusWyaxqbaTB6u1',
-  //   githubAddress: 'string',
-  //   name: 'Ivanov',
-  //   rank: 'student',
-  //   tasksID: [
-  //     { taskID: 1, taskName: 'Task4' },
-  //     { taskID: 2, taskName: 'Task5' },
-  //     { taskID: 3, taskName: 'Task6' },
-  //   ],
-  // },
-  // {
-  //   id: 'sZvSHsJdnRQyaNkAERz9eaj0ra03',
-  //   githubAddress: 'string',
-  //   name: 'Sidorov',
-  //   rank: 'student',
-  //   tasksID: [
-  //     { taskID: 1, taskName: 'Task7' },
-  //     { taskID: 2, taskName: 'Task8' },
-  //     { taskID: 3, taskName: 'Task9' },
-  //   ],
-  //   // },
-  // ],
+  studentsid: ['', ''],
+  tasksID: ['', ''],
 };
 interface PropsMentorPage {
   userData: [];
