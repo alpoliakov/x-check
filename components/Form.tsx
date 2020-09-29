@@ -6,8 +6,9 @@ import { ICriteriaGroup, StateTask } from '../interfaces/ITask';
 import { setDocument } from '../services/updateFirebase';
 import { useEffect, useState } from 'react';
 
-const Myform: React.FC = () => {
+const Myform: React.FC = ({ task }: any) => {
   const [myUid, setMyUid] = useState<any>();
+
   useEffect(() => {
     const waitForCurrentUser = setInterval(() => {
       // @ts-ignore
@@ -22,6 +23,7 @@ const Myform: React.FC = () => {
       }
     }, 300);
   }, []);
+
   const onFinish = (values: any) => {
     const evaluationCriteria: any = [];
 
@@ -81,35 +83,47 @@ const Myform: React.FC = () => {
     };
     setDocument('TasksArray', newTask.id, newTask);
   };
-
+  const name = task.name ? task.name : '';
+  const description = task.description ? task.description : '';
+  const demo = task.demo ? task.demo : '';
+  const usefulLinks = task.usefulLinks ? task.usefulLinks : '';
+  const authorName = task.authorName ? task.authorName : '';
+  const oldUrl = task.oldUrl ? task.oldUrl : '';
+  const ifPublish = task.ifPublish ? task.name : '';
+  const useJury = task.useJury ? task.useJury : '';
+  const evaluationCriteria = task.evaluationCriteria ? task.evaluationCriteria : '';
   return (
     <Form name="create-task" onFinish={onFinish}>
       <h2>Create a new task:</h2>
-      <Form.Item label="Name" name="name">
-        <Input name="name" placeholder="Task name" />
+      <Form.Item label="Name" name="name" required={true}>
+        <Input name="name" placeholder="Task name" defaultValue={name} />
       </Form.Item>
       <Form.Item label="Description" name="description">
-        <Input name="description" placeholder="This task is ..." />
+        <Input name="description" placeholder="This task is ..." defaultValue={description} />
       </Form.Item>
       <Form.Item label="demo" name="demo">
-        <Input name="demo" placeholder="demo url" />
+        <Input name="demo" placeholder="demo url" defaultValue={demo} />
       </Form.Item>
       <Form.Item label="usefulLinks" name="usefulLinks">
-        <Input name="usefulLinks" placeholder="useful links" />
+        <Input name="usefulLinks" placeholder="useful links" defaultValue={usefulLinks} />
       </Form.Item>
       <Form.Item label="authorName" name="authorName">
-        <Input name="authorName" placeholder="task author name" />
+        <Input name="authorName" placeholder="task author name" defaultValue={authorName} />
       </Form.Item>
       <Form.Item label="oldUrl" name="oldUrl">
-        <Input name="oldUrl" placeholder="old link where you got this task from" />
+        <Input
+          name="oldUrl"
+          placeholder="old link where you got this task from"
+          defaultValue={oldUrl}
+        />
       </Form.Item>
       <h3>Requirements:</h3>
-      <MyCriteria />
+      <MyCriteria evaluationCriteria={evaluationCriteria} />
       <Form.Item label="_Save as draft?_" name="ifPublish" style={{ width: '130px' }}>
-        <Input name="ifPublish" placeholder="true if not empty" />
+        <Input name="ifPublish" placeholder="true if not empty" defaultValue={ifPublish} />
       </Form.Item>
       <Form.Item label="use presentation?" name="useJury" style={{ width: '130px' }}>
-        <Input name="useJury" placeholder="true if not empty" />
+        <Input name="useJury" placeholder="true if not empty" defaultValue={useJury} />
       </Form.Item>
       <Form.Item>
         <Button type="primary" htmlType="submit">

@@ -46,6 +46,7 @@ const AdminPage: React.FC<PropsAdmin> = ({
   const handleOkTable = (e: any) => {
     setVisitableTable(false);
   };
+  const task = {};
   return (
     <MainLayout title={'main: admin'}>
       <Title level={1}>Admin Page</Title>
@@ -91,7 +92,7 @@ const AdminPage: React.FC<PropsAdmin> = ({
             visible={visitableCreateTask}
             onOk={handleOk}
           >
-            <Form />
+            <Form task={task} />
           </Modal>
           <Modal
             title="Create tasks"
