@@ -2,19 +2,19 @@ import React, { useState, Key, useEffect } from 'react';
 import { Select, Avatar, Form } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { useForm } from 'antd/lib/form/Form';
-import { MentorBasic, StudentBasic } from '../../interfaces/IUser';
+import { UserBasic } from '../../interfaces/IUser';
 import { ITask } from '../../interfaces/ITask';
 
 const { Option } = Select;
 
 interface PropsStudentList {
-  user: MentorBasic;
-  data: StudentBasic[];
+  user: UserBasic;
+  data: UserBasic[];
   getTask: (value: any) => void;
 }
 
 const StudentsList: React.FC<PropsStudentList> = ({ user, data, getTask }) => {
-  const [students, setStudent] = useState<StudentBasic[]>([]);
+  const [students, setStudent] = useState<UserBasic[]>([]);
   const [tasks, setSTask] = useState<ITask[]>([]);
   const [isDisabled, setIsDisabled] = useState<boolean>(true);
   const [taskValue, setTaskValue] = useState<string | undefined>(undefined);
@@ -23,7 +23,7 @@ const StudentsList: React.FC<PropsStudentList> = ({ user, data, getTask }) => {
   useEffect(() => {
     const mentorStudents = data.filter((i) => {
       let result: any;
-      user.students.forEach((e) => {
+      user.studentsid.forEach((e) => {
         if (i.uid === e) {
           return (result = i);
         }
@@ -38,7 +38,7 @@ const StudentsList: React.FC<PropsStudentList> = ({ user, data, getTask }) => {
     getTask(null);
   }, [tasks]);
   const handleProvinceChange = (value: Key, key: any) => {
-    const userTasks: any = user.students.filter((i) => i === key.key);
+    const userTasks: any = user.studentsid.filter((i) => i === key.key);
     setSTask(userTasks[0].tasksID);
     setIsDisabled(false);
   };
@@ -57,7 +57,7 @@ const StudentsList: React.FC<PropsStudentList> = ({ user, data, getTask }) => {
             onChange={handleProvinceChange}
           >
             {students.map((province) => (
-              <Option key={province.uid} value={province.name}>
+              <Option key={province.uid} value={province.nickname}>
                 <Avatar
                   size={20}
                   src={
@@ -67,7 +67,7 @@ const StudentsList: React.FC<PropsStudentList> = ({ user, data, getTask }) => {
                   }
                 />
                 {'  '}
-                {province.name}
+                {province.nickname}
               </Option>
             ))}
           </Select>

@@ -1,4 +1,4 @@
-import { ITaskInfo, Role, StudentBasic } from '../../../interfaces/IUser';
+import { Role, UserBasic } from '../../../interfaces/IUser';
 import {
   IWorkDone,
   ICheсkingPoint,
@@ -227,19 +227,12 @@ export const checkingTask: IWorkDone = {
   deployUrl: 'https://skaymant-songbird.netlify.app/',
 };
 
-const taskInfo1: ITaskInfo = {
-  taskID: 'taskID',
-  taskName: 'taskName',
-};
-
-export const user: StudentBasic = {
+export const user: UserBasic = {
   uid: 'sdasd11',
-  name: 'Sam Shpakau',
-  isActive: true,
+  nickname: 'Sam Shpakau',
   githubAddress: 'https://github.com/SkaymanT',
   role: Role.student,
+  studentsid: [],
   mentor: null,
-  courseId: 'courseId',
-  courseName: 'courseName',
-  tasksID: [taskInfo1],
+  tasksID: ['taskInfo1'],
 };

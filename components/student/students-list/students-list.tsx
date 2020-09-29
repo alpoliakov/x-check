@@ -1,17 +1,17 @@
 import React from 'react';
 import { Select, Avatar } from 'antd';
-import { StudentBasic } from '../../../interfaces/IUser';
+import { UserBasic } from '../../../interfaces/IUser';
 
 const { Option } = Select;
 
 interface PropsStudentList {
-  users: StudentBasic[];
+  users: UserBasic[];
   getUser: (value: any) => void;
 }
 
 const StudentsList: React.FC<PropsStudentList> = ({ users, getUser }) => {
   const handleUserChange = (value: string) => {
-    const user = users.filter((user) => user.name === value);
+    const user = users.filter((user) => user.nickname === value);
     getUser(user[0]);
   };
   return (
@@ -22,7 +22,7 @@ const StudentsList: React.FC<PropsStudentList> = ({ users, getUser }) => {
         onChange={handleUserChange}
       >
         {users.map((user) => (
-          <Option key={user.uid} value={user.name}>
+          <Option key={user.uid} value={user.nickname}>
             <Avatar
               size={20}
               src={
@@ -31,7 +31,7 @@ const StudentsList: React.FC<PropsStudentList> = ({ users, getUser }) => {
                   : 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
               }
             />
-            {user.name}
+            {user.nickname}
           </Option>
         ))}
       </Select>
