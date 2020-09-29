@@ -1,12 +1,27 @@
 import * as React from 'react';
 import { Form, Input, Button, Space } from 'antd';
 import MyCriteria from './Criteria';
-import { db, taskRef } from '../firebase';
+import { db, taskRef, auth } from '../firebase';
 import { ITask, ICriteriaGroup, StateTask } from '../interfaces/ITask';
 import { setDocument } from '../services/updateFirebase';
+import { useEffect, useState } from 'react';
 
-const Myform: React.FC = (props) => {
-
+const Myform: React.FC = () => {
+  const [myUid, setMyUid] = useState<any>();
+  useEffect(() => {
+    const waitForCurrentUser = setInterval(() => {
+      // @ts-ignore
+      const uid = auth.currentUser;
+      if (uid !== null) {
+        clearInterval(waitForCurrentUser);
+        const myuid = uid.uid;
+        setMyUid(myuid);
+        return uid;
+      } else {
+        console.log('Wait for it');
+      }
+    }, 300);
+  }, []);
   const onFinish = (values: any) => {
     const evaluationCriteria: any = [];
 
@@ -49,10 +64,6 @@ const Myform: React.FC = (props) => {
     if (values.useJury && values.useJury !== 'false') {
       useJury = true;
     } 
-    // values.evaluationCriteria.foreach((group) => {
-    //   group.
-    // });
-
 
     const newTask = {
       name: values.name,
@@ -67,9 +78,10 @@ const Myform: React.FC = (props) => {
       authorName: values.authorName,
       usefulLinks: values.usefulLinks,
       oldUrl: values.oldUrl,
-      publisherID: 'Вася Пупкин',
+      publisherID: myUid,
     };
-    setDocument('TasksArray', newTask.id, newTask);
+console.log(newTask);
+    // setDocument('TasksArray', newTask.id, newTask);
   };
 
 // id={props.id}
