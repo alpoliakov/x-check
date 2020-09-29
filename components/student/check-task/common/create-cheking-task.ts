@@ -9,7 +9,7 @@ export default function createTask(task: ITask, user: StudentBasic): IWorkDone {
     name: user.name,
   };
 
-  const selfTest = createCheckOnTask(task, `${task.id}_${user.uid}`);
+  const selfTest = createCheckOnTask(task, `${user.uid}`);
   const mentor = {} as IMentor;
   return {
     id: `${task.id}_${user.uid}`,
