@@ -21,9 +21,9 @@ const MyCriteriaItem: React.FC<ICriteriaPoint> = (props) => {
             {fields.map((field) => (
               <Space key={field.key} style={{ display: 'flex', marginBottom: 8 }} align="start">
                 <Form.Item
-                  label={'Criteria item'}
+                  label={'Criteria item description'}
                   name={[field.name, 'criteriaPointName']}
-                  required={false}
+                  required={true}
                   style={{ minWidth: '480px', width: 'auto' }}
                 >
                   <Input placeholder="hh" style={{ width: '100%' }} />
@@ -31,7 +31,7 @@ const MyCriteriaItem: React.FC<ICriteriaPoint> = (props) => {
                 <Form.Item
                   label={'Score'}
                   name={[field.name, 'criteriaPointScore']}
-                  required={false}
+                  required={true}
                   style={{ minWidth: '100px', width: 'auto' }}
                 >
                   <Input placeholder="10" style={{ width: '100%' }} />
@@ -42,7 +42,7 @@ const MyCriteriaItem: React.FC<ICriteriaPoint> = (props) => {
                   required={false}
                   style={{ minWidth: '180px', width: 'auto' }}
                 >
-                  <Input placeholder="true or false" style={{ width: '100%' }} />
+                  <Input placeholder="true if not empty" style={{ width: '100%' }} />
                 </Form.Item>
                 <Form.Item
                   label={'is Fine?'}
@@ -50,15 +50,15 @@ const MyCriteriaItem: React.FC<ICriteriaPoint> = (props) => {
                   required={false}
                   style={{ minWidth: '160px', width: 'auto' }}
                 >
-                  <Input placeholder="true or false" style={{ width: '100%' }} />
+                  <Input placeholder="true if not empty" style={{ width: '100%' }} />
                 </Form.Item>
                 <Form.Item
                   label={'Criteria group'}
                   name={[field.name, 'groupName']}
-                  required={false}
+                  required={true}
                   style={{ minWidth: '300px', width: 'auto' }}
                 >
-                  <Input placeholder="copy" style={{ width: '100%' }} />
+                  <Input placeholder="Criteria group name" style={{ width: '100%' }} />
                 </Form.Item>
                 {/*<Form.Item label={'For mentor'} name="if" required={false}>
                       <Checkbox style={{ width: '10%' }} />
