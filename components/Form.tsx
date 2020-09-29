@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { Form, Input, Button, Space } from 'antd';
+import { Form, Input, Button } from 'antd';
 import MyCriteria from './Criteria';
-import { db, taskRef, auth } from '../firebase';
-import { ITask, ICriteriaGroup, StateTask } from '../interfaces/ITask';
+import { auth } from '../firebase';
+import { ICriteriaGroup, StateTask } from '../interfaces/ITask';
 import { setDocument } from '../services/updateFirebase';
 import { useEffect, useState } from 'react';
 
@@ -26,7 +26,6 @@ const Myform: React.FC = () => {
     const evaluationCriteria: any = [];
 
     for (let i = 0; i < values.criterias.length; i++) {
-     
       const criteriaPoint = {
         criteriaPointID: values.criterias[i].criteriaPointName,
         criteriaPointName: values.criterias[i].criteriaPointName,
@@ -80,11 +79,9 @@ const Myform: React.FC = () => {
       oldUrl: values.oldUrl,
       publisherID: myUid,
     };
-console.log(newTask);
-    // setDocument('TasksArray', newTask.id, newTask);
+    setDocument('TasksArray', newTask.id, newTask);
   };
 
-// id={props.id}
   return (
     <Form name="create-task" onFinish={onFinish}>
       <h2>Create a new task:</h2>
