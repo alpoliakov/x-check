@@ -10,18 +10,11 @@ import TableData from '../../../components/TableData';
 interface PropsAdmin {
   dataUsers: [];
   dataTasks: [];
-  crossCheckSession: [];
   dataRow?: [];
   dataSession: [];
 }
 
-const AdminPage: React.FC<PropsAdmin> = ({
-  dataUsers,
-  dataTasks,
-  crossCheckSession,
-  dataRow,
-  dataSession,
-}) => {
+const AdminPage: React.FC<PropsAdmin> = ({ dataUsers, dataTasks, dataRow, dataSession }) => {
   const { Title } = Typography;
   const [visibleModal, setVisibleModal] = useState<boolean>(false);
   const [visitableCreateTask, setVisitableCreateTask] = useState(false);
@@ -60,7 +53,7 @@ const AdminPage: React.FC<PropsAdmin> = ({
                 style={{ width: 150, marginTop: 20 }}
                 onClick={showModalCreateTask}
               >
-                Creat task
+                Create task
               </Button>
             </Row>
             <Row>
@@ -81,7 +74,6 @@ const AdminPage: React.FC<PropsAdmin> = ({
             visibleModal={visibleModal}
             dataTasks={dataTasks}
             dataUsers={dataUsers}
-            crossCheckSession={crossCheckSession}
             dataSession={dataSession}
           />
           <Modal
@@ -100,7 +92,7 @@ const AdminPage: React.FC<PropsAdmin> = ({
             visible={visitableTable}
             onOk={handleOkTable}
           >
-             {/* dataRow={dataRow} */}
+            {/* dataRow={dataRow} */}
             <TableData />
           </Modal>
         </div>
@@ -112,7 +104,7 @@ const AdminPage: React.FC<PropsAdmin> = ({
 export const getServerSideProps = async () => {
   let dataUsers: any | undefined = [];
   let dataTasks: any | undefined = [];
-  let crossCheckSession: any | undefined = [];
+  const crossCheckSession: any | undefined = [];
   // let courseUser: any | undefined = [];
   // let courseCrossCheckTasks: any | undefined = [];
   let dataSession: any | undefined = [];
@@ -131,16 +123,10 @@ export const getServerSideProps = async () => {
       // courseUser = data.filter((user) => user.course.includes(activeCourse));
     });
   await db
-    .collection('tasks')
+    .collection('TasksArray')
     .get()
     .then((snap) => {
       dataTasks = snap.docs.map((doc) => doc.data());
-    });
-  await db
-    .collection('crossCheckSession')
-    .get()
-    .then((snap) => {
-      crossCheckSession = snap.docs.map((doc) => doc.data());
     });
 
   /*   await db
@@ -362,7 +348,7 @@ export const getServerSideProps = async () => {
   ];
 
   return {
-    props: { dataUsers, dataTasks, crossCheckSession, dataRow, dataSession },
+    props: { dataUsers, dataTasks, dataRow, dataSession },
   };
 };
 export default AdminPage;

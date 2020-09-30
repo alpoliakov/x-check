@@ -1,7 +1,7 @@
 /* eslint-disable react/display-name */
 import React, { useState } from 'react';
 import { Table, Radio, Divider, Tag, Button, Popconfirm, Space } from 'antd';
-import { ITask } from '../../../interfaces/ITask';
+import { ITask, StateTask } from '../../../interfaces/ITask';
 import { db } from '../../../firebase';
 import { deleteDocument } from '../../../services/updateFirebase';
 
@@ -12,7 +12,7 @@ interface Item {
   key: string;
   id: string;
   name: string;
-  state: string;
+  state: StateTask;
   authorName: string;
 }
 
@@ -33,10 +33,18 @@ const TableNewTask: React.FC<PropsTableNewTask> = ({ tasks }) => {
       title: 'State',
       dataIndex: 'state',
 
-      render: (tags: string) => (
+      render: (tags: StateTask) => (
         <>
-          <Tag color={tags === 'published' ? 'green' : tags === 'draft' ? 'red' : 'geekblue'}>
-            {tags}
+          <Tag
+            color={
+              tags === StateTask.published ? 'green' : tags === StateTask.draft ? 'red' : 'geekblue'
+            }
+          >
+            {tags === StateTask.published
+              ? 'PUBLISHED'
+              : tags === StateTask.draft
+              ? 'DRAFT'
+              : 'ACTIVE'}
           </Tag>
         </>
       ),
@@ -56,12 +64,15 @@ const TableNewTask: React.FC<PropsTableNewTask> = ({ tasks }) => {
       render: (_: any, text: any) => (
         <Space size="middle">
           <Popconfirm title="Sure to published?" onConfirm={() => onClickPublished(_, text)}>
-            <Button key={text} disabled={text.state === 'published' || text.state === 'active'}>
+            <Button
+              key={text}
+              disabled={text.state === StateTask.published || text.state === StateTask.active}
+            >
               Published
             </Button>
           </Popconfirm>
           <Popconfirm title="Sure to active?" onConfirm={() => onClickActive(_, text)}>
-            <Button key={text} disabled={text.state === 'active'}>
+            <Button key={text} disabled={text.state === StateTask.active}>
               Active
             </Button>
           </Popconfirm>
@@ -77,22 +88,22 @@ const TableNewTask: React.FC<PropsTableNewTask> = ({ tasks }) => {
   const onClickDelete = (_: any, e: any) => {
     const dataSource = [...dataTasks];
     setDataTasks(dataSource.filter((item) => item.id !== _));
-    deleteDocument('tasks', e.id);
+    deleteDocument('TasksArray', e.id);
   };
   const onClickPublished = (_: any, e: any) => {
     const dataSource = [...dataTasks];
     setDataTasks(
       dataSource.map((item: Item) => {
         if (item.id === _) {
-          item.state = 'published';
+          item.state = StateTask.active;
         }
         return item;
       })
     );
-    db.collection('tasks')
+    db.collection('TasksArray')
       .doc(e.id)
       .update({
-        state: 'published',
+        state: StateTask.published,
       })
       .then(function () {
         console.log('Document successfully written!');
@@ -100,7 +111,7 @@ const TableNewTask: React.FC<PropsTableNewTask> = ({ tasks }) => {
   };
   const onClickActive = (_: any, e: any) => {
     const dataSource = [...dataTasks];
-    db.collection('crossCheckSession')
+    db.collection('session')
       .doc(e.name)
       .set({
         taskID: e.id,
@@ -115,7 +126,7 @@ const TableNewTask: React.FC<PropsTableNewTask> = ({ tasks }) => {
     setDataTasks(
       dataSource.map((item: Item) => {
         if (item.id === _) {
-          item.state = 'active';
+          item.state = StateTask.active;
         }
         return item;
       })

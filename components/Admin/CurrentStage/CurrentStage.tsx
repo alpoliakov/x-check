@@ -1,30 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Select, Button, DatePicker } from 'antd';
 const { Option } = Select;
-import { ITaskStep } from '../../../interfaces/ICourse';
+import { ICourse, ITaskStep } from '../../../interfaces/ICourse';
 import moment from 'moment';
 import { updateObjectField } from '../../../services/updateFirebase';
+import firebase from 'firebase';
 
 interface PropsCurrentStage {
   activeTask: string | undefined;
-  crossCheckSession: ITaskStep[];
+  dataSession: ICourse[];
   getTaskStage: (value: string | undefined) => void;
 }
 
-const CurrentStage: React.FC<PropsCurrentStage> = ({
-  activeTask,
-  crossCheckSession,
-  getTaskStage,
-}) => {
+const CurrentStage: React.FC<PropsCurrentStage> = ({ activeTask, dataSession, getTaskStage }) => {
   const [currentStage, setCurrentStage] = useState<string | undefined>(undefined);
   const [start, setStart] = useState<string | null>(null);
   const [deadline, setDeadline] = useState<string | null>(null);
 
   useEffect(() => {
     if (activeTask !== undefined) {
-      const active: any = crossCheckSession.find((e) => e.name === activeTask);
-      setStart(active.start);
-      setDeadline(active.deadline);
+      const active: any = dataSession[0].tasks.find((e) => e.name === activeTask);
+      setStart(moment(active.start).format('YYYY-MM-DD'));
+      setDeadline(moment(active.deadline).format('YYYY-MM-DD'));
       setCurrentStage(active.taskStage);
     }
   }, [activeTask]);
@@ -47,12 +44,16 @@ const CurrentStage: React.FC<PropsCurrentStage> = ({
     }
   };
   const onFinish = (): void => {
-    const active: any = crossCheckSession.find((e) => e.name === activeTask);
-    console.log(active);
-    updateObjectField('crossCheckSession', active.name, {
-      taskStage: currentStage,
-      deadline: deadline,
-      start: start,
+    const active: any = dataSession[0].tasks.find((e) => e.name === activeTask);
+    console.log(active, active.name, moment(deadline).valueOf(), moment(start).valueOf());
+    updateObjectField('sessions', 'course1', {
+      tasks: firebase.firestore.FieldValue.arrayUnion({
+        taskID: active.taskID,
+        name: active.name,
+        taskStage: currentStage,
+        deadline: moment(deadline).valueOf(),
+        start: moment(start).valueOf(),
+      }),
     });
     getTaskStage(currentStage);
   };
@@ -76,6 +77,7 @@ const CurrentStage: React.FC<PropsCurrentStage> = ({
           <DatePicker
             disabled={!activeTask}
             value={start !== null ? moment(start, 'YYYY-MM-DD') : null}
+            format={'YYYY-MM-DD'}
             onChange={onChangeStart}
           />
         </Form.Item>
@@ -83,6 +85,7 @@ const CurrentStage: React.FC<PropsCurrentStage> = ({
           <DatePicker
             disabled={!activeTask}
             value={deadline !== null ? moment(deadline, 'YYYY-MM-DD') : null}
+            format={'YYYY-MM-DD'}
             onChange={onchangeDeadline}
           />
         </Form.Item>
