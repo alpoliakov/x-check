@@ -94,7 +94,7 @@ const AdminPage: React.FC<PropsAdmin> = ({ dataUsers, dataTasks, dataRow, dataSe
               <Button style={{ width: 100 }} onClick={returnAdminMain}>
                 Return
               </Button>
-              <Form task={task} transferTaskForm={transferTaskForm} />
+              <Form task={transferTaskForm} />
             </Row>
           )}
           <Modal

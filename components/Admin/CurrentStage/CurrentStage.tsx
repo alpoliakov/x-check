@@ -46,7 +46,7 @@ const CurrentStage: React.FC<PropsCurrentStage> = ({ activeTask, dataSession, ge
   const onFinish = (): void => {
     const active: any = dataSession[0].tasks.find((e) => e.name === activeTask);
     console.log(active, active.name, moment(deadline).valueOf(), moment(start).valueOf());
-    dataSession[0].tasks.forEach((e) => {
+    dataSession[0].tasks.forEach((e: any) => {
       if (e.name === active.name) {
         e.taskStage = currentStage === null ? e.taskStage : currentStage;
         e.deadline = deadline === null ? e.deadline : moment(deadline).valueOf();
