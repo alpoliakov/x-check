@@ -3,28 +3,30 @@ import { Form, Input, Button, Space, Checkbox } from 'antd';
 import { ICriteriaGroup } from '../interfaces/ITask';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 
-const MyCriteriaItem: React.FC = () => {
-  // const pointArray: any[] = [];
-  // if (evaluationCriteria.criteriaPoints) {
-  //   evaluationCriteria.forEach((group: ICriteriaGroup) => {
-  //     group.criteriaPoints.forEach((point) => {
-  //       const item = {
-  //         criteriaPointName: point.criteriaPointName,
-  //         criteriaPointScore: point.criteriaPointScore,
-  //         isThisPointForAMentor: point.isThisPointForAMentor,
-  //         isFine: point.isFine,
-  //         groupName: group.groupName,
-  //       };
-  //       pointArray.push(item);
-  //     });
-  //   });
-  // }
+const MyCriteriaItemDraft: React.FC<{ evaluationCriteria: any }> = ({
+  evaluationCriteria,
+}) => {
+  const pointArray: any[] = [];
+  if (evaluationCriteria.criteriaPoints) {
+    evaluationCriteria.forEach((group: ICriteriaGroup) => {
+      group.criteriaPoints.forEach((point) => {
+        const item = {
+          criteriaPointName: point.criteriaPointName,
+          criteriaPointScore: point.criteriaPointScore,
+          isThisPointForAMentor: point.isThisPointForAMentor,
+          isFine: point.isFine,
+          groupName: group.groupName,
+        };
+        pointArray.push(item);
+      });
+    });
+  }
   return (
     <Form.List name="criterias">
       {(fields, { add, remove }) => {
-        // for (let i = 0; i < pointArray.length; i++) {
-        //   fields.push({ fieldKey: i, name: i, key: i });
-        // }
+        for (let i = 0; i < pointArray.length; i++) {
+          fields.push({ fieldKey: i, name: i, key: i });
+        }
         return (
           <div>
             {fields.map((field) => (
@@ -38,11 +40,11 @@ const MyCriteriaItem: React.FC = () => {
                   <Input
                     placeholder="Criteria item description"
                     style={{ width: '100%' }}
-                    // defaultValue={
-                    //   pointArray[field.name].criteriaPointName
-                    //     ? pointArray[field.name].criteriaPointName
-                    //     : ''
-                    // }
+                    defaultValue={
+                      pointArray[field.name].criteriaPointName
+                        ? pointArray[field.name].criteriaPointName
+                        : ''
+                    }
                   />
                 </Form.Item>
                 <Form.Item
@@ -54,11 +56,11 @@ const MyCriteriaItem: React.FC = () => {
                   <Input
                     placeholder="10"
                     style={{ width: '100%' }}
-                    // defaultValue={
-                    //   pointArray[field.name].criteriaPointScore
-                    //     ? pointArray[field.name].criteriaPointScore
-                    //     : ''
-                    // }
+                    defaultValue={
+                      pointArray[field.name].criteriaPointScore
+                        ? pointArray[field.name].criteriaPointScore
+                        : ''
+                    }
                   />
                 </Form.Item>
                 <Form.Item
@@ -70,11 +72,11 @@ const MyCriteriaItem: React.FC = () => {
                   <Input
                     placeholder="true if not empty"
                     style={{ width: '100%' }}
-                    // defaultValue={
-                    //   pointArray[field.name].isThisPointForAMentor
-                    //     ? pointArray[field.name].isThisPointForAMentor
-                    //     : 'false'
-                    // }
+                    defaultValue={
+                      pointArray[field.name].isThisPointForAMentor
+                        ? pointArray[field.name].isThisPointForAMentor
+                        : 'false'
+                    }
                   />
                 </Form.Item>
                 <Form.Item
@@ -86,9 +88,9 @@ const MyCriteriaItem: React.FC = () => {
                   <Input
                     placeholder="true if not empty"
                     style={{ width: '100%' }}
-                    // defaultValue={
-                    //   pointArray[field.name].isFine ? pointArray[field.name].isFine : 'false'
-                    // }
+                    defaultValue={
+                      pointArray[field.name].isFine ? pointArray[field.name].isFine : 'false'
+                    }
                   />
                 </Form.Item>
                 <Form.Item
@@ -100,9 +102,9 @@ const MyCriteriaItem: React.FC = () => {
                   <Input
                     placeholder="Criteria group name"
                     style={{ width: '100%' }}
-                    // defaultValue={
-                    //   pointArray[field.name].groupName ? pointArray[field.name].groupName : ''
-                    // }
+                    defaultValue={
+                      pointArray[field.name].groupName ? pointArray[field.name].groupName : ''
+                    }
                   />
                 </Form.Item>
                 <MinusCircleOutlined
@@ -132,4 +134,4 @@ const MyCriteriaItem: React.FC = () => {
     </Form.List>
   );
 };
-export default MyCriteriaItem;
+export default MyCriteriaItemDraft;

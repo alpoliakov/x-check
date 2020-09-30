@@ -131,7 +131,7 @@ export const getServerSideProps = async () => {
       // courseUser = data.filter((user) => user.course.includes(activeCourse));
     });
   await db
-    .collection('tasks')
+    .collection('TasksArray')
     .get()
     .then((snap) => {
       dataTasks = snap.docs.map((doc) => doc.data());
