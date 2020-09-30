@@ -4,32 +4,63 @@ import { UserOutlined } from '@ant-design/icons';
 import { useForm } from 'antd/lib/form/Form';
 import { UserBasic } from '../../../interfaces/IUser';
 import { ITask } from '../../../interfaces/ITask';
+import AddStudents from './AddStudents';
+import { updateObjectField } from '../../../services/updateFirebase';
+import firebase from 'firebase';
 
 const { Option } = Select;
 
 interface PropsStudentList {
-  user: [];
+  userData: UserBasic[];
   myUid: string;
   getTask: (value: any) => void;
 }
 
-const StudentsList: React.FC<PropsStudentList> = ({ user, getTask, myUid }) => {
+const StudentsList: React.FC<PropsStudentList> = ({ userData, getTask, myUid }) => {
   const [students, setStudent] = useState<UserBasic[]>([]);
+  const [users, setUsers] = useState<UserBasic[]>([]);
   const [tasks, setSTask] = useState<ITask[]>([]);
   const [isDisabled, setIsDisabled] = useState<boolean>(true);
   const [taskValue, setTaskValue] = useState<string | undefined>(undefined);
+  const [update, setUpdate] = useState<any>();
   const [form] = useForm();
-  useEffect(() => {
-    setStudent(user.filter((e: any) => e.uid !== myUid));
-  }, [myUid]);
 
   useEffect(() => {
     setTaskValue(undefined);
     getTask(null);
   }, [tasks]);
+  useEffect(() => {
+    if (myUid) {
+      const mentorStudents: any[] = userData.filter((e: any) => e.uid === myUid)[0].studentsid;
+      setStudent(
+        mentorStudents.map((e: any) => {
+          return userData.filter((i) => e === i.uid)[0];
+        })
+      );
+      setUsers(userData.filter((e) => e.uid !== myUid && !e.mentor));
+    }
+  }, [myUid]);
+
+  const getUpdate = (value: string) => {
+    if (myUid && value) {
+      userData.forEach((e: any) => {
+        if (e.uid === value) {
+          e.mentor = { id: myUid };
+          updateObjectField('users', value, { mentor: { id: myUid } });
+        }
+        if (e.uid === myUid && !e.studentsid.includes(value)) {
+          e.studentsid.push(value);
+          updateObjectField('users', myUid, {
+            studentsid: firebase.firestore.FieldValue.arrayUnion(value),
+          });
+        }
+      });
+    }
+  };
   const handleProvinceChange = (value: Key, key: any) => {
     const userTasks: any = students.filter((i) => i.uid === key.key);
-    setSTask(userTasks);
+    console.log(userTasks, key.key);
+    setSTask(userTasks.tasksID);
     setIsDisabled(false);
   };
 
@@ -39,6 +70,7 @@ const StudentsList: React.FC<PropsStudentList> = ({ user, getTask, myUid }) => {
   };
   return (
     <>
+      <AddStudents userData={users} myUid={myUid} getUpdate={getUpdate} />
       <Form layout="vertical">
         <Form.Item label="Students" rules={[{ required: true }]}>
           <Select
@@ -46,7 +78,7 @@ const StudentsList: React.FC<PropsStudentList> = ({ user, getTask, myUid }) => {
             style={{ width: 280 }}
             onChange={handleProvinceChange}
           >
-            {students.map((province) => (
+            {students.map((province, i) => (
               <Option key={province.uid} value={province.nickname}>
                 <Avatar
                   size={20}
