@@ -6,6 +6,7 @@ import { db } from '../../../firebase';
 import AdminMain from '../../../components/Admin/index';
 import Form from '../../../components/Form';
 import TableData from '../../../components/TableData';
+import Import from '../../../components/Import';
 
 interface PropsAdmin {
   dataUsers: [];
@@ -24,6 +25,7 @@ const AdminPage: React.FC<PropsAdmin> = ({
 }) => {
   const { Title } = Typography;
   const [visibleModal, setVisibleModal] = useState<boolean>(false);
+  const [visibleImport, setVisibleImport] = useState<boolean>(false);
   const [visitableCreateTask, setVisitableCreateTask] = useState(false);
   const [visitableTable, setVisitableTable] = useState(false);
 
@@ -34,6 +36,9 @@ const AdminPage: React.FC<PropsAdmin> = ({
   const showTable = () => {
     setVisitableTable(true);
   };
+  const showImport = () => {
+    setVisibleImport(true);
+  };
   const showModal = () => {
     setVisibleModal(true);
   };
@@ -42,6 +47,9 @@ const AdminPage: React.FC<PropsAdmin> = ({
   };
   const handleOk = (e: any) => {
     setVisitableCreateTask(false);
+  };
+  const handleOkImport = (e: any) => {
+    setVisibleImport(false);
   };
   const handleOkTable = (e: any) => {
     setVisitableTable(false);
@@ -61,7 +69,12 @@ const AdminPage: React.FC<PropsAdmin> = ({
                 style={{ width: 150, marginTop: 20 }}
                 onClick={showModalCreateTask}
               >
-                Creat task
+                Create task
+              </Button>
+            </Row>
+            <Row>
+              <Button type="primary" style={{ width: 150, marginTop: 20 }} onClick={showImport}>
+                Import/Export
               </Button>
             </Row>
             <Row>
@@ -86,6 +99,14 @@ const AdminPage: React.FC<PropsAdmin> = ({
             dataSession={dataSession}
           />
           <Modal
+            width={'1200px'}
+            onCancel={handleOkImport}
+            visible={visibleImport}
+            onOk={handleOkImport}
+          >
+            <Import />
+          </Modal>
+          <Modal
             title="Create tasks"
             width={'auto'}
             onCancel={() => setVisitableCreateTask(false)}
@@ -95,13 +116,13 @@ const AdminPage: React.FC<PropsAdmin> = ({
             <Form task={task} />
           </Modal>
           <Modal
-            title="Create tasks"
+            title="Table tasks"
             width={'auto'}
             onCancel={() => setVisitableTable(false)}
             visible={visitableTable}
             onOk={handleOkTable}
           >
-             {/* dataRow={dataRow} */}
+            {/* dataRow={dataRow} */}
             <TableData />
           </Modal>
         </div>
