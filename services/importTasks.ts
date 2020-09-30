@@ -1,12 +1,20 @@
 import { ICriteriaGroup, ICriteriaPoint, StateTask } from '../interfaces/ITask';
-export default function importTaskMD(task: string): any {
+export default function importTaskMD(
+  task: string,
+  categorySeparator = '- **',
+  pointSeparator = '- '
+): any {
   task.replace('`', "'");
   const md2json = require('md-2-json');
   const incomingJSON = md2json.parse(task);
   // const myUID = getAutorUID();
   const name = Object.keys(incomingJSON)[0];
   const demo = getDemoLink(incomingJSON);
-  const evaluationCriteria = evaluationCriteriaParse(incomingJSON);
+  const evaluationCriteria = evaluationCriteriaParse(
+    incomingJSON,
+    categorySeparator,
+    pointSeparator
+  );
 
   const newTask = {
     id: name,

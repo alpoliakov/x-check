@@ -22,9 +22,8 @@ import {
 import { ITask, TypeTask } from '../../../../interfaces/ITask';
 import { Role } from '../../../../interfaces/IUser';
 import { deleteDocument, setDocument } from '../../../../services/updateFirebase';
-import Sidebar from '../../../../components/student/cross-check/sidebar';
 import { ICourse } from '../../../../interfaces/ICourse';
-
+import Sidebar from '../../../../components/student/cross-check/Sidebar';
 interface PropsCrossCheckPage {
   tasksData: ITask[];
   courseData: ICourse[];
