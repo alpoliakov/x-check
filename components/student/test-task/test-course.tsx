@@ -9,7 +9,7 @@ export const dataCourse: ICourse[] = [
         taskID: 'Songbird 1',
         name: 'Songbird',
         taskStage: 'stage',
-        deadline: new Date(2020, 0, 1).getTime(),
+        deadline: new Date(2021, 0, 1).getTime(),
         start: new Date(2020, 0, 1).getTime(),
       },
       {
