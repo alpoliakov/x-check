@@ -95,14 +95,13 @@ const AdminPage: React.FC<PropsAdmin> = ({
             <Form task={task} />
           </Modal>
           <Modal
-            title="Create tasks"
+            title="Task review"
             width={'auto'}
             onCancel={() => setVisitableTable(false)}
             visible={visitableTable}
             onOk={handleOkTable}
           >
-             {/* dataRow={dataRow} */}
-            <TableData />
+            <TableData dataRow={dataRow} />
           </Modal>
         </div>
       </main>
@@ -353,12 +352,21 @@ export const getServerSideProps = async () => {
       user: 'Mike',
       task: '32',
       reviewer: 'Stas',
+      score: 50,
     },
     {
       key: '2',
       user: 'John',
-      task: 42,
-      reviewer: '10 Downing Street',
+      task: 'Singolo',
+      reviewer: 'Gleb',
+      score: 40,
+    },
+    {
+      key: '3',
+      user: 'Anna',
+      task: 'X-check',
+      reviewer: 'Gleb',
+      score: 30,
     },
   ];
 
