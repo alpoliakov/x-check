@@ -4,43 +4,43 @@ import TaskInformation from './TaskInformation/TaskInformation';
 import AssignRole from './AssignRole/AssignRole';
 import TableNewTask from './TableNewTask/TableNewTask';
 import { distribute } from '../../services/distributeStudents';
-import { ITaskStep } from '../../interfaces/ICourse';
+import { ICourse, ITaskStep } from '../../interfaces/ICourse';
 import { ITask } from '../../interfaces/ITask';
+import { UserBasic } from '../../interfaces/IUser';
 
 interface PropsAdminMain {
-  dataUsers: [];
+  dataUsers: UserBasic[];
   dataTasks: ITask[];
-  crossCheckSession: ITaskStep[];
-  dataSession: any;
+  dataSession: ICourse[];
   visibleModal: boolean;
   getVisibleModal: (value: boolean) => void;
+  getClickTask: (value: string) => void;
 }
 
 const AdminMain: React.FC<PropsAdminMain> = ({
   dataUsers,
   dataTasks,
   visibleModal,
-  crossCheckSession,
   dataSession,
   getVisibleModal,
+  getClickTask,
 }) => {
   const [users, setUser] = useState<any[]>(dataUsers);
   const [visible, setVisible] = useState<boolean>(visibleModal);
   useEffect(() => {
-    // console.log('DATA', dataUsers, dataTasks, crossCheckSession, dataSession);
     setVisible(visibleModal);
   }, [visibleModal]);
   useEffect(() => {
     getVisibleModal(visible);
   }, [visible]);
 
-  const handleOk = (e: any) => {
+  const handleOk = () => {
     setVisible(false);
   };
   return (
     <div className="admin-wrapper">
       <Row>
-        <TaskInformation crossCheckSession={crossCheckSession} tasks={dataTasks} users={users} />
+        <TaskInformation dataSession={dataSession} users={users} />
       </Row>
       <Row gutter={[8, 8]} style={{ margin: 0 }}>
         <Col span={12} style={{ textAlign: 'center', margin: 0 }}>
@@ -56,7 +56,7 @@ const AdminMain: React.FC<PropsAdminMain> = ({
               </Button>,
             ]}
           >
-            <TableNewTask tasks={dataTasks} />
+            <TableNewTask getClickTask={getClickTask} tasks={dataTasks} />
           </Modal>
         </Col>
         <Col span={12} style={{ textAlign: 'center', margin: '20px 0' }}></Col>

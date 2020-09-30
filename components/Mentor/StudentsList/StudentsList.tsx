@@ -2,44 +2,34 @@ import React, { useState, Key, useEffect } from 'react';
 import { Select, Avatar, Form } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { useForm } from 'antd/lib/form/Form';
-import { UserBasic } from '../../interfaces/IUser';
-import { ITask } from '../../interfaces/ITask';
+import { UserBasic } from '../../../interfaces/IUser';
+import { ITask } from '../../../interfaces/ITask';
 
 const { Option } = Select;
 
 interface PropsStudentList {
-  user: UserBasic;
-  data: UserBasic[];
+  user: [];
+  myUid: string;
   getTask: (value: any) => void;
 }
 
-const StudentsList: React.FC<PropsStudentList> = ({ user, data, getTask }) => {
+const StudentsList: React.FC<PropsStudentList> = ({ user, getTask, myUid }) => {
   const [students, setStudent] = useState<UserBasic[]>([]);
   const [tasks, setSTask] = useState<ITask[]>([]);
   const [isDisabled, setIsDisabled] = useState<boolean>(true);
   const [taskValue, setTaskValue] = useState<string | undefined>(undefined);
   const [form] = useForm();
-
   useEffect(() => {
-    const mentorStudents = data.filter((i) => {
-      let result: any;
-      user.studentsid.forEach((e) => {
-        if (i.uid === e) {
-          return (result = i);
-        }
-      });
-      return result;
-    });
-    setStudent(mentorStudents);
-  }, []);
+    setStudent(user.filter((e: any) => e.uid !== myUid));
+  }, [myUid]);
 
   useEffect(() => {
     setTaskValue(undefined);
     getTask(null);
   }, [tasks]);
   const handleProvinceChange = (value: Key, key: any) => {
-    const userTasks: any = user.studentsid.filter((i) => i === key.key);
-    setSTask(userTasks[0].tasksID);
+    const userTasks: any = students.filter((i) => i.uid === key.key);
+    setSTask(userTasks);
     setIsDisabled(false);
   };
 
@@ -50,7 +40,7 @@ const StudentsList: React.FC<PropsStudentList> = ({ user, data, getTask }) => {
   return (
     <>
       <Form layout="vertical">
-        <Form.Item name="Students" label="Students" rules={[{ required: true }]}>
+        <Form.Item label="Students" rules={[{ required: true }]}>
           <Select
             placeholder="Select students..."
             style={{ width: 280 }}
@@ -72,7 +62,7 @@ const StudentsList: React.FC<PropsStudentList> = ({ user, data, getTask }) => {
             ))}
           </Select>
         </Form.Item>
-        <Form.Item name="Tasks" label="Tasks" rules={[{ required: true }]}>
+        <Form.Item label="Tasks" rules={[{ required: true }]}>
           <Select
             placeholder="Select student tasks..."
             value={taskValue}
@@ -80,9 +70,9 @@ const StudentsList: React.FC<PropsStudentList> = ({ user, data, getTask }) => {
             onChange={onSecondCityChange}
             disabled={isDisabled}
           >
-            {tasks.map((i: any) => (
-              <Option key={i.taskID} value={i.taskName}>
-                {i.taskName}
+            {tasks.map((task: any, i) => (
+              <Option key={i} value={task.taskName}>
+                {task.taskName}
               </Option>
             ))}
           </Select>{' '}
