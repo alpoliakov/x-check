@@ -3,8 +3,8 @@ export interface IWorkDone {
   taskID: string; //для поиска таска, на основании которого сделана проверка
   state: TaskState;
   student: IStudent; //имя выполнившего работу
-  publishedAt: Date; // дата создания проверки
-  deadline: Date; //возможно пригодится для расчёта штрафов за просроченный дедлайн
+  publishedAt: number; // дата создания проверки
+  deadline: number; //возможно пригодится для расчёта штрафов за просроченный дедлайн
   finalScore: number; //набранные, масимальный будет браться из таска
   selfTest: ICheсk; // оценки самопроверки
   mentor: IMentor; //возможно стоит оставить только поле auditorName если это будут отдельные объекты для каждого проверяющего
@@ -74,7 +74,7 @@ export interface ICheсkingPoint {
 export interface IComment {
   id: string; // для обращения редактирования/удаления
   text: string; //содержание комментария
-  date: Date; //дата создания/правки комментария
+  date: number; //дата создания/правки комментария
   whoSaidThat: string; // autor, auditor, referee - дать возможность редактировать только тому, кто этот коммент написал
   isAnonimSay: boolean; // чтобы знать надо ли скрывать имя сказавшего
 }

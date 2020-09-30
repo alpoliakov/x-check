@@ -1,6 +1,6 @@
 import React from 'react';
 import MainLayout from '../../../../components/MainLayout';
-import { db } from '../../../../firebase';
+import { auth, db } from '../../../../firebase';
 import { Row, Col } from 'antd';
 import CheckTask from '../../../../components/student/check-task';
 import { checkingTask, user } from '../../../../components/student/test-task/test-work-done';
@@ -12,160 +12,265 @@ import {
   createMentorCheck,
   createTask,
 } from '../../../../components/student/check-task/common';
-import { ICheсk, TaskState } from '../../../../interfaces/IWorkDone';
-import { TypeTask } from '../../../../interfaces/ITask';
+import {
+  CheckState,
+  ICheсk,
+  IStudent,
+  IWorkDone,
+  TaskState,
+} from '../../../../interfaces/IWorkDone';
+import { ITask, TypeTask } from '../../../../interfaces/ITask';
 import { Role } from '../../../../interfaces/IUser';
-import Sidebar from '../../../../components/student/cross-check/Sidebar';
+import { deleteDocument, setDocument } from '../../../../services/updateFirebase';
+import Sidebar from '../../../../components/student/cross-check/sidebar';
+import { ICourse } from '../../../../interfaces/ICourse';
 
 interface PropsCrossCheckPage {
-  data?: [];
+  tasksData: ITask[];
+  courseData: ICourse[];
+  completedTasksData: IWorkDone[]; // была проблема в 56 строки, ты присваивал свойство от undefined
 }
-const CrossCheckPage: React.FC<PropsCrossCheckPage> = ({ data }) => {
-  console.log(data);
-  const tasksData = dataCourse.tasks;
-  const taskList = tasksData.map((el) => el.name);
 
-  const [task, setTask] = React.useState('');
+const CrossCheckPage: React.FC<PropsCrossCheckPage> = ({
+  tasksData,
+  courseData,
+  completedTasksData,
+}) => {
+  const role = Role.student;
+  const typeTask = TypeTask.ReviewTask;
+  if (auth.currentUser !== null) {
+    console.log(auth.currentUser.uid);
+    console.log(auth.currentUser.displayName);
+  }
+  const [task, setTask] = React.useState<ITask>({} as ITask);
   const [isDeadline, setIsDeadline] = React.useState(false);
-  const [isComplited, setIsComplited] = React.useState(false);
-  const selectTask = (task: string) => {
-    setTask(task);
+  const [workDone, setWorkDone] = React.useState<IWorkDone>({} as IWorkDone);
+  const [neWworkDone, setNewWorkDone] = React.useState<IWorkDone>({} as IWorkDone);
+  const [checkTask, setCheckTask] = React.useState<ICheсk>({} as ICheсk);
+  const [reviewer, setReviewer] = React.useState<IStudent>({} as IStudent);
+  const [deployUrl, setDeployUrl] = React.useState<string>('');
+  const [sourceGithubRepoUrl, setSourceGithubRepoUrl] = React.useState<string>('');
 
-    const selectTaskDeadline = tasksData
-      .filter((el) => el.name === task)
-      .map((el) => el.deadline)[0];
+  // console.log('task', task);
+  // console.log('workDone', workDone);
+  // console.log('neWworkDone', neWworkDone);
+  // console.log('isDeadline', isDeadline);
+  // console.log('checkTask', checkTask);
+  // console.log('reviewer', reviewer);
 
-    // const date = new Date();
+  // console.log('tasksData', tasksData);
+  // console.log('courseData', courseData);
+  // console.log('completedTasksData', completedTasksData);
+  let taskJSX: JSX.Element = <></>;
 
-    // if (selectTaskDeadline.getTime() < date.getTime()) {
-    //   setIsDeadline(true);
-    // } else {
-    //   setIsDeadline(false);
-    // }
+  const onSave = (checkingTask: ICheсk) => {
+    if (workDone.id === undefined && !isDeadline && neWworkDone.id !== undefined) {
+      //Сохранение новосозданного IWorkDone(самотестрирование)
+      const newCheckingTask = {
+        ...neWworkDone,
+        selfTest: checkingTask,
+        deployUrl: deployUrl,
+        sourceGithubRepoUrl: sourceGithubRepoUrl,
+      };
+      console.log('Save in Data 1', newCheckingTask);
+      // setDocument('completed_tasks', newCheckingTask.id, newCheckingTask);
+      // deleteDocument('completed_tasks', newCheckingTask.id, newCheckingTask);
+    } else if (workDone.id !== undefined && !isDeadline && neWworkDone.id === undefined) {
+      //Сохранение старого IWorkDone до дедлайна
+      const newCheckingTask = {
+        ...workDone,
+        selfTest: checkingTask,
+        deployUrl: deployUrl,
+        sourceGithubRepoUrl: sourceGithubRepoUrl,
+      };
+      console.log('Save in Data 2', newCheckingTask);
+      //updateObjectField('completed_tasks', newCheckingTask.id, newCheckingTask);
+    } else if (
+      workDone.id !== undefined &&
+      isDeadline &&
+      neWworkDone.id === undefined &&
+      reviewer.id !== undefined &&
+      checkTask.checkerID !== undefined
+    ) {
+      //Сохранение старого IWorkDone после дедлайна (согласование выставленной оценки)
+      const updateCheck = workDone.cheсks.map((item) => {
+        if (item.checkerID === checkingTask.checkerID) {
+          return checkingTask;
+        }
+        return item;
+      });
+      const newCheckingTask = {
+        ...workDone,
+        checks: updateCheck,
+      };
+      console.log('Save in Data', newCheckingTask);
+    }
   };
 
-  const onSave = (checkTask: ICheсk) => {
-    console.log('Save in Data', checkTask);
+  const onSubmit = (checkingTask: ICheсk) => {
+    console.log('Change and save in Data', checkingTask);
+    if (workDone.id === undefined && !isDeadline && neWworkDone.id !== undefined) {
+      const newCheckingTask = {
+        ...neWworkDone,
+        selfTest: checkingTask,
+        deployUrl: deployUrl,
+        sourceGithubRepoUrl: sourceGithubRepoUrl,
+      };
+      console.log('Save in Data', newCheckingTask);
+    } else if (workDone.id !== undefined && !isDeadline && neWworkDone.id === undefined) {
+      const newCheckingTask = {
+        ...workDone,
+        selfTest: checkingTask,
+        deployUrl: deployUrl,
+        sourceGithubRepoUrl: sourceGithubRepoUrl,
+      };
+      console.log('Save in Data', newCheckingTask);
+    }
   };
 
-  const onSubmit = (checkTask: ICheсk) => {
-    console.log('Change and save in Data', checkTask);
+  const getDeployUrl = (url: string) => {
+    setDeployUrl(url);
   };
-  let role = user.role;
+  const getSourceGithubRepoUrl = (url: string) => {
+    setSourceGithubRepoUrl(url);
+  };
+  const selectTask = (selectTaskID: string) => {
+    // setDocument('sessions', dataCourse.id, dataCourse);
+    // deleteDocument('sessions', dataCourse.id);
 
-  // /* 1. До Сабмита (Создания IwokDone)
-  // если IworkDone будет пустой, то создаем его на основе Таска*/
+    // setDocument('TasksArray', testTask.id, testTask);
+    // deleteDocument('TasksArray', testTask.id);
+    let selectTask = {} as ITask;
+    let selectWorkDone = {} as IWorkDone;
+    let selectNeWworkDone = {} as IWorkDone;
+    let selectIsDeadline = false;
+    let selectCheckTask = {} as ICheсk;
+    let selectReviewer = {} as IStudent;
+    if (tasksData.length !== 0 && dataCourse.length !== 0) {
+      const select = tasksData.filter((taskData) => taskData.id === selectTaskID);
+      if (select.length !== 0) {
+        selectTask = select[0];
+        const selectTaskDeadline = dataCourse[0].tasks.filter(
+          (taskData) => taskData.taskID === selectTaskID
+        );
+        if (selectTaskDeadline.length !== 0) {
+          const selectTaskDeadline1 = selectTaskDeadline.map((el) => el.deadline)[0];
+          const date = new Date().getTime();
+          if (selectTaskDeadline1 < date) {
+            selectIsDeadline = true;
+          } else {
+            selectIsDeadline = false;
+          }
+        }
 
-  const newCheckingTask = createTask(testTask, user);
-  const typeTask = TypeTask.SubmitTask;
-  const [checkTask, reviewer] = [newCheckingTask.selfTest, newCheckingTask.student];
+        if (completedTasksData.length !== 0) {
+          const searchWorksDone = completedTasksData.filter(
+            (completedTask) => completedTask.taskID === select[0].id
+          );
+          if (searchWorksDone.length !== 0) {
+            setDeployUrl(searchWorksDone[0].deployUrl);
+            setSourceGithubRepoUrl(searchWorksDone[0].sourceGithubRepoUrl);
 
-  // /* 2. До сабмита (правка IwokDone)  своя работа */
+            selectWorkDone = searchWorksDone[0];
+            selectNeWworkDone = {} as IWorkDone;
+            if (!selectIsDeadline) {
+              //этап правки самопроверки
+              selectCheckTask = searchWorksDone[0].selfTest;
+              selectReviewer = searchWorksDone[0].student;
+            } else {
+              //этап согласования оценок никого не выбираем
+              selectCheckTask = {} as ICheсk;
+              selectReviewer = {} as IStudent;
+            }
+          } else {
+            if (!selectIsDeadline) {
+              //этап создания самопроверки
+              selectWorkDone = {} as IWorkDone;
+              selectNeWworkDone = createTask(selectTask, user);
+              selectCheckTask = selectNeWworkDone.selfTest;
+              selectReviewer = selectNeWworkDone.student;
+            } else {
+              // этап не засабмиченной работы
+              selectWorkDone = {} as IWorkDone;
+              selectNeWworkDone = {} as IWorkDone;
+              selectCheckTask = {} as ICheсk;
+              selectReviewer = {} as IStudent;
+            }
+          }
+        } else {
+          selectWorkDone = {} as IWorkDone;
+          selectNeWworkDone = createTask(selectTask, user);
+        }
+      } else {
+        selectTask = {} as ITask;
+      }
+      setTask(selectTask);
+      setWorkDone(selectWorkDone);
+      setNewWorkDone(selectNeWworkDone);
+      setIsDeadline(selectIsDeadline);
+      setCheckTask(selectCheckTask);
+      setReviewer(selectReviewer);
+    }
+  };
 
-  // const typeTask = TypeTask.SubmitTask;
-  // const [checkTask, reviewer] = [checkingTask.selfTest, checkingTask.student];
+  if (task.id !== undefined && reviewer.id !== undefined && checkTask.checkerID !== undefined) {
+    taskJSX = (
+      <CheckTask
+        task={task}
+        checkingTask={checkTask}
+        reviewer={reviewer}
+        deployUrl={deployUrl}
+        sourceGithubRepoUrl={sourceGithubRepoUrl}
+        role={role}
+        typeTask={typeTask}
+        onSave={onSave}
+        onSubmit={onSubmit}
+      />
+    );
+  } else if (
+    task.id === undefined ||
+    reviewer.id === undefined ||
+    checkTask.checkerID === undefined
+  ) {
+    taskJSX = <></>;
+  }
 
-  // /* 3. После сабмита (создания IwokDone.checks по reviewers) */
-  // const typeTask = TypeTask.ReviewTask;
-  // const [checkTask, reviewer] = [
-  //   createCheckOnReviewer(testTask, selfCheckingTask, selfCheckingTask.reviewers[1]),
-  //   selfCheckingTask.reviewers[1],
-  // ];
+  const selectReviewer = (reviewer: IStudent) => {
+    setReviewer(reviewer);
+    const findCheckTask = workDone.cheсks.filter((item) => reviewer.id === item.checkerID);
+    if (findCheckTask.length !== 0) {
+      setCheckTask(findCheckTask[0]);
+    } else {
+      setCheckTask(workDone.selfTest);
+    }
+  };
 
-  // /* 3.1 После сабмита (создания IwokDone.mentor ) */
-  // role = Role.mentor;
-  // const typeTask = TypeTask.ReviewTask;
-  // const [checkTask, reviewer] = [createMentorCheck(selfCheckingTask), selfCheckingTask.mentor];
-
-  // /* 4. Проверка чужой работа */
-  // const typeTask = TypeTask.ReviewTask;
-  // const [checkTask, reviewer] = [
-  //   createCheckOnReviewer(testTask, selfCheckingTask, selfCheckingTask.reviewers[0]),
-  //   selfCheckingTask.reviewers[0],
-  // ];
-
-  // /* 4.1. Проверка своей работа, когда ее не проверили*/
-  // const typeTask = TypeTask.SubmitTask;
-  // const [checkTask, reviewer] = [
-  //   createCheckOnReviewer(testTask, selfCheckingTask, checkingTask.reviewers[2]),
-  //   checkingTask.reviewers[2],
-  // ];
-
-  // /* 5. Согласование оценки (своя работа) */
-  // const typeTask = TypeTask.SubmitTask;
-  // const [checkTask, reviewer] = [
-  //   createCheckOnReviewer(testTask, selfCheckingTask, selfCheckingTask.reviewers[0]),
-  //   selfCheckingTask.reviewers[0],
-  // ];
-
-  // /* 5.1 Согласование оценки ментора (своя работа) */
-  // role = Role.mentor;
-  // const typeTask = TypeTask.SubmitTask;
-  // const [checkTask, reviewer] = [createMentorCheck(selfCheckingTask), selfCheckingTask.mentor];
-
-  // /* 6. Согласовано (своя работа) */
-  // const typeTask = TypeTask.SubmitTask;
-  // const [checkTask, reviewer] = [
-  //   createCheckOnReviewer(testTask, checkingTask, checkingTask.reviewers[1]),
-  //   checkingTask.reviewers[1],
-  // ];
-
-  // /* 6.1 Согласовано (чужая работа) */
-  // const typeTask = TypeTask.ReviewTask;
-  // const [checkTask, reviewer] = [
-  //   createCheckOnReviewer(testTask, checkingTask, checkingTask.reviewers[1]),
-  //   checkingTask.reviewers[1],
-  // ];
-
-  // /* 6.2. Согласовано Ментор (чужая работа) */
-  // role = Role.mentor;
-  // const typeTask = TypeTask.ReviewTask;
-  // const [checkTask, reviewer] = [createMentorCheck(checkingTask), checkingTask.mentor];
-
-  /* 7. Dispute (своя работа) */
-  // const typeTask = TypeTask.SubmitTask;
-  // const [checkTask, reviewer] = [
-  //   createCheckOnReviewer(testTask, checkingTask, checkingTask.reviewers[2]),
-  //   checkingTask.reviewers[2],
-  // ];
-
-  // /* 7.1 Dispute (чужая работа) */
-  // const typeTask = TypeTask.ReviewTask;
-  // const [checkTask, reviewer] = [
-  //   createCheckOnReviewer(testTask, checkingTask, checkingTask.reviewers[2]),
-  //   checkingTask.reviewers[2],
-  // ];
-
-  // /* 7.2. Dispute Ментор (чужая работа) */
-  // role = Role.mentor;
-  // const typeTask = TypeTask.ReviewTask;
-  // const [checkTask, reviewer] = [createMentorCheck(checkingTask), checkingTask.mentor];
+  const taskList =
+    dataCourse !== undefined
+      ? /*courseData[0]*/ dataCourse[0].tasks.map((task) => {
+          return { name: task.name, id: task.taskID };
+        })
+      : [];
 
   return (
     <>
-      <MainLayout title="Student">
+      <MainLayout title="Cross-Check: Submit">
         <main className={'main__box'}>
           <div className="nav__main">
             <Sidebar
               getTask={selectTask}
               taskList={taskList}
-              isDeadline={isDeadline}
-              isComplited={isComplited}
-            />
-          </div>
-          <div className="workspace">
-            <CheckTask
-              task={testTask}
-              checkingTask={checkTask}
+              workDone={workDone}
               reviewer={reviewer}
-              deployUrl={checkingTask.deployUrl}
-              sourceGithubRepoUrl={checkingTask.sourceGithubRepoUrl}
-              role={role}
-              typeTask={typeTask}
-              onSave={onSave}
-              onSubmit={onSubmit}
+              isDeadline={isDeadline}
+              deployUrl={deployUrl}
+              sourceGithubRepoUrl={sourceGithubRepoUrl}
+              getDeployUrl={getDeployUrl}
+              getSourceGithubRepoUrl={getSourceGithubRepoUrl}
+              selectReviewer={selectReviewer}
             />
           </div>
+          <div className="workspace">{taskJSX}</div>
         </main>
       </MainLayout>
     </>
@@ -175,15 +280,42 @@ const CrossCheckPage: React.FC<PropsCrossCheckPage> = ({ data }) => {
 export default CrossCheckPage;
 
 export const getServerSideProps = async () => {
-  let data: any | undefined = [];
+  let tasksData: ITask[] = [] as ITask[];
   await db
-    .collection('task')
+    .collection('TasksArray')
     .get()
     .then((snap) => {
-      data = snap.docs.map((doc) => doc.data());
+      if (snap !== undefined && snap !== null) {
+        tasksData = snap.docs.map((doc) => doc.data()) as ITask[];
+      } else {
+        tasksData = [] as ITask[];
+      }
+    });
+  let courseData: ICourse[] = [] as ICourse[];
+  await db
+    .collection('sessions')
+    .get()
+    .then((snap) => {
+      if (snap !== undefined && snap !== null) {
+        courseData = snap.docs.map((doc) => doc.data()) as ICourse[];
+      } else {
+        courseData = [] as ICourse[];
+      }
+    });
+
+  let completedTasksData: IWorkDone[] = [] as IWorkDone[];
+  await db
+    .collection('completed_tasks')
+    .get()
+    .then((snap) => {
+      if (snap !== undefined && snap !== null) {
+        completedTasksData = snap.docs.map((doc) => doc.data()) as IWorkDone[];
+      } else {
+        completedTasksData = [] as IWorkDone[];
+      }
     });
 
   return {
-    props: { data },
+    props: { tasksData, courseData, completedTasksData },
   };
 };
