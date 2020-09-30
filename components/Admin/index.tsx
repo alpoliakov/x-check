@@ -14,6 +14,7 @@ interface PropsAdminMain {
   dataSession: ICourse[];
   visibleModal: boolean;
   getVisibleModal: (value: boolean) => void;
+  getClickTask: (value: string) => void;
 }
 
 const AdminMain: React.FC<PropsAdminMain> = ({
@@ -22,6 +23,7 @@ const AdminMain: React.FC<PropsAdminMain> = ({
   visibleModal,
   dataSession,
   getVisibleModal,
+  getClickTask,
 }) => {
   const [users, setUser] = useState<any[]>(dataUsers);
   const [visible, setVisible] = useState<boolean>(visibleModal);
@@ -33,7 +35,7 @@ const AdminMain: React.FC<PropsAdminMain> = ({
     getVisibleModal(visible);
   }, [visible]);
 
-  const handleOk = (e: any) => {
+  const handleOk = () => {
     setVisible(false);
   };
   return (
@@ -55,7 +57,7 @@ const AdminMain: React.FC<PropsAdminMain> = ({
               </Button>,
             ]}
           >
-            <TableNewTask tasks={dataTasks} />
+            <TableNewTask getClickTask={getClickTask} tasks={dataTasks} />
           </Modal>
         </Col>
         <Col span={12} style={{ textAlign: 'center', margin: '20px 0' }}></Col>

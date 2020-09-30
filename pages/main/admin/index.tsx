@@ -6,35 +6,46 @@ import { db } from '../../../firebase';
 import AdminMain from '../../../components/Admin/index';
 import Form from '../../../components/Form';
 import TableData from '../../../components/TableData';
+import { ITask } from '../../../interfaces/ITask';
+import { UserBasic } from '../../../interfaces/IUser';
+import { ICourse } from '../../../interfaces/ICourse';
 
 interface PropsAdmin {
-  dataUsers: [];
-  dataTasks: [];
+  dataUsers: UserBasic[];
+  dataTasks: ITask[];
   dataRow?: [];
-  dataSession: [];
+  dataSession: ICourse[];
 }
 
 const AdminPage: React.FC<PropsAdmin> = ({ dataUsers, dataTasks, dataRow, dataSession }) => {
   const { Title } = Typography;
   const [visibleModal, setVisibleModal] = useState<boolean>(false);
-  const [visitableCreateTask, setVisitableCreateTask] = useState(false);
-  const [visitableTable, setVisitableTable] = useState(false);
+  const [visitableTable, setVisitableTable] = useState<boolean>(false);
+  const [adminMain, setAdminMain] = useState<boolean>(true);
+  const [transferTaskForm, setTransferTaskForm] = useState<ITask>();
 
   const showModalCreateTask = () => {
-    setVisitableCreateTask(true);
+    setAdminMain(false);
   };
-
+  const getClickTask = (value: string) => {
+    console.log(value, dataTasks.filter((e) => e.name === value)[0]);
+    const taskFarm = dataTasks.filter((e) => e.name === value)[0];
+    setAdminMain(false);
+    setVisibleModal(false);
+    setTransferTaskForm(taskFarm);
+  };
   const showTable = () => {
     setVisitableTable(true);
   };
   const showModal = () => {
+    setAdminMain(true);
     setVisibleModal(true);
+  };
+  const returnAdminMain = () => {
+    setAdminMain(true);
   };
   const getVisibleModal = (value: boolean) => {
     setVisibleModal(value);
-  };
-  const handleOk = (e: any) => {
-    setVisitableCreateTask(false);
   };
   const handleOkTable = (e: any) => {
     setVisitableTable(false);
@@ -70,22 +81,23 @@ const AdminPage: React.FC<PropsAdmin> = ({ dataUsers, dataTasks, dataRow, dataSe
           </div>
         </div>
         <div className="workspace">
-          <AdminMain
-            getVisibleModal={getVisibleModal}
-            visibleModal={visibleModal}
-            dataTasks={dataTasks}
-            dataUsers={dataUsers}
-            dataSession={dataSession}
-          />
-          <Modal
-            title="Create tasks"
-            width={'auto'}
-            onCancel={() => setVisitableCreateTask(false)}
-            visible={visitableCreateTask}
-            onOk={handleOk}
-          >
-            <Form task={task} />
-          </Modal>
+          {adminMain ? (
+            <AdminMain
+              getClickTask={getClickTask}
+              getVisibleModal={getVisibleModal}
+              visibleModal={visibleModal}
+              dataTasks={dataTasks}
+              dataUsers={dataUsers}
+              dataSession={dataSession}
+            />
+          ) : (
+            <Row style={{ width: 1000, display: 'flex', flexDirection: 'column' }}>
+              <Button style={{ width: 100 }} onClick={returnAdminMain}>
+                Return
+              </Button>
+              <Form task={task} transferTaskForm={transferTaskForm} />
+            </Row>
+          )}
           <Modal
             title="Create tasks"
             width={'auto'}

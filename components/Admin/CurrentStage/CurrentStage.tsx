@@ -3,7 +3,7 @@ import { Form, Select, Button, DatePicker } from 'antd';
 const { Option } = Select;
 import { ICourse, ITaskStep } from '../../../interfaces/ICourse';
 import moment from 'moment';
-import { updateObjectField } from '../../../services/updateFirebase';
+import { setDocument, updateObjectField } from '../../../services/updateFirebase';
 import firebase from 'firebase';
 
 interface PropsCurrentStage {
@@ -46,15 +46,15 @@ const CurrentStage: React.FC<PropsCurrentStage> = ({ activeTask, dataSession, ge
   const onFinish = (): void => {
     const active: any = dataSession[0].tasks.find((e) => e.name === activeTask);
     console.log(active, active.name, moment(deadline).valueOf(), moment(start).valueOf());
-    updateObjectField('sessions', 'course1', {
-      tasks: firebase.firestore.FieldValue.arrayUnion({
-        taskID: active.taskID,
-        name: active.name,
-        taskStage: currentStage,
-        deadline: moment(deadline).valueOf(),
-        start: moment(start).valueOf(),
-      }),
+    dataSession[0].tasks.forEach((e) => {
+      if (e.name === active.name) {
+        e.taskStage = currentStage === null ? e.taskStage : currentStage;
+        e.deadline = deadline === null ? e.deadline : moment(deadline).valueOf();
+        e.start = start === null ? e.start : moment(start).valueOf();
+      }
+      return e;
     });
+    setDocument('sessions', 'course1', dataSession[0]);
     getTaskStage(currentStage);
   };
   return (
