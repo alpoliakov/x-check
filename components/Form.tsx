@@ -69,16 +69,16 @@ const Myform: React.FC<{ task: any }> = ({ task }: any) => {
     const newTask = {
       name: values.name,
       id: values.name,
-      description: values.description,
-      evaluationCriteria: evaluationCriteria,
+      description: values.description ? values.description : '',
+      evaluationCriteria: evaluationCriteria ? evaluationCriteria : '',
       useJury: useJury,
       checkingType: 'crossCheck',
       state: taskstate,
       publishedAt: new Date(2020, 0, 2).getTime(),
-      demo: values.demo,
-      authorName: values.authorName,
-      usefulLinks: values.usefulLinks,
-      oldUrl: values.oldUrl,
+      demo: values.demo ? values.demo : '',
+      authorName: values.authorName ? values.authorName : '',
+      usefulLinks: values.usefulLinks ? values.usefulLinks : '',
+      oldUrl: values.oldUrl ? values.oldUrl : '',
       publisherID: myUid,
     };
     setDocument('TasksArray', newTask.id, newTask);
