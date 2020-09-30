@@ -104,7 +104,7 @@ const AdminPage: React.FC<PropsAdmin> = ({
             visible={visibleImport}
             onOk={handleOkImport}
           >
-            <Import />
+            <Import dataTasks={dataTasks} />
           </Modal>
           <Modal
             title="Create tasks"

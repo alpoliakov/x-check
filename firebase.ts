@@ -15,7 +15,7 @@ const config = {
 };
 
 const USERS = 'users';
-const TASKS = 'tasks';
+const TASKS = 'TasksArray';
 const SESSIONS = 'sessions';
 const SCORE = 'score';
 const COMPLETED_TASKS = 'completed_tasks';

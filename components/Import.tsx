@@ -6,12 +6,36 @@ import { ICriteriaGroup, StateTask } from '../interfaces/ITask';
 import { setDocument } from '../services/updateFirebase';
 import { useEffect, useState } from 'react';
 
-const Import: React.FC = () => {
-
+const Import: React.FC<{ dataTasks: any[] }> = ({ dataTasks }) => {
+  const [getTask, setTask] = useState('1');
   const onFinish = (values: any) => {
+
+    // const x = async () => {
+    //   const response = await fetch(values.link);
+    //     const json = await response.json();
     console.log('Success:', values);
+      // console.log(response);
+      // if (response.ok) {
+      // } else {
+      //   console.log('Ошибка HTTP: ' + response.status);
+      // }
+    // }
+    // x();
   };
   const onFinish2 = (values: any) => {
+    let x: any;
+    dataTasks.forEach((task) => {
+      if (task.name === values.taskName) {
+        x = task;
+      }
+    })
+    if (x) {
+      setTask(x);
+      console.log('+');
+    } else {
+      setTask('таска с таким названием не найдено');
+      console.log('-');
+    }
     console.log('Success:', values);
   };
   const onFinish3 = (values: any) => {
@@ -29,24 +53,28 @@ const Import: React.FC = () => {
           onFinish={onFinish}
           style={{ display: 'flex', justifyContent: 'space-between' }}
         >
-          <Form.Item
-            label=""
-            name="link"
-            style={{ width: '500px', marginBottom: '0px', height: '50px' }}
-          >
-            <Input name="link" placeholder="https://github.com/... .md" />
-            <p style={{ color: 'grey' }}>Enter URL of the github page with the task in md</p>
-          </Form.Item>
-          <Form.Item label="" name="prefix-group" style={{ width: '200px', marginBottom: '0px' }}>
-            <Input name="prefix-group" placeholder="-**" />
+          <div style={{ margin: '0 10px 0 0' }}>
+            <Form.Item label="" name="link" style={{ width: '500px', marginBottom: '0px' }}>
+              <Input name="link" placeholder="https://github.com/... .md" />
+            </Form.Item>
+            <p style={{ color: 'grey', margin: '0 10px' }}>
+              Enter URL of the github page with the task in md
+            </p>
+          </div>
+          <div>
+            <Form.Item label="" name="prefix-group" style={{ width: '200px', marginBottom: '0px' }}>
+              <Input name="prefix-group" placeholder="-**" />
+            </Form.Item>
             <p style={{ color: 'grey', margin: '0 10px' }}>
               prefix before the groupname of requirements
             </p>
-          </Form.Item>
-          <Form.Item label="" name="prefix-item" style={{ width: '200px', marginBottom: '0px' }}>
-            <Input name="prefix-item" placeholder="*" />
+          </div>
+          <div style={{ margin: '0 10px' }}>
+            <Form.Item label="" name="prefix-item" style={{ width: '200px', marginBottom: '0px' }}>
+              <Input name="prefix-item" placeholder="*" />
+            </Form.Item>
             <p style={{ color: 'grey' }}>prefix before each requirement</p>
-          </Form.Item>
+          </div>
           <Form.Item>
             <Button type="primary" htmlType="submit">
               Add the task to the database
@@ -68,7 +96,7 @@ const Import: React.FC = () => {
           </p>
           <Form.Item
             label=""
-            name="name"
+            name="taskName"
             style={{ width: '500px', marginBottom: '0px', paddingBottom: '0', height: '50px' }}
           >
             <Input name="name" placeholder="Task name" />
@@ -83,6 +111,7 @@ const Import: React.FC = () => {
       <div>
         <Form name="show-task" onFinish={onFinish3}>
           <TextArea
+            defaultValue={getTask}
             rows={4}
             style={{ width: '100%', padding: '15px', marginBottom: '15px' }}
             placeholder=" JSON fom the database will be shown here and you will be able to copy it. 
