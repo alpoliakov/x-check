@@ -6,9 +6,11 @@ import { db } from '../../../firebase';
 import AdminMain from '../../../components/Admin/index';
 import Form from '../../../components/Form';
 import TableData from '../../../components/TableData';
+import Import from '../../../components/Import';
 import { ITask } from '../../../interfaces/ITask';
 import { UserBasic } from '../../../interfaces/IUser';
 import { ICourse } from '../../../interfaces/ICourse';
+
 
 interface PropsAdmin {
   dataUsers: UserBasic[];
@@ -20,9 +22,12 @@ interface PropsAdmin {
 const AdminPage: React.FC<PropsAdmin> = ({ dataUsers, dataTasks, dataRow, dataSession }) => {
   const { Title } = Typography;
   const [visibleModal, setVisibleModal] = useState<boolean>(false);
+  const [visibleImport, setVisibleImport] = useState<boolean>(false);
+  const [visitableCreateTask, setVisitableCreateTask] = useState(false);
   const [visitableTable, setVisitableTable] = useState<boolean>(false);
   const [adminMain, setAdminMain] = useState<boolean>(true);
   const [transferTaskForm, setTransferTaskForm] = useState<ITask>();
+
 
   const showModalCreateTask = () => {
     setAdminMain(false);
@@ -36,6 +41,9 @@ const AdminPage: React.FC<PropsAdmin> = ({ dataUsers, dataTasks, dataRow, dataSe
   const showTable = () => {
     setVisitableTable(true);
   };
+  const showImport = () => {
+    setVisibleImport(true);
+  };
   const showModal = () => {
     setAdminMain(true);
     setVisibleModal(true);
@@ -45,6 +53,12 @@ const AdminPage: React.FC<PropsAdmin> = ({ dataUsers, dataTasks, dataRow, dataSe
   };
   const getVisibleModal = (value: boolean) => {
     setVisibleModal(value);
+  };
+  const handleOk = (e: any) => {
+    setVisitableCreateTask(false);
+  };
+  const handleOkImport = (e: any) => {
+    setVisibleImport(false);
   };
   const handleOkTable = (e: any) => {
     setVisitableTable(false);
@@ -68,6 +82,11 @@ const AdminPage: React.FC<PropsAdmin> = ({ dataUsers, dataTasks, dataRow, dataSe
               </Button>
             </Row>
             <Row>
+              <Button type="primary" style={{ width: 150, marginTop: 20 }} onClick={showImport}>
+                Import/Export
+              </Button>
+            </Row>
+            <Row>
               <Button type="primary" style={{ width: 150, marginTop: 20 }} onClick={showModal}>
                 Start new task
               </Button>
@@ -80,6 +99,15 @@ const AdminPage: React.FC<PropsAdmin> = ({ dataUsers, dataTasks, dataRow, dataSe
           </div>
         </div>
         <div className="workspace">
+          <Modal
+            width={'1200px'}
+            onCancel={handleOkImport}
+            visible={visibleImport}
+            onOk={handleOkImport}
+          >
+            <Import dataTasks={dataTasks} />
+          </Modal>
+
           {adminMain ? (
             <AdminMain
               getClickTask={getClickTask}
@@ -98,7 +126,7 @@ const AdminPage: React.FC<PropsAdmin> = ({ dataUsers, dataTasks, dataRow, dataSe
             </Row>
           )}
           <Modal
-            title="Create tasks"
+            title="Table tasks"
             width={'auto'}
             onCancel={() => setVisitableTable(false)}
             visible={visitableTable}
