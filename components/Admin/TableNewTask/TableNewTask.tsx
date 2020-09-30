@@ -3,19 +3,20 @@ import React, { useState } from 'react';
 import { Table, Radio, Divider, Tag, Button, Popconfirm, Space } from 'antd';
 import { ITask, StateTask } from '../../../interfaces/ITask';
 import { db } from '../../../firebase';
-import { deleteDocument } from '../../../services/updateFirebase';
+import { deleteDocument, setDocument, updateObjectField } from '../../../services/updateFirebase';
 
 interface PropsTableNewTask {
   tasks: ITask[];
+  getClickTask: (value: string) => void;
 }
 interface Item {
   key: string;
   id: string;
   name: string;
-  state: string;
+  state: StateTask;
   authorName: string;
 }
-const TableNewTask: React.FC<PropsTableNewTask> = ({ tasks }) => {
+const TableNewTask: React.FC<PropsTableNewTask> = ({ tasks, getClickTask }) => {
   const data: any = [];
   for (let i = 0; i < tasks.length; i++) {
     data.push({
@@ -36,10 +37,14 @@ const TableNewTask: React.FC<PropsTableNewTask> = ({ tasks }) => {
         <>
           <Tag
             color={
-              tags === StateTask.active ? 'green' : tags === StateTask.draft ? 'red' : 'geekblue'
+              tags === StateTask.published ? 'green' : tags === StateTask.draft ? 'red' : 'geekblue'
             }
           >
-            {tags}
+            {tags === StateTask.published
+              ? 'PUBLISHED'
+              : tags === StateTask.draft
+              ? 'DRAFT'
+              : 'ACTIVE'}
           </Tag>
         </>
       ),
@@ -47,7 +52,12 @@ const TableNewTask: React.FC<PropsTableNewTask> = ({ tasks }) => {
     {
       title: 'Task',
       dataIndex: 'name',
-      render: (text: React.ReactNode) => <a href="/">{text}</a>,
+      // eslint-disable-next-line jsx-a11y/no-static-element-interactions
+      render: (text: string) => (
+        <Button type="link" onClick={() => getClickTask(text)}>
+          {text}
+        </Button>
+      ),
     },
     {
       title: 'Author',
@@ -59,12 +69,15 @@ const TableNewTask: React.FC<PropsTableNewTask> = ({ tasks }) => {
       render: (_: any, text: any) => (
         <Space size="middle">
           <Popconfirm title="Sure to published?" onConfirm={() => onClickPublished(_, text)}>
-            <Button key={text} disabled={text.state === 'published' || text.state === 'active'}>
+            <Button
+              key={text}
+              disabled={text.state === StateTask.published || text.state === StateTask.active}
+            >
               Published
             </Button>
           </Popconfirm>
           <Popconfirm title="Sure to active?" onConfirm={() => onClickActive(_, text)}>
-            <Button key={text} disabled={text.state === 'active'}>
+            <Button key={text} disabled={text.state === StateTask.active}>
               Active
             </Button>
           </Popconfirm>
@@ -87,23 +100,33 @@ const TableNewTask: React.FC<PropsTableNewTask> = ({ tasks }) => {
     setDataTasks(
       dataSource.map((item: Item) => {
         if (item.id === _) {
-          item.state = 'published';
+          item.state = StateTask.active;
         }
         return item;
       })
     );
-    db.collection('tasks')
+    updateObjectField('TasksArray', e.id, {
+      state: StateTask.published,
+    });
+    /* db.collection('TasksArray')
       .doc(e.id)
       .update({
-        state: 'published',
+        state: StateTask.published,
       })
       .then(function () {
         console.log('Document successfully written!');
-      });
+      }); */
   };
   const onClickActive = (_: any, e: any) => {
     const dataSource = [...dataTasks];
-    db.collection('crossCheckSession')
+    setDocument('session', e.name, {
+      taskID: e.id,
+      name: e.name,
+      taskStage: null,
+      deadline: null,
+      start: null,
+    });
+    /* db.collection('session')
       .doc(e.name)
       .set({
         taskID: e.id,
@@ -114,11 +137,11 @@ const TableNewTask: React.FC<PropsTableNewTask> = ({ tasks }) => {
       })
       .then(function () {
         console.log('Document successfully written!');
-      });
+      }); */
     setDataTasks(
       dataSource.map((item: Item) => {
         if (item.id === _) {
-          item.state = 'active';
+          item.state = StateTask.active;
         }
         return item;
       })
