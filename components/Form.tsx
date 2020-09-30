@@ -6,7 +6,7 @@ import { ICriteriaGroup, StateTask } from '../interfaces/ITask';
 import { setDocument } from '../services/updateFirebase';
 import { useEffect, useState } from 'react';
 
-const Myform: React.FC = ({ task }: any) => {
+const Myform: React.FC<{ task: any }> = ({ task }: any) => {
   const [myUid, setMyUid] = useState<any>();
 
   useEffect(() => {
