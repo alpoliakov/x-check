@@ -2,15 +2,8 @@ import React from 'react';
 import MainLayout from '../../../../components/MainLayout';
 import { auth, db } from '../../../../firebase';
 import CheckTask from '../../../../components/student/check-task';
-import { checkingTask, user } from '../../../../components/student/test-task/test-work-done';
-import { testTask } from '../../../../components/student/test-task/test-task';
-import { selfCheckingTask } from '../../../../components/student/test-task/selftest-work-done';
 import { dataCourse } from '../../../../components/student/test-task/test-course';
-import {
-  createCheckOnReviewer,
-  createMentorCheck,
-  createWorkDone,
-} from '../../../../components/student/check-task/common';
+import { createWorkDone } from '../../../../components/student/check-task/common';
 import {
   CheckState,
   ICheсk,
@@ -25,10 +18,8 @@ import {
   setDocument,
   updateObjectField,
 } from '../../../../services/updateFirebase';
-import Sidebar from '../../../../components/student/cross-check/Sidebar';
+import SidebarSubmit from '../../../../components/student/cross-check-submit-sidebar';
 import { ICourse } from '../../../../interfaces/ICourse';
-import { message } from 'antd';
-
 
 interface PropsCrossCheckPage {
   tasksData: ITask[];
@@ -282,7 +273,7 @@ const CrossCheckSubmitPage: React.FC<PropsCrossCheckPage> = ({
       <MainLayout title="Cross-Check: Submit">
         <main className={'main__box'}>
           <div className="nav__main">
-            <Sidebar
+            <SidebarSubmit
               getTask={selectTask}
               taskList={taskList}
               workDone={workDone}
