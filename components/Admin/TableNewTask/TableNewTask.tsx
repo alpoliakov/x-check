@@ -77,7 +77,7 @@ const TableNewTask: React.FC<PropsTableNewTask> = ({ tasks }) => {
   const onClickDelete = (_: any, e: any) => {
     const dataSource = [...dataTasks];
     setDataTasks(dataSource.filter((item) => item.id !== _));
-    deleteDocument('tasks', e.id);
+    deleteDocument('TasksArray', e.id);
   };
   const onClickPublished = (_: any, e: any) => {
     const dataSource = [...dataTasks];
