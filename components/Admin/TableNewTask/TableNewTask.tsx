@@ -1,7 +1,7 @@
 /* eslint-disable react/display-name */
 import React, { useState } from 'react';
 import { Table, Radio, Divider, Tag, Button, Popconfirm, Space } from 'antd';
-import { ITask } from '../../../interfaces/ITask';
+import { ITask, StateTask } from '../../../interfaces/ITask';
 import { db } from '../../../firebase';
 import { deleteDocument } from '../../../services/updateFirebase';
 
@@ -15,7 +15,6 @@ interface Item {
   state: string;
   authorName: string;
 }
-
 const TableNewTask: React.FC<PropsTableNewTask> = ({ tasks }) => {
   const data: any = [];
   for (let i = 0; i < tasks.length; i++) {
@@ -33,9 +32,13 @@ const TableNewTask: React.FC<PropsTableNewTask> = ({ tasks }) => {
       title: 'State',
       dataIndex: 'state',
 
-      render: (tags: string) => (
+      render: (tags: StateTask) => (
         <>
-          <Tag color={tags === 'published' ? 'green' : tags === 'draft' ? 'red' : 'geekblue'}>
+          <Tag
+            color={
+              tags === StateTask.active ? 'green' : tags === StateTask.draft ? 'red' : 'geekblue'
+            }
+          >
             {tags}
           </Tag>
         </>
@@ -77,7 +80,7 @@ const TableNewTask: React.FC<PropsTableNewTask> = ({ tasks }) => {
   const onClickDelete = (_: any, e: any) => {
     const dataSource = [...dataTasks];
     setDataTasks(dataSource.filter((item) => item.id !== _));
-    deleteDocument('tasks', e.id);
+    deleteDocument('TasksArray', e.id);
   };
   const onClickPublished = (_: any, e: any) => {
     const dataSource = [...dataTasks];
