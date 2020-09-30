@@ -15,7 +15,6 @@ interface Item {
   state: StateTask;
   authorName: string;
 }
-
 const TableNewTask: React.FC<PropsTableNewTask> = ({ tasks }) => {
   const data: any = [];
   for (let i = 0; i < tasks.length; i++) {

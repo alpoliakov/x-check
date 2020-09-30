@@ -34,7 +34,7 @@ export default function InfoItem({
     const newComment: IComment = {
       id: `${commentsItem[commentsItem.length - 1].id}`,
       text: stateComment,
-      date: new Date(),
+      date: new Date().getTime(),
       whoSaidThat: '',
       isAnonimSay: true,
     };

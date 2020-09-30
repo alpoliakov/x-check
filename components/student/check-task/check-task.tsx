@@ -48,7 +48,10 @@ function CheckTask({
   }
   task = filterTaskOnRole(task, role, checkingTask.state);
   const [stateCheckingTask, setCheckingTask] = useState<ICheсk>(checkingTask);
-  console.log('stateCheckingTask', stateCheckingTask);
+  if (checkingTask !== stateCheckingTask) {
+    setCheckingTask(checkingTask);
+  }
+  // console.log('stateCheckingTask', stateCheckingTask);
   const onAgreeAllPoint = () => {
     setCheckingTask((prev) => {
       const newCheckingPointState = prev.cheсking.map((item) => {
@@ -277,7 +280,7 @@ function CheckTask({
     <div className={styles.test}>
       <HeaderTask
         title={task.name}
-        description={task.description}
+        description={'Description'}
         sourceGithubRepoUrl={sourceGithubRepoUrl}
         deployUrl={deployUrl}
         score={stateCheckingTask.score}

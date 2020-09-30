@@ -9,15 +9,15 @@ export default function createTask(task: ITask, user: UserBasic): IWorkDone {
     name: user.nickname,
   };
 
-  const selfTest = createCheckOnTask(task, `${task.id}_${user.uid}`);
+  const selfTest = createCheckOnTask(task, `${user.uid}`);
   const mentor = {} as IMentor;
   return {
     id: `${task.id}_${user.uid}`,
     taskID: task.id,
     state: TaskState.isSelfTest,
     student: student,
-    publishedAt: new Date(),
-    deadline: new Date(),
+    publishedAt: new Date().getTime(),
+    deadline: new Date().getTime(),
     finalScore: 0,
     selfTest: selfTest,
     mentor: mentor,

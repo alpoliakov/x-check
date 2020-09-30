@@ -39,6 +39,7 @@ const AdminPage: React.FC<PropsAdmin> = ({ dataUsers, dataTasks, dataRow, dataSe
   const handleOkTable = (e: any) => {
     setVisitableTable(false);
   };
+  const task = {};
   return (
     <MainLayout title={'main: admin'}>
       <Title level={1}>Admin Page</Title>
@@ -83,7 +84,7 @@ const AdminPage: React.FC<PropsAdmin> = ({ dataUsers, dataTasks, dataRow, dataSe
             visible={visitableCreateTask}
             onOk={handleOk}
           >
-            <Form />
+            <Form task={task} />
           </Modal>
           <Modal
             title="Create tasks"
