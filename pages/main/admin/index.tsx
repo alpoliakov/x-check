@@ -28,7 +28,6 @@ const AdminPage: React.FC<PropsAdmin> = ({ dataUsers, dataTasks, dataRow, dataSe
     setAdminMain(false);
   };
   const getClickTask = (value: string) => {
-    console.log(value, dataTasks.filter((e) => e.name === value)[0]);
     const taskFarm = dataTasks.filter((e) => e.name === value)[0];
     setAdminMain(false);
     setVisibleModal(false);
