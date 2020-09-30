@@ -14,7 +14,7 @@ import {
 const cheсkingComment1: IComment = {
   id: '1',
   text: 'Comment 1',
-  date: new Date(),
+  date: new Date(2020, 0, 2).getTime(),
   whoSaidThat: 'Student 1',
   isAnonimSay: true,
 };
@@ -22,7 +22,7 @@ const cheсkingComment1: IComment = {
 const cheсkingComment2: IComment = {
   id: '2',
   text: 'Comment 2',
-  date: new Date(),
+  date: new Date(2020, 0, 2).getTime(),
   whoSaidThat: 'Student 1',
   isAnonimSay: true,
 };
@@ -160,8 +160,8 @@ export const selfCheckingTask: IWorkDone = {
   taskID: 'Songbird 1',
   state: TaskState.isCheking,
   student: student,
-  publishedAt: new Date(),
-  deadline: new Date(),
+  publishedAt: new Date(2020, 0, 2).getTime(),
+  deadline: new Date(2020, 0, 2).getTime(),
   finalScore: 20,
   selfTest: selftest,
   mentorCheck: mentorCheck,
