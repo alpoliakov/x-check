@@ -7,32 +7,37 @@ import AdminMain from '../../../components/Admin/index';
 import Form from '../../../components/Form';
 import TableData from '../../../components/TableData';
 import Import from '../../../components/Import';
+import { ITask } from '../../../interfaces/ITask';
+import { UserBasic } from '../../../interfaces/IUser';
+import { ICourse } from '../../../interfaces/ICourse';
+
 
 interface PropsAdmin {
-  dataUsers: [];
-  dataTasks: [];
-  crossCheckSession: [];
+  dataUsers: UserBasic[];
+  dataTasks: ITask[];
   dataRow?: [];
-  dataSession: [];
+  dataSession: ICourse[];
 }
 
-const AdminPage: React.FC<PropsAdmin> = ({
-  dataUsers,
-  dataTasks,
-  crossCheckSession,
-  dataRow,
-  dataSession,
-}) => {
+const AdminPage: React.FC<PropsAdmin> = ({ dataUsers, dataTasks, dataRow, dataSession }) => {
   const { Title } = Typography;
   const [visibleModal, setVisibleModal] = useState<boolean>(false);
   const [visibleImport, setVisibleImport] = useState<boolean>(false);
   const [visitableCreateTask, setVisitableCreateTask] = useState(false);
-  const [visitableTable, setVisitableTable] = useState(false);
+  const [visitableTable, setVisitableTable] = useState<boolean>(false);
+  const [adminMain, setAdminMain] = useState<boolean>(true);
+  const [transferTaskForm, setTransferTaskForm] = useState<ITask>();
+
 
   const showModalCreateTask = () => {
-    setVisitableCreateTask(true);
+    setAdminMain(false);
   };
-
+  const getClickTask = (value: string) => {
+    const taskFarm = dataTasks.filter((e) => e.name === value)[0];
+    setAdminMain(false);
+    setVisibleModal(false);
+    setTransferTaskForm(taskFarm);
+  };
   const showTable = () => {
     setVisitableTable(true);
   };
@@ -40,7 +45,11 @@ const AdminPage: React.FC<PropsAdmin> = ({
     setVisibleImport(true);
   };
   const showModal = () => {
+    setAdminMain(true);
     setVisibleModal(true);
+  };
+  const returnAdminMain = () => {
+    setAdminMain(true);
   };
   const getVisibleModal = (value: boolean) => {
     setVisibleModal(value);
@@ -90,14 +99,6 @@ const AdminPage: React.FC<PropsAdmin> = ({
           </div>
         </div>
         <div className="workspace">
-          <AdminMain
-            getVisibleModal={getVisibleModal}
-            visibleModal={visibleModal}
-            dataTasks={dataTasks}
-            dataUsers={dataUsers}
-            crossCheckSession={crossCheckSession}
-            dataSession={dataSession}
-          />
           <Modal
             width={'1200px'}
             onCancel={handleOkImport}
@@ -106,15 +107,24 @@ const AdminPage: React.FC<PropsAdmin> = ({
           >
             <Import dataTasks={dataTasks} />
           </Modal>
-          <Modal
-            title="Create tasks"
-            width={'auto'}
-            onCancel={() => setVisitableCreateTask(false)}
-            visible={visitableCreateTask}
-            onOk={handleOk}
-          >
-            <Form task={task} />
-          </Modal>
+
+          {adminMain ? (
+            <AdminMain
+              getClickTask={getClickTask}
+              getVisibleModal={getVisibleModal}
+              visibleModal={visibleModal}
+              dataTasks={dataTasks}
+              dataUsers={dataUsers}
+              dataSession={dataSession}
+            />
+          ) : (
+            <Row style={{ width: 1000, display: 'flex', flexDirection: 'column' }}>
+              <Button style={{ width: 100 }} onClick={returnAdminMain}>
+                Return
+              </Button>
+              <Form task={transferTaskForm} />
+            </Row>
+          )}
           <Modal
             title="Table tasks"
             width={'auto'}
@@ -134,7 +144,7 @@ const AdminPage: React.FC<PropsAdmin> = ({
 export const getServerSideProps = async () => {
   let dataUsers: any | undefined = [];
   let dataTasks: any | undefined = [];
-  let crossCheckSession: any | undefined = [];
+  const crossCheckSession: any | undefined = [];
   // let courseUser: any | undefined = [];
   // let courseCrossCheckTasks: any | undefined = [];
   let dataSession: any | undefined = [];
@@ -157,12 +167,6 @@ export const getServerSideProps = async () => {
     .get()
     .then((snap) => {
       dataTasks = snap.docs.map((doc) => doc.data());
-    });
-  await db
-    .collection('crossCheckSession')
-    .get()
-    .then((snap) => {
-      crossCheckSession = snap.docs.map((doc) => doc.data());
     });
 
   /*   await db
@@ -384,7 +388,7 @@ export const getServerSideProps = async () => {
   ];
 
   return {
-    props: { dataUsers, dataTasks, crossCheckSession, dataRow, dataSession },
+    props: { dataUsers, dataTasks, dataRow, dataSession },
   };
 };
 export default AdminPage;

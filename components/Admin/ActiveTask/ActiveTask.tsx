@@ -5,12 +5,12 @@ import { ITask } from '../../../interfaces/ITask';
 import { ICourse, ITaskStep } from '../../../interfaces/ICourse';
 
 interface AProps {
-  crossCheckSession: ITaskStep[];
+  dataSession: ICourse[];
   activeTask: string | undefined;
   getActiveTask: (value: string) => void;
 }
 
-const ActiveTask: React.FC<AProps> = ({ crossCheckSession, getActiveTask }) => {
+const ActiveTask: React.FC<AProps> = ({ dataSession, getActiveTask }) => {
   const onSelected = (value: string) => {
     getActiveTask(value);
   };
@@ -19,8 +19,8 @@ const ActiveTask: React.FC<AProps> = ({ crossCheckSession, getActiveTask }) => {
       <Form>
         <Form.Item name="Active task" label="Active task" style={{ width: '100%' }}>
           <Select placeholder="Active task..." style={{ width: 810 }} onChange={onSelected}>
-            {crossCheckSession.map((province) => (
-              <Option key={province.taskID} value={province.name}>
+            {dataSession[0].tasks.map((province) => (
+              <Option key={province.name} value={province.name}>
                 {province.name}
               </Option>
             ))}

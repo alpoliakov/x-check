@@ -51,7 +51,7 @@ function CheckTask({
   if (checkingTask !== stateCheckingTask) {
     setCheckingTask(checkingTask);
   }
-  // console.log('stateCheckingTask', stateCheckingTask);
+  console.log('stateCheckingTask', stateCheckingTask);
   const onAgreeAllPoint = () => {
     setCheckingTask((prev) => {
       const newCheckingPointState = prev.cheсking.map((item) => {
