@@ -31,7 +31,7 @@ interface PropsCrossCheckPage {
   completedTasksData: IWorkDone[]; // была проблема в 56 строки, ты присваивал свойство от undefined
 }
 
-const CrossCheckPage: React.FC<PropsCrossCheckPage> = ({
+const CrossCheckReviewPage: React.FC<PropsCrossCheckPage> = ({
   tasksData,
   courseData,
   completedTasksData,
@@ -277,7 +277,7 @@ const CrossCheckPage: React.FC<PropsCrossCheckPage> = ({
   );
 };
 
-export default CrossCheckPage;
+export default CrossCheckReviewPage;
 
 export const getServerSideProps = async () => {
   let tasksData: ITask[] = [] as ITask[];
