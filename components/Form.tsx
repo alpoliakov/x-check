@@ -67,8 +67,8 @@ const Myform: React.FC<{ task: any }> = ({ task }: any) => {
     } 
 
     const newTask = {
-      name: values.name,
-      id: values.name,
+      name: values.name.replace(/\//g, ' '),
+      id: values.name.replace(/\//g, ' '),
       description: values.description ? values.description : '',
       evaluationCriteria: evaluationCriteria ? evaluationCriteria : '',
       useJury: useJury,

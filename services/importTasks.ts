@@ -17,8 +17,8 @@ export default function importTaskMD(
   );
 
   const newTask = {
-    id: name,
-    name: name,
+    id: name.replace(/\//g, ' '),
+    name: name.replace(/\//g, ' '),
     demo: demo,
     evaluationCriteria: evaluationCriteria,
     publishedAt: new Date(2020, 0, 2).getTime(),
@@ -57,8 +57,8 @@ export function bigImportTaskMD(
     Object.keys(incomingJSON)[0].length > 1 ? getDescriptionTask(incomingJSON) : '';
 
   const newTask = {
-    id: name,
-    name: name,
+    id: name.replace(/\//g, ' '),
+    name: name.replace(/\//g, ' '),
     demo: demo,
     description: description,
     evaluationCriteria: evaluationCriteria,
