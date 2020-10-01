@@ -3,6 +3,8 @@ import { Form, Input, Button } from 'antd';
 import { useState } from 'react';
 import importTaskMD, { importTaskRSSChecklist } from '../services/importTasks';
 
+let x = {"taskName":"RSS Виртуальная клавиатура","criteria":[{"type":"title","title":"Минимальный набор"},{"type":"subtask","text":"Реализована генерация DOM-элементов и index.html пустой изначально","max":20},{"type":"subtask","text":"Нажатие на кнопку на физической клавиатуре подсвечивает кнопку на виртуальной","max":10},{"type":"title","title":"Стандартный набор"},{"type":"penalty","text":"Тестовый - Oшибки или предупреждения eslint-config-airbnb-base","max":-15}]};
+console.log(JSON.stringify(x));
 const Import: React.FC<{ dataTasks: any[]; getClickDraft: (value: any) => void }> = ({
   dataTasks,
   getClickDraft,
@@ -55,10 +57,9 @@ const Import: React.FC<{ dataTasks: any[]; getClickDraft: (value: any) => void }
     }
   }
 
-  const RSSChecklistImport = (getTask: string) => {
+  const RSSChecklistImport = (getTask: any) => {
     try {
-      const task = JSON.parse(getTask);
-      const newTask = importTaskRSSChecklist(task);
+      const newTask = importTaskRSSChecklist(getTask);
       getClickDraft(newTask);
     } catch (err) {
       setTask(
@@ -189,9 +190,7 @@ const Import: React.FC<{ dataTasks: any[]; getClickDraft: (value: any) => void }
               >
                 Import from MD
               </Button>
-              <p style={{ color: 'grey' }}>
-                click this button if you are importing md format
-              </p>
+              <p style={{ color: 'grey' }}>click this button if you are importing md format</p>
             </div>
           </div>
         </Form>
