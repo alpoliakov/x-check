@@ -3,11 +3,9 @@ import { Form, Input, Button, Space, Checkbox } from 'antd';
 import { ICriteriaGroup } from '../interfaces/ITask';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 
-const MyCriteriaItemDraft: React.FC<{ evaluationCriteria: any }> = ({
-  evaluationCriteria,
-}) => {
+const MyCriteriaItemDraft: React.FC<{ evaluationCriteria: any }> = ({ evaluationCriteria }) => {
   const pointArray: any[] = [];
-  if (evaluationCriteria.criteriaPoints) {
+  if (evaluationCriteria[0].criteriaPoints) {
     evaluationCriteria.forEach((group: ICriteriaGroup) => {
       group.criteriaPoints.forEach((point) => {
         const item = {
@@ -27,6 +25,7 @@ const MyCriteriaItemDraft: React.FC<{ evaluationCriteria: any }> = ({
         for (let i = 0; i < pointArray.length; i++) {
           fields.push({ fieldKey: i, name: i, key: i });
         }
+
         return (
           <div>
             {fields.map((field) => (
@@ -111,6 +110,7 @@ const MyCriteriaItemDraft: React.FC<{ evaluationCriteria: any }> = ({
                   className="dynamic-delete-button"
                   style={{ margin: '0 8px' }}
                   onClick={() => {
+                    pointArray.shift();
                     remove(field.name);
                   }}
                 />
@@ -120,6 +120,7 @@ const MyCriteriaItemDraft: React.FC<{ evaluationCriteria: any }> = ({
               <Button
                 type="dashed"
                 onClick={() => {
+                  pointArray.push("");
                   add();
                 }}
                 block
