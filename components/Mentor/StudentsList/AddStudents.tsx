@@ -1,39 +1,35 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Form, Select, Button, Tag, Avatar } from 'antd';
-import firebase from 'firebase';
-import { updateObjectField } from '../../../services/updateFirebase';
-import { auth } from '../../../firebase';
+import { Card, Form, Select, Button, Tag, Avatar, Tooltip } from 'antd';
+import { UserBasic } from '../../../interfaces/IUser';
 
 interface IProps {
-  users: any[];
+  userData: UserBasic[];
   myUid: string;
+  getUpdate: (value: string) => void;
 }
 
-const AddStudents: React.FC<IProps> = ({ users, myUid }) => {
+const AddStudents: React.FC<IProps> = ({ myUid, userData, getUpdate }) => {
   const [form] = Form.useForm();
   const { Option } = Select;
-  const [usersData, setUser] = useState<any[]>([]);
+  const [users, setUser] = useState<UserBasic[]>(userData);
   const [userKey, setUserKey] = useState<string>('');
 
   useEffect(() => {
-    console.log('add', myUid);
-    setUser(users.filter((e) => e.uid !== myUid));
-  }, []);
+    setUser(userData);
+  }, [userData]);
 
   const changeKeyUser = (value: any, event: any) => {
-    console.log(event.key);
     setUserKey(event.key);
   };
   const onFinish = (): void => {
-    if (userKey !== '' && !usersData.filter((e) => e.uid === userKey).includes(userKey)) {
-      updateObjectField('users', userKey, {
-        students: firebase.firestore.FieldValue.arrayUnion(userKey),
-      });
+    console.log(users.filter((e) => e.uid === userKey));
+    if (userKey !== '') {
+      getUpdate(userKey);
     }
   };
   return (
     <>
-      <Card style={{ width: 'auto', marginRight: 20 }}>
+      <Card style={{ width: 'auto', marginRight: 20, marginBottom: 20 }}>
         <Form
           layout="inline"
           form={form}
@@ -47,6 +43,7 @@ const AddStudents: React.FC<IProps> = ({ users, myUid }) => {
         >
           <Form.Item label="User">
             <Select
+              allowClear
               showSearch
               style={{ width: 'auto' }}
               placeholder="Select a user..."
@@ -57,7 +54,7 @@ const AddStudents: React.FC<IProps> = ({ users, myUid }) => {
                 option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
               }
             >
-              {usersData.map((item: any) => (
+              {users.map((item: any) => (
                 <Option key={item.uid} value={item.nickname}>
                   <Avatar
                     size={20}
@@ -77,9 +74,11 @@ const AddStudents: React.FC<IProps> = ({ users, myUid }) => {
               marginTop: 30,
             }}
           >
-            <Button type="primary" onClick={onFinish}>
-              Add student
-            </Button>
+            <Tooltip placement="bottom" title="Become a mentor and add yourself a student">
+              <Button type="primary" onClick={onFinish}>
+                Add student
+              </Button>
+            </Tooltip>
           </Form.Item>
         </Form>
       </Card>

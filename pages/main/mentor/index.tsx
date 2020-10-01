@@ -37,7 +37,7 @@ const MentorPage: React.FC<PropsMentorPage> = ({ userData }) => {
       } else {
         console.log('Wait for it');
       }
-    }, 300);
+    }, 700);
   }, []);
 
   const getTask = (value: any) => {
@@ -52,7 +52,7 @@ const MentorPage: React.FC<PropsMentorPage> = ({ userData }) => {
           {/*    <Title level={2}>Mentor</Title>
           <SubmitTasks /> */}
           {/* <AddStudents users={userData} myUid={myUid} /> */}
-          <StudentList user={userData} myUid={myUid} getTask={getTask} />
+          <StudentList userData={userData} myUid={myUid} getTask={getTask} />
         </div>
         <div className="workspace">
           <h1>Working Space</h1>

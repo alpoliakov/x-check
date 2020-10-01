@@ -10,8 +10,7 @@ import Import from '../../../components/Import';
 import { ITask } from '../../../interfaces/ITask';
 import { UserBasic } from '../../../interfaces/IUser';
 import { ICourse } from '../../../interfaces/ICourse';
-import { TaskState } from '../../../interfaces/IWorkDone';
-
+import { IWorkDone, TaskState } from '../../../interfaces/IWorkDone';
 
 interface PropsAdmin {
   dataUsers: UserBasic[];
@@ -19,27 +18,28 @@ interface PropsAdmin {
   dataReviews: [];
   dataSession: ICourse[];
   dataReviewRequest: [];
+  dataCompletedTask: IWorkDone[];
 }
 
 const AdminPage: React.FC<PropsAdmin> = ({
   dataUsers,
   dataTasks,
   dataReviews,
-  dataSession,
   dataReviewRequest,
+  dataSession,
+  dataCompletedTask,
 }) => {
   const { Title } = Typography;
   const [visibleModal, setVisibleModal] = useState<boolean>(false);
   const [visibleImport, setVisibleImport] = useState<boolean>(false);
-  const [visitableCreateTask, setVisitableCreateTask] = useState(false);
   const [visitableTable, setVisitableTable] = useState<boolean>(false);
   const [visitableReviewTable, setVisitableReviewTable] = useState<boolean>(false);
   const [adminMain, setAdminMain] = useState<boolean>(true);
-  const [transferTaskForm, setTransferTaskForm] = useState<ITask>();
-
+  const [transferTaskForm, setTransferTaskForm] = useState<ITask | boolean>(false);
 
   const showModalCreateTask = () => {
     setAdminMain(false);
+    setTransferTaskForm(false);
   };
   const getClickTask = (value: string) => {
     const taskFarm = dataTasks.filter((e) => e.name === value)[0];
@@ -65,9 +65,6 @@ const AdminPage: React.FC<PropsAdmin> = ({
   };
   const getVisibleModal = (value: boolean) => {
     setVisibleModal(value);
-  };
-  const handleOk = (e: any) => {
-    setVisitableCreateTask(false);
   };
   const handleOkImport = (e: any) => {
     setVisibleImport(false);
@@ -139,6 +136,7 @@ const AdminPage: React.FC<PropsAdmin> = ({
               dataTasks={dataTasks}
               dataUsers={dataUsers}
               dataSession={dataSession}
+              dataCompletedTask={dataCompletedTask}
             />
           ) : (
             <Row style={{ width: 1000, display: 'flex', flexDirection: 'column' }}>
@@ -179,7 +177,7 @@ export const getServerSideProps = async () => {
   // let courseUser: any | undefined = [];
   // let courseCrossCheckTasks: any | undefined = [];
   let dataSession: any | undefined = [];
-  let completedTask: any | undefined = [];
+  let dataCompletedTask: any | undefined = [];
   await db
     .collection('sessions')
     .get()
@@ -199,15 +197,14 @@ export const getServerSideProps = async () => {
     .then((snap) => {
       dataTasks = snap.docs.map((doc) => doc.data());
     });
-
   await db
     .collection('completed_tasks')
     .get()
     .then((snap) => {
-      completedTask = snap.docs.map((doc) => doc.data());
+      dataCompletedTask = snap.docs.map((doc) => doc.data());
     });
 
-  const dataReviews = completedTask
+  const dataReviews = dataCompletedTask
     .map((task) => {
       if (task.cheсks.length > 0) {
         return task.cheсks.map((el) => {
@@ -230,7 +227,7 @@ export const getServerSideProps = async () => {
     .filter((el) => el.taskStage === 'REQUESTS_GATHERING')
     .map((el) => el.taskID);
   const filterTasks = requestTasksID
-    .map((taskId) => completedTask.filter((el) => el.taskID === taskId))
+    .map((taskId) => dataCompletedTask.filter((el) => el.taskID === taskId))
     .flat(Infinity);
 
   const filterTaskState = filterTasks.filter((el) => el.state === TaskState.isSelfTest);
@@ -245,9 +242,10 @@ export const getServerSideProps = async () => {
     props: {
       dataUsers,
       dataTasks,
-      dataReviews,
       dataSession,
+      dataCompletedTask,
       dataReviewRequest,
+      dataReviews,
     },
   };
 };
