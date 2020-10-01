@@ -76,55 +76,51 @@ export function bigImportTaskMD(
 
 export function importTaskRSSChecklist(RSSChecklist: any): any {
   RSSChecklist = JSON.parse(RSSChecklist);
-  // const myUID = getAutorUID();
   const group: ICriteriaGroup = {
     groupID: '',
     groupName: '',
     criteriaPoints: [],
   };
 
-  const criteriaPoint: ICriteriaPoint = {
-    criteriaPointID: '',
-    criteriaPointName: '',
-    criteriaPointScore: 0,
-    isFine: false,
-    isThisPointForAMentor: false,
-  };
-
-  const evaluationCriteria = [];
-
-  RSSChecklist.criteria.foreach((item: any) => {
+  const evaluationCriteria: any[ ] = [];
+  RSSChecklist.criteria.forEach((item: any) => {
     if (item.type === 'title') {
       if (group.groupID !== '') {
-        evaluationCriteria.push(group);
+        const groupPuch = { ...group };
+        evaluationCriteria.push(groupPuch);
         group.criteriaPoints = [];
       }
       group.groupID = item.title;
       group.groupName = item.title;
     } else if (item.type === 'subtask') {
-      criteriaPoint.criteriaPointID = item.text;
-      criteriaPoint.criteriaPointName = item.text;
-      criteriaPoint.criteriaPointScore = item.max;
-      criteriaPoint.isFine = false;
-      criteriaPoint.isThisPointForAMentor = false;
-      group.criteriaPoints.push(criteriaPoint);
+      const x = {
+        criteriaPointID: item.text,
+        criteriaPointName: item.text,
+        criteriaPointScore: item.max,
+        isFine: false,
+        isThisPointForAMentor: false,
+      };
+      group.criteriaPoints.push(x);
     } else if (item.type === 'penalty') {
-      criteriaPoint.criteriaPointID = item.text;
-      criteriaPoint.criteriaPointName = item.text;
-      criteriaPoint.criteriaPointScore = item.max * -1;
-      criteriaPoint.isFine = true;
-      criteriaPoint.isThisPointForAMentor = false;
-      group.criteriaPoints.push(criteriaPoint);
+      const x = {
+        criteriaPointID: item.text,
+        criteriaPointName: item.text,
+        criteriaPointScore: item.max * -1,
+        isFine: true,
+        isThisPointForAMentor: false,
+      };
+      group.criteriaPoints.push(x);
     }
   });
-  evaluationCriteria.push(group);
+  const groupPuch = { ...group };
+  evaluationCriteria.push(groupPuch);
 
   const newTask = {
     id: RSSChecklist.taskName,
     name: RSSChecklist.taskName,
     evaluationCriteria: evaluationCriteria,
     publishedAt: new Date(2020, 0, 2).getTime(),
-    authorName: 'Петя Пупыркин',
+    authorName: '',
     demo: '',
     state: StateTask.published,
     description: '',
@@ -132,7 +128,7 @@ export function importTaskRSSChecklist(RSSChecklist: any): any {
     oldUrl: '',
     useJury: false,
     checkingType: 'crossCheck',
-    publisherID: 'Вася Пупкин',
+    publisherID: '',
   };
   return newTask;
 }
@@ -157,34 +153,38 @@ function evaluationCriteriaParse(
     'Evaluation criteria'
   );
 
+  if (!evaluationCriteriaDingy){
+    return '';
+  } else {
   let OneStrEnd = evaluationCriteriaDingy.indexOf(categorySeparator, 4);
-  let newEvaluationCriteria = evaluationCriteriaDingy.slice(OneStrEnd, -1);
-  const evaluationCriteriaArray = [];
-  while (newEvaluationCriteria.indexOf(categorySeparator, 4) !== -1) {
-    OneStrEnd = newEvaluationCriteria.indexOf(categorySeparator, 4);
-    const criteriaBlock = newEvaluationCriteria.slice(0, OneStrEnd);
-    evaluationCriteriaArray.push(criteriaBlock);
-    newEvaluationCriteria = newEvaluationCriteria.slice(OneStrEnd, -1);
-  }
-  evaluationCriteriaArray.push(newEvaluationCriteria);
+    let newEvaluationCriteria = evaluationCriteriaDingy.slice(OneStrEnd, -1);
+    const evaluationCriteriaArray = [];
+    while (newEvaluationCriteria.indexOf(categorySeparator, 4) !== -1) {
+      OneStrEnd = newEvaluationCriteria.indexOf(categorySeparator, 4);
+      const criteriaBlock = newEvaluationCriteria.slice(0, OneStrEnd);
+      evaluationCriteriaArray.push(criteriaBlock);
+      newEvaluationCriteria = newEvaluationCriteria.slice(OneStrEnd, -1);
+    }
+    evaluationCriteriaArray.push(newEvaluationCriteria);
 
-  const newArray: any = [];
-  let pointsArray: ICriteriaPoint[];
+    const newArray: any = [];
+    let pointsArray: ICriteriaPoint[];
 
-  evaluationCriteriaArray.forEach((criteria) => {
-    const nameStart = criteria.indexOf('**');
-    const nameEnd = criteria.indexOf('+', nameStart + 2);
-    const titleEnd = criteria.indexOf('**', nameStart + 2);
-    const groupName = criteria.slice(nameStart + 2, nameEnd);
-    const criteriaPointsDingy = criteria.slice(titleEnd + 5, -1);
-    pointsArray = getCriteriaPoint(criteriaPointsDingy, pointSeparator);
-    newArray.push({
-      groupID: groupName,
-      groupName: groupName,
-      criteriaPoints: pointsArray,
+    evaluationCriteriaArray.forEach((criteria) => {
+      const nameStart = criteria.indexOf('**');
+      const nameEnd = criteria.indexOf('+', nameStart + 2);
+      const titleEnd = criteria.indexOf('**', nameStart + 2);
+      const groupName = criteria.slice(nameStart + 2, nameEnd);
+      const criteriaPointsDingy = criteria.slice(titleEnd + 5, -1);
+      pointsArray = getCriteriaPoint(criteriaPointsDingy, pointSeparator);
+      newArray.push({
+        groupID: groupName,
+        groupName: groupName,
+        criteriaPoints: pointsArray,
+      });
     });
-  });
-  return newArray;
+    return newArray;
+  }
 }
 
 function getCriteriaPoint(criteriaPointsDingy: string, pointSeparator: string) {

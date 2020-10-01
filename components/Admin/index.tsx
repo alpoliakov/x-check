@@ -31,7 +31,6 @@ const AdminMain: React.FC<PropsAdminMain> = ({
   const [users, setUser] = useState<any[]>(dataUsers);
   const [visible, setVisible] = useState<boolean>(visibleModal);
   useEffect(() => {
-    console.log(dataUsers, dataTasks, dataSession, dataCompletedTask);
     setVisible(visibleModal);
   }, [visibleModal]);
   useEffect(() => {
