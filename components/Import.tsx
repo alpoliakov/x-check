@@ -3,25 +3,31 @@ import { Form, Input, Button } from 'antd';
 import { useState } from 'react';
 import importTaskMD, { importTaskRSSChecklist } from '../services/importTasks';
 
-let x = {"taskName":"RSS Виртуальная клавиатура","criteria":[{"type":"title","title":"Минимальный набор"},{"type":"subtask","text":"Реализована генерация DOM-элементов и index.html пустой изначально","max":20},{"type":"subtask","text":"Нажатие на кнопку на физической клавиатуре подсвечивает кнопку на виртуальной","max":10},{"type":"title","title":"Стандартный набор"},{"type":"penalty","text":"Тестовый - Oшибки или предупреждения eslint-config-airbnb-base","max":-15}]};
-console.log(JSON.stringify(x));
 const Import: React.FC<{ dataTasks: any[]; getClickDraft: (value: any) => void }> = ({
   dataTasks,
   getClickDraft,
 }) => {
   const [getTask, setTask] = useState('');
+  const [prefixGroupname, setPrefixGroupname] = useState('');
+  const [prefixRequirement, setPrefixRequirement] = useState('');
   const onFinish = (values: any) => {
-    // const x = async () => {
-    //   const response = await fetch(values.link);
-    //     const json = await response.json();
-    setTask('sorry i forgot to fix this button');
-    // console.log(response);
-    // if (response.ok) {
-    // } else {
-    //   console.log('Ошибка HTTP: ' + response.status);
-    // }
-    // }
-    // x();
+    let link = values.link.replace('github.com', 'raw.githubusercontent.com');
+    link = link.replace('tasks/blob', 'tasks');
+    const x = async () => {
+      try {
+        const response = await fetch(link);
+        const json = await response.text();
+        let str = json.replace(/`/g, '"');
+        const start = str.indexOf('#');
+        str = str.slice(start);
+        str = str.replace(/(###)/g, '##');
+        str = str.replace(/(####)/g, '##');
+        setTask(str);
+      } catch {
+        setTask('sorry i forgot to fix this button');
+      }
+    };
+    x();
   };
 
   const onFinish2 = (values: any) => {
@@ -46,6 +52,12 @@ const Import: React.FC<{ dataTasks: any[]; getClickDraft: (value: any) => void }
 
   const onOutputChange = (event: any) => {
     setTask(event.target.value);
+  };
+  const onPrefixChange = (event: any) => {
+    setPrefixGroupname(event.target.value);
+  };
+  const onPrefixItemChange = (event: any) => {
+    setPrefixRequirement(event.target.value);
   };
 
   const MDImport = (getTask: string) => {
@@ -101,7 +113,7 @@ const Import: React.FC<{ dataTasks: any[]; getClickDraft: (value: any) => void }
           </div>
           <div>
             <Form.Item label="" name="prefix-group" style={{ width: '200px', marginBottom: '0px' }}>
-              <Input name="prefix-group" placeholder="-**" />
+              <Input name="prefix-group" placeholder="-**" onChange={() => onPrefixChange} />
             </Form.Item>
             <p style={{ color: 'grey', margin: '0 10px' }}>
               prefix before the groupname of requirements
@@ -109,7 +121,7 @@ const Import: React.FC<{ dataTasks: any[]; getClickDraft: (value: any) => void }
           </div>
           <div style={{ margin: '0 10px' }}>
             <Form.Item label="" name="prefix-item" style={{ width: '200px', marginBottom: '0px' }}>
-              <Input name="prefix-item" placeholder="*" />
+              <Input name="prefix-item" placeholder="*" onChange={() => onPrefixItemChange} />
             </Form.Item>
             <p style={{ color: 'grey' }}>prefix before each requirement</p>
           </div>

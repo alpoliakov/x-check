@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { Form, Input, Button } from 'antd';
 import MyCriteria from './Criteria';
-import { auth } from '../firebase';
+import { auth, db } from '../firebase';
 import { ICriteriaGroup, StateTask } from '../interfaces/ITask';
 import { setDocument } from '../services/updateFirebase';
 import { useEffect, useState } from 'react';
 
-const Myform: React.FC<{ task: any }> = ({ task }: any) => {
+const Myform: React.FC<{ task: any, dataUsers: any }> = ({ task, dataUsers }) => {
   const [myUid, setMyUid] = useState<any>();
 
   useEffect(() => {
@@ -23,6 +23,9 @@ const Myform: React.FC<{ task: any }> = ({ task }: any) => {
       }
     }, 300);
   }, []);
+  // console.log(dataUsers);
+  // const myRolle = dataUsers.find(item => item.id == myUid).role;
+  //     console.log(myRolle)
 
   const onFinish = (values: any) => {
     const evaluationCriteria: any = [];
@@ -67,8 +70,8 @@ const Myform: React.FC<{ task: any }> = ({ task }: any) => {
     } 
 
     const newTask = {
-      name: values.name,
-      id: values.name,
+      name: values.name.replace(/\//g, ' '),
+      id: values.name.replace(/\//g, ' '),
       description: values.description ? values.description : '',
       evaluationCriteria: evaluationCriteria ? evaluationCriteria : '',
       useJury: useJury,
@@ -81,7 +84,14 @@ const Myform: React.FC<{ task: any }> = ({ task }: any) => {
       oldUrl: values.oldUrl ? values.oldUrl : '',
       publisherID: myUid,
     };
-    setDocument('TasksArray', newTask.id, newTask);
+    try {
+      myUid
+        ? setDocument('TasksArray', newTask.id, newTask)
+        : console.log('Something went wrong. You may not be eligible to create task.');
+    } catch {
+      console.log('Something went wrong. You may not be eligible to create task.')
+    }
+
   };
   const name = task.name ? task.name : '';
   const description = task.description ? task.description : '';
@@ -133,5 +143,17 @@ const Myform: React.FC<{ task: any }> = ({ task }: any) => {
     </Form>
   );
 };
-
+export const getServerSideProps = async () => {
+  let dataUsers: any | undefined = [];
+  await db
+    .collection('users')
+    .get()
+    .then((snap) => {
+      dataUsers = snap.docs.map((doc) => doc.data());
+    });
+  console.log(dataUsers);
+  return {
+    props: { dataUsers }
+  }
+}
 export default Myform;
