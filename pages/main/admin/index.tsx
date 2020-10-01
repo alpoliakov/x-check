@@ -6,6 +6,7 @@ import { db } from '../../../firebase';
 import AdminMain from '../../../components/Admin/index';
 import Form from '../../../components/Form';
 import TableData from '../../../components/TableData';
+import Description from '../../../components/Description';
 import Import from '../../../components/Import';
 import { ITask } from '../../../interfaces/ITask';
 import { UserBasic } from '../../../interfaces/IUser';
@@ -16,6 +17,7 @@ interface PropsAdmin {
   dataUsers: UserBasic[];
   dataTasks: ITask[];
   dataReviews: [];
+  oneTaskReview: [];
   dataSession: ICourse[];
   dataReviewRequest: [];
   dataCompletedTask: IWorkDone[];
@@ -25,6 +27,7 @@ const AdminPage: React.FC<PropsAdmin> = ({
   dataUsers,
   dataTasks,
   dataReviews,
+  oneTaskReview,
   dataReviewRequest,
   dataSession,
   dataCompletedTask,
@@ -33,6 +36,7 @@ const AdminPage: React.FC<PropsAdmin> = ({
   const [visibleModal, setVisibleModal] = useState<boolean>(false);
   const [visibleImport, setVisibleImport] = useState<boolean>(false);
   const [visitableTable, setVisitableTable] = useState<boolean>(false);
+  const [visitableTask, setVisitableTask] = useState<boolean>(false);
   const [visitableReviewTable, setVisitableReviewTable] = useState<boolean>(false);
   const [adminMain, setAdminMain] = useState<boolean>(true);
   const [transferTaskForm, setTransferTaskForm] = useState<ITask | boolean>(false);
@@ -56,6 +60,11 @@ const AdminPage: React.FC<PropsAdmin> = ({
   const showTable = () => {
     setVisitableTable(true);
   };
+  const showTaskInfo =() => {
+    setVisitableTask(true);
+  };
+
+
   const showReviewTable = () => {
     setVisitableReviewTable(true);
   };
@@ -78,6 +87,7 @@ const AdminPage: React.FC<PropsAdmin> = ({
   const handleOkTable = (e: any) => {
     setVisitableTable(false);
     setVisitableReviewTable(false);
+    setVisitableTask(false);
   };
   const task = {};
 
@@ -111,6 +121,11 @@ const AdminPage: React.FC<PropsAdmin> = ({
             <Row>
               <Button type="primary" style={{ width: 150, marginTop: 20 }} onClick={showTable}>
                 Table results
+              </Button>
+            </Row>
+            <Row>
+              <Button type="primary" style={{ width: 150, marginTop: 20 }} onClick={showTaskInfo}>
+                View task review
               </Button>
             </Row>
             <Row>
@@ -160,6 +175,15 @@ const AdminPage: React.FC<PropsAdmin> = ({
             onOk={handleOkTable}
           >
             <TableData dataRow={dataReviews} taskReview={visitableTable} />
+          </Modal>
+          <Modal
+            title="View task review"
+            width={'auto'}
+            onCancel={() => setVisitableTask(false)}
+            visible={visitableTask}
+            onOk={handleOkTable}
+          >
+            <Description data={oneTaskReview} taskReview={visitableTask} />
           </Modal>
           <Modal
             title="Review requests"
@@ -229,6 +253,27 @@ export const getServerSideProps = async () => {
     .filter((el) => el)
     .flat(Infinity);
 
+    const oneTaskReview = dataCompletedTask
+    .map((task) => {
+      if (task.cheсks.length > 0) {
+        return task.cheсks.map((el) => {
+          const reviewerName = task.reviewers.filter((reviewer) => reviewer.id === el.checkerID)[0];
+
+          return {
+            key: task.student.name + reviewerName.name,
+            //user: task.student.name,
+            task: task.taskID,
+            reviewer: reviewerName.name,
+            score: el.score,
+          };
+        });
+      }
+    })
+    .filter((el) => el)
+    .flat(Infinity);
+
+
+
   const requestTasksID = dataSession[0].tasks
     .filter((el) => el.taskStage === 'REQUESTS_GATHERING')
     .map((el) => el.taskID);
@@ -252,6 +297,7 @@ export const getServerSideProps = async () => {
       dataCompletedTask,
       dataReviewRequest,
       dataReviews,
+      oneTaskReview,
     },
   };
 };
