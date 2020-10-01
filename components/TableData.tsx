@@ -58,7 +58,20 @@ class TableData extends React.Component {
         setTimeout(() => this.searchInput.select(), 100);
       }
     },
-    sorter: (a, b) => a[dataIndex] < b[dataIndex],
+    sorter: (a, b) => {
+      switch (dataIndex) {
+        case 'score':
+          return a[dataIndex] - b[dataIndex];
+        default:
+          if (a[dataIndex] < b[dataIndex]) {
+            return -1;
+          }
+          if (a[dataIndex] > b[dataIndex]) {
+            return 1;
+          }
+          return 0;
+      }
+    },
     render: (text: string) => text,
   });
 

@@ -16,7 +16,7 @@ import { TaskState } from '../../../interfaces/IWorkDone';
 interface PropsAdmin {
   dataUsers: UserBasic[];
   dataTasks: ITask[];
-  dataReviews?: [];
+  dataReviews: [];
   dataSession: ICourse[];
   dataReviewRequest: [];
 }
@@ -50,13 +50,11 @@ const AdminPage: React.FC<PropsAdmin> = ({
   const showTable = () => {
     setVisitableTable(true);
   };
-<<<<<<< HEAD
   const showReviewTable = () => {
     setVisitableReviewTable(true);
-=======
+  };
   const showImport = () => {
     setVisibleImport(true);
->>>>>>> develop
   };
   const showModal = () => {
     setAdminMain(true);
