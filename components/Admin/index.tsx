@@ -7,11 +7,13 @@ import { distribute } from '../../services/distributeStudents';
 import { ICourse, ITaskStep } from '../../interfaces/ICourse';
 import { ITask } from '../../interfaces/ITask';
 import { UserBasic } from '../../interfaces/IUser';
+import { IWorkDone } from '../../interfaces/IWorkDone';
 
 interface PropsAdminMain {
   dataUsers: UserBasic[];
   dataTasks: ITask[];
   dataSession: ICourse[];
+  dataCompletedTask: IWorkDone[];
   visibleModal: boolean;
   getVisibleModal: (value: boolean) => void;
   getClickTask: (value: string) => void;
@@ -22,12 +24,14 @@ const AdminMain: React.FC<PropsAdminMain> = ({
   dataTasks,
   visibleModal,
   dataSession,
+  dataCompletedTask,
   getVisibleModal,
   getClickTask,
 }) => {
   const [users, setUser] = useState<any[]>(dataUsers);
   const [visible, setVisible] = useState<boolean>(visibleModal);
   useEffect(() => {
+    console.log(dataUsers, dataTasks, dataSession, dataCompletedTask);
     setVisible(visibleModal);
   }, [visibleModal]);
   useEffect(() => {
@@ -40,7 +44,11 @@ const AdminMain: React.FC<PropsAdminMain> = ({
   return (
     <div className="admin-wrapper">
       <Row>
-        <TaskInformation dataSession={dataSession} users={users} />
+        <TaskInformation
+          dataSession={dataSession}
+          users={users}
+          dataCompletedTask={dataCompletedTask}
+        />
       </Row>
       <Row gutter={[8, 8]} style={{ margin: 0 }}>
         <Col span={12} style={{ textAlign: 'center', margin: 0 }}>
