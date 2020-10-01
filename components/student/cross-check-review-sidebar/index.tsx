@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { Select, Input, Table, Tag } from 'antd';
-import { ITask, TypeTask } from '../../../interfaces/ITask';
+import { Select, Table, Tag } from 'antd';
 import styles from './index.module.css';
-import { CheckState, ICheсk, IStudent, IWorkDone } from '../../../interfaces/IWorkDone';
+import { CheckState, ICheсk, IStudent } from '../../../interfaces/IWorkDone';
 
 interface ISelectTask {
   name: string;
@@ -12,7 +11,6 @@ interface PropsSidebar {
   taskList: ISelectTask[];
   isDeadline: boolean;
   checkingTasks: ICheсk[];
-  activeStudent: IStudent;
   students: IStudent[];
   getTask: (task: string) => void;
   selectStudent: (reviewer: IStudent) => void;
@@ -22,15 +20,16 @@ const SidebarReview: React.FC<PropsSidebar> = ({
   getTask,
   taskList,
   checkingTasks,
-  activeStudent,
   isDeadline,
   students,
   selectStudent,
 }) => {
   const { Option } = Select;
+  const [isActive, setIsActive] = useState<boolean>(false);
 
   const handleClick = (value: string) => {
     getTask(value);
+    setIsActive(true);
   };
 
   const onClickStudent = (studentID: string) => {
@@ -45,7 +44,7 @@ const SidebarReview: React.FC<PropsSidebar> = ({
   let sideBarJSX: JSX.Element = <></>;
   let colorTag = 'geekblue';
   let itemStatus = '';
-  if (isDeadline && checkingTasks.length !== 0 && students.length !== 0) {
+  if (isActive && isDeadline && checkingTasks.length !== 0 && students.length !== 0) {
     const data = students.map((item, index) => {
       const stateItem = checkingTasks.filter((itemChecks) => itemChecks.checkerID === item.id);
       if (stateItem.length !== 0) {
@@ -55,7 +54,7 @@ const SidebarReview: React.FC<PropsSidebar> = ({
             itemStatus = 'Not Verified';
             break;
           case CheckState.AuditorDraft:
-            colorTag = 'geekblue';
+            colorTag = 'orange';
             itemStatus = 'Auditor Draft';
             break;
           case CheckState.Verified:
@@ -75,7 +74,7 @@ const SidebarReview: React.FC<PropsSidebar> = ({
             itemStatus = 'Auditor Draft';
         }
       } else {
-        colorTag = 'geekblue';
+        colorTag = 'orange';
         itemStatus = 'Auditor Draft';
       }
       return {
@@ -128,6 +127,12 @@ const SidebarReview: React.FC<PropsSidebar> = ({
         }
       </div>
     );
+  } else if (isActive && !isDeadline && checkingTasks.length !== 0 && students.length !== 0) {
+    sideBarJSX = <>Cross-Check did not start! </>;
+  } else if (isActive && isDeadline && checkingTasks.length === 0 && students.length === 0) {
+    sideBarJSX = <>No submit task!</>;
+  } else if (isActive) {
+    sideBarJSX = <>No submit task!</>;
   } else {
     sideBarJSX = <></>;
   }

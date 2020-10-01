@@ -51,19 +51,48 @@ const CrossCheckReviewPage: React.FC<PropsCrossCheckPage> = ({
   const [checkingTasks, setCheckingTasks] = React.useState<ICheсk[]>([]);
   const [activeCheckTask, setActiveCheckTask] = React.useState<ICheсk>({} as ICheсk);
   const [students, setStudents] = React.useState<IStudent[]>([]);
-  const [activeStudent, setActiveStudent] = React.useState<IStudent>({} as IStudent);
+  const [activeWorkDone, setActiveWorkDone] = React.useState<IWorkDone>({} as IWorkDone);
 
   // console.log('tasksData', tasksData);
   // console.log('courseData', courseData);
   console.log('completedTasksData', completedTasksData);
+  console.log('activeWorkDone', activeWorkDone);
   let taskJSX: JSX.Element = <></>;
 
   const onSave = (checkingTask: ICheсk) => {
-    console.log('Save in Data 1', checkingTask);
+    let saveWorkDone: IWorkDone;
+    if (
+      activeWorkDone.cheсks.filter((item) => item.checkerID === checkingTask.checkerID).length !== 0
+    ) {
+      const updateCheck = activeWorkDone.cheсks.map((item) => {
+        if (item.checkerID === checkingTask.checkerID) {
+          return checkingTask;
+        }
+        return item;
+      });
+      saveWorkDone = { ...activeWorkDone, cheсks: updateCheck };
+    } else {
+      saveWorkDone = { ...activeWorkDone, cheсks: [...activeWorkDone.cheсks, checkingTask] };
+    }
+    updateObjectField('completed_tasks', saveWorkDone.id, saveWorkDone);
   };
 
   const onSubmit = (checkingTask: ICheсk) => {
-    console.log('Save and Change in Data 1', checkingTask);
+    let submitWorkDone: IWorkDone;
+    if (
+      activeWorkDone.cheсks.filter((item) => item.checkerID === checkingTask.checkerID).length !== 0
+    ) {
+      const updateCheck = activeWorkDone.cheсks.map((item) => {
+        if (item.checkerID === checkingTask.checkerID) {
+          return checkingTask;
+        }
+        return item;
+      });
+      submitWorkDone = { ...activeWorkDone, cheсks: updateCheck };
+    } else {
+      submitWorkDone = { ...activeWorkDone, cheсks: [...activeWorkDone.cheсks, checkingTask] };
+    }
+    updateObjectField('completed_tasks', submitWorkDone.id, submitWorkDone);
   };
 
   const selectTask = (selectTaskID: string) => {
@@ -110,22 +139,24 @@ const CrossCheckReviewPage: React.FC<PropsCrossCheckPage> = ({
             });
             setStudents(searchStudents);
             setCheckingTasks(searchcheckingTasks);
+            setActiveWorkDone({} as IWorkDone);
+            setActiveCheckTask({} as ICheсk);
           } else {
             setStudents([]);
-            setActiveStudent({} as IStudent);
+            setActiveWorkDone({} as IWorkDone);
             setCheckingTasks([]);
             setActiveCheckTask({} as ICheсk);
           }
         } else {
           setStudents([]);
-          setActiveStudent({} as IStudent);
+          setActiveWorkDone({} as IWorkDone);
           setCheckingTasks([]);
           setActiveCheckTask({} as ICheсk);
         }
       } else {
         setTask({} as ITask);
         setStudents([]);
-        setActiveStudent({} as IStudent);
+        setActiveWorkDone({} as IWorkDone);
         setCheckingTasks([]);
         setActiveCheckTask({} as ICheсk);
       }
@@ -133,7 +164,25 @@ const CrossCheckReviewPage: React.FC<PropsCrossCheckPage> = ({
   };
 
   const selectStudent = (student: IStudent) => {
-    setActiveStudent(student);
+    if (completedTasksData.length !== 0) {
+      const searchWorkDone = completedTasksData.filter((completedTask) => {
+        return (
+          completedTask.reviewers.filter((item) => item.id === authorizedStudent.id).length !== 0 &&
+          completedTask.taskID === task.id &&
+          completedTask.student.id === student.id
+        );
+      });
+      if (searchWorkDone.length !== 0) {
+        setActiveWorkDone(searchWorkDone[0]);
+      } else {
+        setActiveWorkDone({} as IWorkDone);
+      }
+    } else {
+      setStudents([]);
+      setActiveWorkDone({} as IWorkDone);
+      setCheckingTasks([]);
+      setActiveCheckTask({} as ICheсk);
+    }
     if (auth.currentUser !== null && auth.currentUser.displayName !== null) {
       authorizedStudent = {
         id: auth.currentUser.uid,
@@ -159,6 +208,7 @@ const CrossCheckReviewPage: React.FC<PropsCrossCheckPage> = ({
         task={task}
         checkingTask={activeCheckTask}
         reviewer={authorizedStudent}
+        changeOutside={false}
         deployUrl={''}
         sourceGithubRepoUrl={''}
         role={role}
@@ -187,7 +237,6 @@ const CrossCheckReviewPage: React.FC<PropsCrossCheckPage> = ({
               taskList={taskList}
               isDeadline={isDeadline}
               checkingTasks={checkingTasks}
-              activeStudent={activeStudent}
               students={students}
               getTask={selectTask}
               selectStudent={selectStudent}

@@ -40,6 +40,7 @@ const CrossCheckSubmitPage: React.FC<PropsCrossCheckPage> = ({
     userID = auth.currentUser.uid;
     userName = auth.currentUser.displayName;
   }
+  const [changeOutside, setChangeOutside] = React.useState<boolean>(false);
   const [task, setTask] = React.useState<ITask>({} as ITask);
   const [isDeadline, setIsDeadline] = React.useState(false);
   const [workDone, setWorkDone] = React.useState<IWorkDone>({} as IWorkDone);
@@ -220,6 +221,7 @@ const CrossCheckSubmitPage: React.FC<PropsCrossCheckPage> = ({
       } else {
         selectTask = {} as ITask;
       }
+      setChangeOutside((prev) => !prev);
       setTask(selectTask);
       setWorkDone(selectWorkDone);
       setNewWorkDone(selectNeWworkDone);
@@ -235,6 +237,7 @@ const CrossCheckSubmitPage: React.FC<PropsCrossCheckPage> = ({
         task={task}
         checkingTask={checkTask}
         reviewer={reviewer}
+        changeOutside={changeOutside}
         deployUrl={deployUrl}
         sourceGithubRepoUrl={sourceGithubRepoUrl}
         role={role}

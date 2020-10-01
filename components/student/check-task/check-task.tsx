@@ -21,6 +21,7 @@ type PropsCheckTask = {
   checkingTask: ICheсk; // из него берется оценки
   reviewer: IStudent | IMentor; // нужен для комментов автора комментов
   role: Role; // нужен для определения особых пунктов специально для менторов
+  changeOutside: boolean; //чтобы определять изменился ли стате извне
   typeTask: TypeTask; // определить reviewer проверяющий или проверяемый
   deployUrl: string; // для ссылки в хедере
   sourceGithubRepoUrl: string; // для ссылки в хедере
@@ -34,6 +35,7 @@ function CheckTask({
   reviewer,
   role,
   typeTask,
+  changeOutside,
   deployUrl,
   sourceGithubRepoUrl,
   onSave,
@@ -47,10 +49,13 @@ function CheckTask({
     );
   }
   task = filterTaskOnRole(task, role, checkingTask.state);
+  const [stateChangeOutside, setStateChangeOutside] = React.useState<boolean>(changeOutside);
   const [stateCheckingTask, setCheckingTask] = useState<ICheсk>(checkingTask);
-  if (checkingTask !== stateCheckingTask) {
+  if (checkingTask !== stateCheckingTask && stateChangeOutside !== changeOutside) {
     setCheckingTask(checkingTask);
+    setStateChangeOutside((prev) => !prev);
   }
+
   console.log('stateCheckingTask', stateCheckingTask);
   const onAgreeAllPoint = () => {
     setCheckingTask((prev) => {
