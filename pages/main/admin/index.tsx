@@ -47,6 +47,12 @@ const AdminPage: React.FC<PropsAdmin> = ({
     setVisibleModal(false);
     setTransferTaskForm(taskFarm);
   };
+  const getClickDraft = (value: any) => {
+    setAdminMain(false);
+    setVisibleImport(false);
+    // const task = JSON.parse(value);
+    setTransferTaskForm(value);
+  };
   const showTable = () => {
     setVisitableTable(true);
   };
@@ -125,7 +131,7 @@ const AdminPage: React.FC<PropsAdmin> = ({
             visible={visibleImport}
             onOk={handleOkImport}
           >
-            <Import dataTasks={dataTasks} />
+            <Import dataTasks={dataTasks} getClickDraft={getClickDraft} />
           </Modal>
 
           {adminMain ? (
