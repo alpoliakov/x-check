@@ -61,7 +61,7 @@ const Sidebar: React.FC<PropsSidebar> = ({
   if (!isDeadline && workDone.id === undefined && reviewer.id === undefined) {
     sideBarJSX = <></>;
   } else if (isDeadline && workDone.id === undefined) {
-    sideBarJSX = <>Работа не сабмитнута в указанные сроки</>;
+    sideBarJSX = <>The deadline has passed already</>;
   } else if (!isDeadline && workDone.id === undefined && reviewer.id !== undefined) {
     sideBarJSX = (
       <div>
