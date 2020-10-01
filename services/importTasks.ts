@@ -157,10 +157,10 @@ function evaluationCriteriaParse(
     'Evaluation criteria'
   );
 
-  if (evaluationCriteriaDingy.lenght > 0){
+  if (!evaluationCriteriaDingy){
     return '';
   } else {
-    let OneStrEnd = evaluationCriteriaDingy.indexOf(categorySeparator, 4);
+  let OneStrEnd = evaluationCriteriaDingy.indexOf(categorySeparator, 4);
     let newEvaluationCriteria = evaluationCriteriaDingy.slice(OneStrEnd, -1);
     const evaluationCriteriaArray = [];
     while (newEvaluationCriteria.indexOf(categorySeparator, 4) !== -1) {

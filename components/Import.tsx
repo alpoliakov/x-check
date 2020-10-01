@@ -1,19 +1,13 @@
 import * as React from 'react';
 import { Form, Input, Button } from 'antd';
-import MyCriteria from './Criteria';
-import { auth } from '../firebase';
-import { ICriteriaGroup, StateTask } from '../interfaces/ITask';
-import { setDocument } from '../services/updateFirebase';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import importTaskMD, { importTaskRSSChecklist } from '../services/importTasks';
 
 const Import: React.FC<{ dataTasks: any[]; getClickDraft: (value: any) => void }> = ({
   dataTasks,
   getClickDraft,
 }) => {
-  const [getTask, setTask] = useState(
-    '{ "name": "John", "age": 35, "isAdmin": false, "friends": [0,1,2,3] }'
-  );
+  const [getTask, setTask] = useState('');
   const onFinish = (values: any) => {
     // const x = async () => {
     //   const response = await fetch(values.link);
@@ -29,16 +23,18 @@ const Import: React.FC<{ dataTasks: any[]; getClickDraft: (value: any) => void }
   };
 
   const onFinish2 = (values: any) => {
-    let x: any;
+    let taskFromDB: any;
     dataTasks.forEach((task) => {
       if (task.name === values.taskName) {
-        x = JSON.stringify(task);
+        taskFromDB = JSON.stringify(task);
       }
     });
-    if (x) {
-      setTask(x);
+    if (taskFromDB) {
+      setTask(taskFromDB);
     } else {
-      setTask('таска с таким названием не найдено');
+      setTask(
+        'task with this name were not found in our database, make sure you entered it correctly'
+      );
     }
   };
 
@@ -51,19 +47,36 @@ const Import: React.FC<{ dataTasks: any[]; getClickDraft: (value: any) => void }
   };
 
   const MDImport = (getTask: string) => {
-    const newTask = importTaskMD(getTask);
-    getClickDraft(newTask);
+    try {
+      const newTask = importTaskMD(getTask);
+      getClickDraft(newTask); 
+    } catch {
+      setTask("Sorry, I can't parse your data, please make sure you enter text as MD");
+    }
   }
 
   const RSSChecklistImport = (getTask: string) => {
-    const task = JSON.parse(getTask);
-    const newTask = importTaskRSSChecklist(task);
-    getClickDraft(newTask);
+    try {
+      const task = JSON.parse(getTask);
+      const newTask = importTaskRSSChecklist(task);
+      getClickDraft(newTask);
+    } catch (err) {
+      setTask(
+        "Sorry, I can't parse your data, please make sure you enter JSON as a string according to the format RSS Checklist"
+      );
+    }
+
   }
 
   const houmImport = (getTask: string) => {
-    const task = JSON.parse(getTask);
-    getClickDraft(task);
+    try {
+      const task = JSON.parse(getTask);
+      getClickDraft(task);
+    } catch (err) {
+      setTask(
+        "Sorry, I can't parse your data, please make sure you enter JSON as a string according to the format our application"
+      );
+    }
   };
   const { TextArea } = Input;
   return (
@@ -156,7 +169,7 @@ const Import: React.FC<{ dataTasks: any[]; getClickDraft: (value: any) => void }
                 click this button if you import JSON in RSS Checklist format
               </p>
             </div>
-            <div style={{ textAlign: 'right' }}>
+            <div style={{ textAlign: 'center' }}>
               <Button
                 type="primary"
                 style={{ marginBottom: '10px' }}
@@ -177,7 +190,7 @@ const Import: React.FC<{ dataTasks: any[]; getClickDraft: (value: any) => void }
                 Import from MD
               </Button>
               <p style={{ color: 'grey' }}>
-                click this button if you are importing JSON in our application format
+                click this button if you are importing md format
               </p>
             </div>
           </div>

@@ -211,7 +211,7 @@ export const getServerSideProps = async () => {
     });
 
   const dataReviews = dataCompletedTask
-    .map((task) => {
+    .map((task: any) => {
       if (task.cheсks.length > 0) {
         return task.cheсks.map((el) => {
           const reviewerName = task.reviewers.filter((reviewer) => reviewer.id === el.checkerID)[0];
