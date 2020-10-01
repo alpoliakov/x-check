@@ -7,7 +7,6 @@ export default function importTaskMD(
   task.replace('`', "'");
   const md2json = require('md-2-json');
   const incomingJSON = md2json.parse(task);
-  // const myUID = getAutorUID();
   const name = Object.keys(incomingJSON)[0];
   const demo = getDemoLink(incomingJSON);
   const evaluationCriteria = evaluationCriteriaParse(
@@ -42,7 +41,6 @@ export function bigImportTaskMD(
   task.replace('`', "'");
   const md2json = require('md-2-json');
   const incomingJSON = md2json.parse(task);
-  // const myUID = getAutorUID();
   const name = Object.keys(incomingJSON)[0].length > 1 ? Object.keys(incomingJSON)[0] : '';
   const demo = Object.keys(incomingJSON)[0].length > 1 ? getDemoLink(incomingJSON) : '';
   const evaluationCriteria =
@@ -258,21 +256,3 @@ function getdescriptionDingy(incomingJSON: any): any {
   const descriptionDingy = incomingJSON[Object.keys(incomingJSON)[0]];
   return descriptionDingy;
 }
-//переделать
-// function getAutorUID() {
-//   const myUid: any;
-//   const waitForCurrentUser = setInterval(() => {
-//     // @ts-ignore
-//     const uid = auth.currentUser;
-//     if (uid !== null) {
-//       clearInterval(waitForCurrentUser);
-//       const myuid = uid.uid;
-//       setMyUid(myuid);
-//       return uid;
-//     } else {
-//       console.log('Wait for it');
-//     }
-//   }, 300);
-
-//   return myUid;
-// }
