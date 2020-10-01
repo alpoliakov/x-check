@@ -7,11 +7,15 @@ interface ISelectTask {
   name: string;
   id: string;
 }
+
+interface IStudentStatus {
+  student: IStudent;
+  status: CheckState;
+}
 interface PropsSidebar {
   taskList: ISelectTask[];
   isDeadline: boolean;
-  checkingTasks: ICheсk[];
-  students: IStudent[];
+  students: IStudentStatus[];
   getTask: (task: string) => void;
   selectStudent: (reviewer: IStudent) => void;
 }
@@ -19,7 +23,6 @@ interface PropsSidebar {
 const SidebarReview: React.FC<PropsSidebar> = ({
   getTask,
   taskList,
-  checkingTasks,
   isDeadline,
   students,
   selectStudent,
@@ -33,9 +36,9 @@ const SidebarReview: React.FC<PropsSidebar> = ({
   };
 
   const onClickStudent = (studentID: string) => {
-    const result = students.filter((item) => item.id === studentID);
+    const result = students.filter((item) => item.student.id === studentID);
     if (result.length !== 0) {
-      selectStudent(result[0]);
+      selectStudent(result[0].student);
     } else {
       selectStudent({} as IStudent);
     }
@@ -44,42 +47,37 @@ const SidebarReview: React.FC<PropsSidebar> = ({
   let sideBarJSX: JSX.Element = <></>;
   let colorTag = 'geekblue';
   let itemStatus = '';
-  if (isActive && isDeadline && checkingTasks.length !== 0 && students.length !== 0) {
-    const data = students.map((item, index) => {
-      const stateItem = checkingTasks.filter((itemChecks) => itemChecks.checkerID === item.id);
-      if (stateItem.length !== 0) {
-        switch (stateItem[0].state) {
-          case CheckState.NotVerified:
-            colorTag = 'geekblue';
-            itemStatus = 'Not Verified';
-            break;
-          case CheckState.AuditorDraft:
-            colorTag = 'orange';
-            itemStatus = 'Auditor Draft';
-            break;
-          case CheckState.Verified:
-            colorTag = 'green';
-            itemStatus = 'Verified';
-            break;
-          case CheckState.Dispute:
-            colorTag = 'red';
-            itemStatus = 'Dispute';
-            break;
-          case CheckState.DisputeClosed:
-            colorTag = 'gold';
-            itemStatus = 'Dispute closed';
-            break;
-          default:
-            colorTag = 'blue';
-            itemStatus = 'Auditor Draft';
-        }
-      } else {
-        colorTag = 'orange';
-        itemStatus = 'Auditor Draft';
+  if (isActive && isDeadline && students.length !== 0) {
+    const data = students.map((item) => {
+      switch (item.status) {
+        case CheckState.NotVerified:
+          colorTag = 'geekblue';
+          itemStatus = 'Not Verified';
+          break;
+        case CheckState.AuditorDraft:
+          colorTag = 'orange';
+          itemStatus = 'Auditor Draft';
+          break;
+        case CheckState.Verified:
+          colorTag = 'green';
+          itemStatus = 'Verified';
+          break;
+        case CheckState.Dispute:
+          colorTag = 'red';
+          itemStatus = 'Dispute';
+          break;
+        case CheckState.DisputeClosed:
+          colorTag = 'gold';
+          itemStatus = 'Dispute closed';
+          break;
+        default:
+          colorTag = 'blue';
+          itemStatus = 'Auditor Draft';
       }
+
       return {
-        key: item.id,
-        reviewer: item.name,
+        key: item.student.id,
+        student: item.student.name,
         status: itemStatus,
       };
     });
@@ -97,9 +95,9 @@ const SidebarReview: React.FC<PropsSidebar> = ({
     };
     const columns = [
       {
-        title: 'Reviewer',
-        dataIndex: 'reviewer',
-        key: 'reviewer',
+        title: 'Student',
+        dataIndex: 'student',
+        key: 'student',
         render: addLink,
       },
       {
@@ -127,12 +125,12 @@ const SidebarReview: React.FC<PropsSidebar> = ({
         }
       </div>
     );
-  } else if (isActive && !isDeadline && checkingTasks.length !== 0 && students.length !== 0) {
+  } else if (isActive && !isDeadline && students.length !== 0) {
     sideBarJSX = <>Cross-Check did not start! </>;
-  } else if (isActive && isDeadline && checkingTasks.length === 0 && students.length === 0) {
+  } else if (isActive && isDeadline && students.length === 0) {
     sideBarJSX = <>No submit task!</>;
   } else if (isActive) {
-    sideBarJSX = <>No submit task!</>;
+    sideBarJSX = <>No submit task</>;
   } else {
     sideBarJSX = <></>;
   }

@@ -27,7 +27,12 @@ import { ICourse } from '../../../../interfaces/ICourse';
 interface PropsCrossCheckPage {
   tasksData: ITask[];
   courseData: ICourse[];
-  completedTasksData: IWorkDone[]; // была проблема в 56 строки, ты присваивал свойство от undefined
+  completedTasksData: IWorkDone[];
+}
+
+interface IStudentStatus {
+  student: IStudent;
+  status: CheckState;
 }
 
 const CrossCheckReviewPage: React.FC<PropsCrossCheckPage> = ({
@@ -48,15 +53,18 @@ const CrossCheckReviewPage: React.FC<PropsCrossCheckPage> = ({
   }
   const [task, setTask] = React.useState<ITask>({} as ITask);
   const [isDeadline, setIsDeadline] = React.useState(false);
-  const [checkingTasks, setCheckingTasks] = React.useState<ICheсk[]>([]);
   const [activeCheckTask, setActiveCheckTask] = React.useState<ICheсk>({} as ICheсk);
-  const [students, setStudents] = React.useState<IStudent[]>([]);
+  const [students, setStudents] = React.useState<IStudentStatus[]>([]);
   const [activeWorkDone, setActiveWorkDone] = React.useState<IWorkDone>({} as IWorkDone);
 
   // console.log('tasksData', tasksData);
-  // console.log('courseData', courseData);
+  console.log('courseData', courseData);
   console.log('completedTasksData', completedTasksData);
-  console.log('activeWorkDone', activeWorkDone);
+  // console.log('statusCheckingTasks', statusCheckingTasks);
+  // console.log('activeCheckTask', activeCheckTask);
+  console.log('students', students);
+  // console.log('activeWorkDone', activeWorkDone);
+
   let taskJSX: JSX.Element = <></>;
 
   const onSave = (checkingTask: ICheсk) => {
@@ -122,48 +130,58 @@ const CrossCheckReviewPage: React.FC<PropsCrossCheckPage> = ({
         }
 
         if (completedTasksData.length !== 0) {
-          const searchWorkDone = completedTasksData.filter((completedTask) => {
+          const searchWorksDone = completedTasksData.filter((completedTask) => {
             return (
               completedTask.reviewers.filter((item) => item.id === authorizedStudent.id).length !==
                 0 && completedTask.taskID === select[0].id
             );
           });
-          if (searchWorkDone.length !== 0) {
-            const searchcheckingTasks: ICheсk[] = [];
-            const searchStudents = searchWorkDone.map((item) => {
-              const resultStudent = item.reviewers.filter(
-                (itemStudent) => itemStudent.id === authorizedStudent.id
-              ); // проверки нету потому что searchWorkDone уже проверил
-              searchcheckingTasks.push(createCheckOnReviewer(select[0], item, authorizedStudent));
-              return resultStudent[0];
+          if (searchWorksDone.length !== 0) {
+            console.log('searchWorksDone', searchWorksDone);
+            const searchStudents = searchWorksDone.map((item) => {
+              const searchStatus = item.cheсks.filter(
+                (cheсk) => cheсk.checkerID === authorizedStudent.id
+              );
+              console.log('searchStatus', searchStatus);
+              let status: CheckState;
+              if (searchStatus.length !== 0) {
+                status = searchStatus[0].state;
+              } else {
+                status = CheckState.AuditorDraft;
+              }
+              return { student: item.student, status: status };
             });
             setStudents(searchStudents);
-            setCheckingTasks(searchcheckingTasks);
             setActiveWorkDone({} as IWorkDone);
             setActiveCheckTask({} as ICheсk);
           } else {
             setStudents([]);
             setActiveWorkDone({} as IWorkDone);
-            setCheckingTasks([]);
             setActiveCheckTask({} as ICheсk);
           }
         } else {
           setStudents([]);
           setActiveWorkDone({} as IWorkDone);
-          setCheckingTasks([]);
           setActiveCheckTask({} as ICheсk);
         }
       } else {
         setTask({} as ITask);
         setStudents([]);
         setActiveWorkDone({} as IWorkDone);
-        setCheckingTasks([]);
         setActiveCheckTask({} as ICheсk);
       }
     }
   };
 
   const selectStudent = (student: IStudent) => {
+    if (auth.currentUser !== null && auth.currentUser.displayName !== null) {
+      authorizedStudent = {
+        id: auth.currentUser.uid,
+        name: auth.currentUser.displayName,
+        isAuditorAnonim: false,
+      };
+    }
+
     if (completedTasksData.length !== 0) {
       const searchWorkDone = completedTasksData.filter((completedTask) => {
         return (
@@ -172,28 +190,26 @@ const CrossCheckReviewPage: React.FC<PropsCrossCheckPage> = ({
           completedTask.student.id === student.id
         );
       });
+      console.log('searchWorkDone', searchWorkDone);
       if (searchWorkDone.length !== 0) {
         setActiveWorkDone(searchWorkDone[0]);
+        const findCheckingTask = searchWorkDone[0].cheсks.filter(
+          (item) => student.id === item.checkerID
+        );
+        if (findCheckingTask.length !== 0) {
+          setActiveCheckTask(findCheckingTask[0]);
+        } else {
+          setActiveCheckTask(createCheckOnReviewer(task, searchWorkDone[0], authorizedStudent));
+        }
+        //фича для удаления
+        // deleteDocument('completed_tasks', searchWorkDone[0].id);
       } else {
         setActiveWorkDone({} as IWorkDone);
+        setActiveCheckTask({} as ICheсk);
       }
     } else {
       setStudents([]);
       setActiveWorkDone({} as IWorkDone);
-      setCheckingTasks([]);
-      setActiveCheckTask({} as ICheсk);
-    }
-    if (auth.currentUser !== null && auth.currentUser.displayName !== null) {
-      authorizedStudent = {
-        id: auth.currentUser.uid,
-        name: auth.currentUser.displayName,
-        isAuditorAnonim: false,
-      };
-    }
-    const findCheckingTask = checkingTasks.filter((item) => student.id === item.checkerID);
-    if (findCheckingTask.length !== 0) {
-      setActiveCheckTask(findCheckingTask[0]);
-    } else {
       setActiveCheckTask({} as ICheсk);
     }
   };
@@ -236,7 +252,6 @@ const CrossCheckReviewPage: React.FC<PropsCrossCheckPage> = ({
             <SidebarReview
               taskList={taskList}
               isDeadline={isDeadline}
-              checkingTasks={checkingTasks}
               students={students}
               getTask={selectTask}
               selectStudent={selectStudent}
