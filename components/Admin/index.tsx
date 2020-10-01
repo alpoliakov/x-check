@@ -64,7 +64,7 @@ const AdminMain: React.FC<PropsAdminMain> = ({
               </Button>,
             ]}
           >
-            <TableNewTask getClickTask={getClickTask} tasks={dataTasks} />
+            <TableNewTask dataSession={dataSession} getClickTask={getClickTask} tasks={dataTasks} />
           </Modal>
         </Col>
         <Col span={12} style={{ textAlign: 'center', margin: '20px 0' }}></Col>

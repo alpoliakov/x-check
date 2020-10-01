@@ -20,8 +20,8 @@ const ActiveTask: React.FC<AProps> = ({ dataSession, getActiveTask }) => {
         <Form.Item name="Active task" label="Active task" style={{ width: '100%' }}>
           <Select placeholder="Active task..." style={{ width: 810 }} onChange={onSelected}>
             {dataSession[0].tasks.map((province) => (
-              <Option key={province.name} value={province.name}>
-                {province.name}
+              <Option key={province.taskID} value={province.taskID}>
+                {province.taskID}
               </Option>
             ))}
           </Select>

@@ -19,7 +19,7 @@ const CurrentStage: React.FC<PropsCurrentStage> = ({ activeTask, dataSession, ge
 
   useEffect(() => {
     if (activeTask !== undefined) {
-      const active: any = dataSession[0].tasks.find((e) => e.name === activeTask);
+      const active: any = dataSession[0].tasks.find((e) => e.taskID === activeTask);
       setStart(moment(active.start).format('YYYY-MM-DD'));
       setDeadline(moment(active.deadline).format('YYYY-MM-DD'));
       setCurrentStage(active.taskStage);
@@ -44,7 +44,7 @@ const CurrentStage: React.FC<PropsCurrentStage> = ({ activeTask, dataSession, ge
     }
   };
   const onFinish = (): void => {
-    const active: any = dataSession[0].tasks.find((e) => e.name === activeTask);
+    const active: any = dataSession[0].tasks.find((e) => e.taskID === activeTask);
     console.log(active, active.name, moment(deadline).valueOf(), moment(start).valueOf());
     dataSession[0].tasks.forEach((e: any) => {
       if (e.name === active.name) {

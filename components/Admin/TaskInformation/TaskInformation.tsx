@@ -9,6 +9,7 @@ import { UserBasic } from '../../../interfaces/IUser';
 import { IWorkDone } from '../../../interfaces/IWorkDone';
 import { updateObjectField } from '../../../services/updateFirebase';
 import firebase from 'firebase';
+import { distribute } from '../../../services/distributeStudents';
 
 interface PropsTaskInformation {
   users: UserBasic[];
@@ -25,7 +26,7 @@ const TaskInformation: React.FC<PropsTaskInformation> = ({
   const [taskStage, setTaskStage] = useState<string | undefined>();
   useEffect(() => {
     if (activeTask !== undefined) {
-      const active: any = dataSession[0].tasks.find((e) => e.name === activeTask);
+      const active: any = dataSession[0].tasks.find((e) => e.taskID === activeTask);
       setTaskStage(active.taskStage);
     }
   }, [activeTask]);
@@ -36,7 +37,7 @@ const TaskInformation: React.FC<PropsTaskInformation> = ({
     setTaskStage(value);
   };
 
-  const distribute = () => {
+  const distributeTest = () => {
     dataCompletedTask.forEach((e) => {
       e.reviewers.push(e.student);
       updateObjectField('completed_tasks', e.id, {
@@ -78,13 +79,18 @@ const TaskInformation: React.FC<PropsTaskInformation> = ({
             style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
           >
             <Space align="end" direction="vertical">
-              <Button style={{ marginBottom: 20, width: 182 }} type="primary" onClick={distribute}>
+              <Button
+                style={{ marginBottom: 20, width: 182 }}
+                type="primary"
+                onClick={distributeTest}
+              >
                 Distribute TEST
               </Button>
               <Button
                 disabled={taskStage !== 'REQUESTS_GATHERING'}
                 style={{ marginBottom: 20, width: 182 }}
                 type="primary"
+                onClick={() => distribute(dataCompletedTask, 'Songbird 1')}
               >
                 Distribute for inspection
               </Button>
