@@ -47,11 +47,12 @@ const CrossCheckSubmitPage: React.FC<PropsCrossCheckPage> = ({
   const [neWworkDone, setNewWorkDone] = React.useState<IWorkDone>({} as IWorkDone);
   const [checkTask, setCheckTask] = React.useState<ICheсk>({} as ICheсk);
   const [reviewer, setReviewer] = React.useState<IStudent>({} as IStudent);
+  const [mentor, setMentor] = React.useState<IStudent>({} as IStudent);
   const [deployUrl, setDeployUrl] = React.useState<string>('');
   const [sourceGithubRepoUrl, setSourceGithubRepoUrl] = React.useState<string>('');
 
   // console.log('task', task);
-  // console.log('workDone', workDone);
+  console.log('workDone', workDone);
   // console.log('neWworkDone', neWworkDone);
   // console.log('isDeadline', isDeadline);
   // console.log('checkTask', checkTask);
@@ -85,12 +86,6 @@ const CrossCheckSubmitPage: React.FC<PropsCrossCheckPage> = ({
       console.log('Save in Data 2', newCheckingTask);
       updateObjectField('completed_tasks', newCheckingTask.id, newCheckingTask);
     }
-    // setTask({} as ITask);
-    // setWorkDone({} as IWorkDone);
-    // setNewWorkDone({} as IWorkDone);
-    // setIsDeadline(false);
-    // setCheckTask({} as ICheсk);
-    // setReviewer({} as IStudent);
   };
 
   const onSubmit = (checkingTask: ICheсk) => {
@@ -104,10 +99,11 @@ const CrossCheckSubmitPage: React.FC<PropsCrossCheckPage> = ({
         sourceGithubRepoUrl: sourceGithubRepoUrl,
       };
       console.log('Change and save in Data 1', newCheckingTask);
+      setWorkDone(newCheckingTask);
       setDocument('completed_tasks', newCheckingTask.id, newCheckingTask);
     } else if (workDone.id !== undefined && !isDeadline && neWworkDone.id === undefined) {
       //Сохранение старого IWorkDone до дедлайна
-      const newCheckingTask = {
+      const newCheckingTask: IWorkDone = {
         ...workDone,
         selfTest: checkingTask,
         deployUrl: deployUrl,
@@ -115,6 +111,7 @@ const CrossCheckSubmitPage: React.FC<PropsCrossCheckPage> = ({
         sourceGithubRepoUrl: sourceGithubRepoUrl,
       };
       console.log('Change and save in Data 2', newCheckingTask);
+      setWorkDone(newCheckingTask);
       updateObjectField('completed_tasks', newCheckingTask.id, newCheckingTask);
     } else if (
       workDone.id !== undefined &&
@@ -124,19 +121,29 @@ const CrossCheckSubmitPage: React.FC<PropsCrossCheckPage> = ({
       checkTask.checkerID !== undefined
     ) {
       //Сохранение старого IWorkDone после дедлайна (согласование выставленной оценки)
-      const updateCheck = workDone.cheсks.map((item) => {
+      const updateCheck: ICheсk[] = workDone.cheсks.map((item) => {
         if (item.checkerID === checkingTask.checkerID) {
           return checkingTask;
         }
         return item;
       });
-      const newCheckingTask = {
+      const newCheckingTask: IWorkDone = {
         ...workDone,
-        checks: updateCheck,
+        cheсks: updateCheck,
       };
       console.log('Change and save in Data 3', newCheckingTask);
+      setWorkDone(newCheckingTask);
       updateObjectField('completed_tasks', newCheckingTask.id, newCheckingTask);
+      getServerSideProps();
     }
+    setChangeOutside((prev) => !prev);
+    setCheckTask(checkingTask);
+    // setTask({} as ITask);
+    // setWorkDone({} as IWorkDone);
+    // setNewWorkDone({} as IWorkDone);
+    // setIsDeadline(false);
+    // setCheckTask({} as ICheсk);
+    // setReviewer({} as IStudent);
   };
 
   const getDeployUrl = (url: string) => {

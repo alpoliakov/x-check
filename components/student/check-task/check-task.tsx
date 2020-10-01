@@ -47,11 +47,18 @@ function CheckTask({
         <p>In the process of checking</p>
       </div>
     );
+  } else if (typeTask === TypeTask.ReviewTask && checkingTask.state === CheckState.NotVerified) {
+    return (
+      <div className={styles.test}>
+        <p>In the process of approval</p>
+      </div>
+    );
   }
   task = filterTaskOnRole(task, role, checkingTask.state);
   const [stateChangeOutside, setStateChangeOutside] = React.useState<boolean>(changeOutside);
   const [stateCheckingTask, setCheckingTask] = useState<ICheсk>(checkingTask);
   if (checkingTask !== stateCheckingTask && stateChangeOutside !== changeOutside) {
+    console.log('изменения извне');
     setCheckingTask(checkingTask);
     setStateChangeOutside((prev) => !prev);
   }
@@ -249,7 +256,7 @@ function CheckTask({
           const current = {
             ...prev,
             state: CheckState.NotVerified,
-            cheсking: changeStatePoint(prev, CheсkingPointState.Verified),
+            cheсking: changeStatePoint(prev, CheсkingPointState.NotVerified),
           };
           onSubmit(current);
           return current;

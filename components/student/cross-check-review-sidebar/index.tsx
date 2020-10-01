@@ -45,33 +45,26 @@ const SidebarReview: React.FC<PropsSidebar> = ({
   };
 
   let sideBarJSX: JSX.Element = <></>;
-  let colorTag = 'geekblue';
   let itemStatus = '';
   if (isActive && isDeadline && students.length !== 0) {
     const data = students.map((item) => {
       switch (item.status) {
-        case CheckState.NotVerified:
-          colorTag = 'geekblue';
-          itemStatus = 'Not Verified';
-          break;
         case CheckState.AuditorDraft:
-          colorTag = 'orange';
           itemStatus = 'Auditor Draft';
           break;
+        case CheckState.NotVerified:
+          itemStatus = 'Not Verified';
+          break;
         case CheckState.Verified:
-          colorTag = 'green';
           itemStatus = 'Verified';
           break;
         case CheckState.Dispute:
-          colorTag = 'red';
           itemStatus = 'Dispute';
           break;
         case CheckState.DisputeClosed:
-          colorTag = 'gold';
           itemStatus = 'Dispute closed';
           break;
         default:
-          colorTag = 'blue';
           itemStatus = 'Auditor Draft';
       }
 
@@ -87,6 +80,27 @@ const SidebarReview: React.FC<PropsSidebar> = ({
     };
 
     const addTag = (text: string) => {
+      let colorTag = 'geekblue';
+      switch (text) {
+        case 'Auditor Draft':
+          colorTag = 'orange';
+          break;
+        case 'Not Verified':
+          colorTag = 'geekblue';
+          break;
+        case 'Verified':
+          colorTag = 'green';
+          break;
+        case 'Dispute':
+          colorTag = 'red';
+          break;
+        case 'Dispute closed':
+          colorTag = 'gold';
+          break;
+        default:
+          colorTag = 'orange';
+      }
+
       return (
         <Tag color={colorTag} key={text}>
           {text}
@@ -125,10 +139,10 @@ const SidebarReview: React.FC<PropsSidebar> = ({
         }
       </div>
     );
-  } else if (isActive && !isDeadline && students.length !== 0) {
+  } else if (isActive && !isDeadline) {
     sideBarJSX = <>Cross-Check did not start! </>;
   } else if (isActive && isDeadline && students.length === 0) {
-    sideBarJSX = <>No submit task!</>;
+    sideBarJSX = <>Wait for the distribution of students</>;
   } else if (isActive) {
     sideBarJSX = <>No submit task</>;
   } else {

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Select, Input, Table, Tag } from 'antd';
 import { ITask, TypeTask } from '../../../interfaces/ITask';
 import styles from './index.module.css';
-import { CheckState, IStudent, IWorkDone } from '../../../interfaces/IWorkDone';
+import { CheckState, IStudent, IWorkDone, TaskState } from '../../../interfaces/IWorkDone';
 
 interface ISelectTask {
   name: string;
@@ -56,12 +56,13 @@ const SidebarSubmit: React.FC<PropsSidebar> = ({
   };
 
   let sideBarJSX: JSX.Element = <></>;
-  let colorTag = 'geekblue';
   let itemStatus = '';
   if (!isDeadline && workDone.id === undefined && reviewer.id === undefined) {
     sideBarJSX = <></>;
   } else if (isDeadline && workDone.id === undefined) {
     sideBarJSX = <>The deadline has passed already</>;
+  } else if (workDone.state === TaskState.isCheking && !isDeadline) {
+    sideBarJSX = <></>;
   } else if (!isDeadline && workDone.id === undefined && reviewer.id !== undefined) {
     sideBarJSX = (
       <div>
@@ -78,40 +79,43 @@ const SidebarSubmit: React.FC<PropsSidebar> = ({
     );
   } else if (isDeadline && workDone.id !== undefined) {
     const data = workDone.reviewers.map((item, index) => {
+      let isAnonimSidebar: boolean;
       const stateItem = workDone.cheсks.filter((itemChecks) => itemChecks.checkerID === item.id);
       if (stateItem.length !== 0) {
         switch (stateItem[0].state) {
-          case CheckState.NotVerified:
-            colorTag = 'geekblue';
-            itemStatus = 'Not Verified';
-            break;
           case CheckState.AuditorDraft:
-            colorTag = 'geekblue';
             itemStatus = 'Auditor Draft';
             break;
+          case CheckState.NotVerified:
+            itemStatus = 'Not Verified';
+            break;
           case CheckState.Verified:
-            colorTag = 'green';
             itemStatus = 'Verified';
             break;
           case CheckState.Dispute:
-            colorTag = 'red';
             itemStatus = 'Dispute';
             break;
           case CheckState.DisputeClosed:
-            colorTag = 'gold';
             itemStatus = 'Dispute closed';
             break;
           default:
-            colorTag = 'blue';
-            itemStatus = 'Dispute closed';
+            itemStatus = 'Auditor Draft';
         }
+        isAnonimSidebar = stateItem[0].isAnonim;
       } else {
-        colorTag = 'geekblue';
+        isAnonimSidebar = false;
         itemStatus = 'Auditor Draft';
+      }
+      if (isAnonimSidebar) {
+        return {
+          key: item.id,
+          reviewer: item.name,
+          status: itemStatus,
+        };
       }
       return {
         key: item.id,
-        reviewer: `Reveiwer ${index}`,
+        reviewer: `Reveiwer ${index + 1}`,
         status: itemStatus,
       };
     });
@@ -121,6 +125,27 @@ const SidebarSubmit: React.FC<PropsSidebar> = ({
     };
 
     const addTag = (text: string) => {
+      let colorTag = 'geekblue';
+      switch (text) {
+        case 'Auditor Draft':
+          colorTag = 'orange';
+          break;
+        case 'Not Verified':
+          colorTag = 'geekblue';
+          break;
+        case 'Verified':
+          colorTag = 'green';
+          break;
+        case 'Dispute':
+          colorTag = 'red';
+          break;
+        case 'Dispute closed':
+          colorTag = 'gold';
+          break;
+        default:
+          colorTag = 'orange';
+      }
+
       return (
         <Tag color={colorTag} key={text}>
           {text}
