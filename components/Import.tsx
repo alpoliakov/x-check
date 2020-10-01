@@ -12,7 +12,7 @@ const Import: React.FC<{ dataTasks: any[]; getClickDraft: (value: any) => void }
     // const x = async () => {
     //   const response = await fetch(values.link);
     //     const json = await response.json();
-    console.log('Success:', values);
+    setTask('sorry i forgot to fix this button');
     // console.log(response);
     // if (response.ok) {
     // } else {
