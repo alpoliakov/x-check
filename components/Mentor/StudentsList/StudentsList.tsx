@@ -19,7 +19,7 @@ interface PropsStudentList {
 const StudentsList: React.FC<PropsStudentList> = ({ userData, getTask, myUid }) => {
   const [students, setStudent] = useState<UserBasic[]>([]);
   const [users, setUsers] = useState<UserBasic[]>([]);
-  const [tasks, setSTask] = useState<ITask[]>([]);
+  const [tasks, setSTask] = useState<string[]>([]);
   const [isDisabled, setIsDisabled] = useState<boolean>(true);
   const [taskValue, setTaskValue] = useState<string | undefined>(undefined);
   const [update, setUpdate] = useState<any>();
@@ -58,9 +58,8 @@ const StudentsList: React.FC<PropsStudentList> = ({ userData, getTask, myUid }) 
     }
   };
   const handleProvinceChange = (value: Key, key: any) => {
-    const userTasks: any = students.filter((i) => i.uid === key.key);
-    console.log(userTasks, key.key);
-    setSTask(userTasks.tasksID);
+    const userTasks: UserBasic[] = students.filter((i) => i.uid === key.key);
+    setSTask(userTasks[0].tasksID);
     setIsDisabled(false);
   };
 
@@ -78,7 +77,7 @@ const StudentsList: React.FC<PropsStudentList> = ({ userData, getTask, myUid }) 
             style={{ width: 280 }}
             onChange={handleProvinceChange}
           >
-            {students.map((province, i) => (
+            {students.map((province) => (
               <Option key={province.uid} value={province.nickname}>
                 <Avatar
                   size={20}
@@ -102,9 +101,9 @@ const StudentsList: React.FC<PropsStudentList> = ({ userData, getTask, myUid }) 
             onChange={onSecondCityChange}
             disabled={isDisabled}
           >
-            {tasks.map((task: any, i) => (
-              <Option key={i} value={task.taskName}>
-                {task.taskName}
+            {tasks.map((task) => (
+              <Option key={task} value={task}>
+                {task}
               </Option>
             ))}
           </Select>{' '}

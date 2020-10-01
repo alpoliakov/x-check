@@ -6,13 +6,21 @@ import ActiveTask from '../ActiveTask/index';
 import { ITask } from '../../../interfaces/ITask';
 import { ICourse, ITaskStep } from '../../../interfaces/ICourse';
 import { UserBasic } from '../../../interfaces/IUser';
+import { IWorkDone } from '../../../interfaces/IWorkDone';
+import { updateObjectField } from '../../../services/updateFirebase';
+import firebase from 'firebase';
 
 interface PropsTaskInformation {
   users: UserBasic[];
   dataSession: ICourse[];
+  dataCompletedTask: IWorkDone[];
 }
 
-const TaskInformation: React.FC<PropsTaskInformation> = ({ users, dataSession }) => {
+const TaskInformation: React.FC<PropsTaskInformation> = ({
+  users,
+  dataSession,
+  dataCompletedTask,
+}) => {
   const [activeTask, setActiveTask] = useState<string | undefined>(undefined);
   const [taskStage, setTaskStage] = useState<string | undefined>();
   useEffect(() => {
@@ -26,6 +34,17 @@ const TaskInformation: React.FC<PropsTaskInformation> = ({ users, dataSession })
   };
   const getTaskStage = (value: string | undefined) => {
     setTaskStage(value);
+  };
+
+  const distribute = () => {
+    dataCompletedTask.forEach((e) => {
+      e.reviewers.push(e.student);
+      updateObjectField('completed_tasks', e.id, {
+        reviewers: firebase.firestore.FieldValue.arrayUnion(e.student),
+      });
+    });
+
+    console.log(dataCompletedTask);
   };
   return (
     <>
@@ -48,13 +67,20 @@ const TaskInformation: React.FC<PropsTaskInformation> = ({ users, dataSession })
         </Row>
         <Row style={{ marginTop: 40 }}>
           <Col span={12}>
-            <AdminStatisticTask user={users} />
+            <AdminStatisticTask
+              dataCompletedTask={dataCompletedTask}
+              activeTask={activeTask}
+              user={users}
+            />
           </Col>
           <Col
             span={12}
             style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
           >
             <Space align="end" direction="vertical">
+              <Button style={{ marginBottom: 20, width: 182 }} type="primary" onClick={distribute}>
+                Distribute TEST
+              </Button>
               <Button
                 disabled={taskStage !== 'REQUESTS_GATHERING'}
                 style={{ marginBottom: 20, width: 182 }}
