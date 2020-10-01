@@ -84,6 +84,10 @@ const MainLayout: React.FC<PropsML> = ({ children, title, changeAuthorization })
     router.push(`/about/edit`).catch((e) => new Error(e.message));
   };
 
+  const returnMainPage = () => {
+    router.push(`/main`).catch((e) => new Error(e.message));
+  };
+
   const menu = (
     <Menu>
       <Menu.Item key="profile" icon={<EyeOutlined />}>
@@ -123,7 +127,7 @@ const MainLayout: React.FC<PropsML> = ({ children, title, changeAuthorization })
       <section className={'layout'}>
         <nav className={'nav'}>
           <div className="logo">
-            <a href="https://app.rs.school/">
+            <a type={'button'} onClick={returnMainPage}>
               <img
                 src="/static/images/logo-rsschool3.png"
                 alt="Rolling Scopes School Logo"
