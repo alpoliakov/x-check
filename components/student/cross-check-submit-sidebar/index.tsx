@@ -119,7 +119,21 @@ const SidebarSubmit: React.FC<PropsSidebar> = ({
         status: itemStatus,
       };
     });
-
+    const statusMentor =
+      workDone.mentorCheck.state !== undefined
+        ? workDone.mentorCheck.state
+        : CheckState.AuditorDraft;
+    const dataWithMentor =
+      workDone.mentor.id !== undefined
+        ? [
+            ...data,
+            {
+              key: workDone.mentor.id,
+              reviewer: workDone.mentor.name,
+              status: statusMentor,
+            },
+          ]
+        : data;
     const addLink = (text: string) => {
       return <a>{text}</a>;
     };
@@ -171,7 +185,7 @@ const SidebarSubmit: React.FC<PropsSidebar> = ({
         {
           <Table
             columns={columns}
-            dataSource={data}
+            dataSource={dataWithMentor}
             pagination={false}
             onRow={(record) => {
               return {
