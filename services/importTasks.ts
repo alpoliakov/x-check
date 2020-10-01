@@ -157,34 +157,38 @@ function evaluationCriteriaParse(
     'Evaluation criteria'
   );
 
-  let OneStrEnd = evaluationCriteriaDingy.indexOf(categorySeparator, 4);
-  let newEvaluationCriteria = evaluationCriteriaDingy.slice(OneStrEnd, -1);
-  const evaluationCriteriaArray = [];
-  while (newEvaluationCriteria.indexOf(categorySeparator, 4) !== -1) {
-    OneStrEnd = newEvaluationCriteria.indexOf(categorySeparator, 4);
-    const criteriaBlock = newEvaluationCriteria.slice(0, OneStrEnd);
-    evaluationCriteriaArray.push(criteriaBlock);
-    newEvaluationCriteria = newEvaluationCriteria.slice(OneStrEnd, -1);
-  }
-  evaluationCriteriaArray.push(newEvaluationCriteria);
+  if (evaluationCriteriaDingy.lenght > 0){
+    return '';
+  } else {
+    let OneStrEnd = evaluationCriteriaDingy.indexOf(categorySeparator, 4);
+    let newEvaluationCriteria = evaluationCriteriaDingy.slice(OneStrEnd, -1);
+    const evaluationCriteriaArray = [];
+    while (newEvaluationCriteria.indexOf(categorySeparator, 4) !== -1) {
+      OneStrEnd = newEvaluationCriteria.indexOf(categorySeparator, 4);
+      const criteriaBlock = newEvaluationCriteria.slice(0, OneStrEnd);
+      evaluationCriteriaArray.push(criteriaBlock);
+      newEvaluationCriteria = newEvaluationCriteria.slice(OneStrEnd, -1);
+    }
+    evaluationCriteriaArray.push(newEvaluationCriteria);
 
-  const newArray: any = [];
-  let pointsArray: ICriteriaPoint[];
+    const newArray: any = [];
+    let pointsArray: ICriteriaPoint[];
 
-  evaluationCriteriaArray.forEach((criteria) => {
-    const nameStart = criteria.indexOf('**');
-    const nameEnd = criteria.indexOf('+', nameStart + 2);
-    const titleEnd = criteria.indexOf('**', nameStart + 2);
-    const groupName = criteria.slice(nameStart + 2, nameEnd);
-    const criteriaPointsDingy = criteria.slice(titleEnd + 5, -1);
-    pointsArray = getCriteriaPoint(criteriaPointsDingy, pointSeparator);
-    newArray.push({
-      groupID: groupName,
-      groupName: groupName,
-      criteriaPoints: pointsArray,
+    evaluationCriteriaArray.forEach((criteria) => {
+      const nameStart = criteria.indexOf('**');
+      const nameEnd = criteria.indexOf('+', nameStart + 2);
+      const titleEnd = criteria.indexOf('**', nameStart + 2);
+      const groupName = criteria.slice(nameStart + 2, nameEnd);
+      const criteriaPointsDingy = criteria.slice(titleEnd + 5, -1);
+      pointsArray = getCriteriaPoint(criteriaPointsDingy, pointSeparator);
+      newArray.push({
+        groupID: groupName,
+        groupName: groupName,
+        criteriaPoints: pointsArray,
+      });
     });
-  });
-  return newArray;
+    return newArray;
+  }
 }
 
 function getCriteriaPoint(criteriaPointsDingy: string, pointSeparator: string) {

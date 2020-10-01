@@ -5,41 +5,65 @@ import { auth } from '../firebase';
 import { ICriteriaGroup, StateTask } from '../interfaces/ITask';
 import { setDocument } from '../services/updateFirebase';
 import { useEffect, useState } from 'react';
+import importTaskMD, { importTaskRSSChecklist } from '../services/importTasks';
 
-const Import: React.FC<{ dataTasks: any[] }> = ({ dataTasks }) => {
-  const [getTask, setTask] = useState('1');
+const Import: React.FC<{ dataTasks: any[]; getClickDraft: (value: any) => void }> = ({
+  dataTasks,
+  getClickDraft,
+}) => {
+  const [getTask, setTask] = useState(
+    '{ "name": "John", "age": 35, "isAdmin": false, "friends": [0,1,2,3] }'
+  );
   const onFinish = (values: any) => {
-
     // const x = async () => {
     //   const response = await fetch(values.link);
     //     const json = await response.json();
     console.log('Success:', values);
-      // console.log(response);
-      // if (response.ok) {
-      // } else {
-      //   console.log('Ошибка HTTP: ' + response.status);
-      // }
+    // console.log(response);
+    // if (response.ok) {
+    // } else {
+    //   console.log('Ошибка HTTP: ' + response.status);
+    // }
     // }
     // x();
   };
+
   const onFinish2 = (values: any) => {
     let x: any;
     dataTasks.forEach((task) => {
       if (task.name === values.taskName) {
-        x = task;
+        x = JSON.stringify(task);
       }
-    })
+    });
     if (x) {
       setTask(x);
-      console.log('+');
     } else {
       setTask('таска с таким названием не найдено');
-      console.log('-');
     }
-    console.log('Success:', values);
   };
+
   const onFinish3 = (values: any) => {
     console.log('Success:', values);
+  };
+
+  const onOutputChange = (event: any) => {
+    setTask(event.target.value);
+  };
+
+  const MDImport = (getTask: string) => {
+    const newTask = importTaskMD(getTask);
+    getClickDraft(newTask);
+  }
+
+  const RSSChecklistImport = (getTask: string) => {
+    const task = JSON.parse(getTask);
+    const newTask = importTaskRSSChecklist(task);
+    getClickDraft(newTask);
+  }
+
+  const houmImport = (getTask: string) => {
+    const task = JSON.parse(getTask);
+    getClickDraft(task);
   };
   const { TextArea } = Input;
   return (
@@ -111,7 +135,8 @@ const Import: React.FC<{ dataTasks: any[] }> = ({ dataTasks }) => {
       <div>
         <Form name="show-task" onFinish={onFinish3}>
           <TextArea
-            defaultValue={getTask}
+            value={getTask}
+            onChange={onOutputChange}
             rows={4}
             style={{ width: '100%', padding: '15px', marginBottom: '15px' }}
             placeholder=" JSON fom the database will be shown here and you will be able to copy it. 
@@ -120,21 +145,37 @@ const Import: React.FC<{ dataTasks: any[] }> = ({ dataTasks }) => {
           />
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <div>
-              <Form.Item style={{ marginBottom: '10px' }}>
-                <Button type="primary" htmlType="submit">
-                  Import JSON in RSS Checklist format
-                </Button>
-              </Form.Item>
+              <Button
+                type="primary"
+                style={{ marginBottom: '10px' }}
+                onClick={() => RSSChecklistImport(getTask)}
+              >
+                Import JSON in RSS Checklist format
+              </Button>
               <p style={{ color: 'grey' }}>
                 click this button if you import JSON in RSS Checklist format
               </p>
             </div>
             <div style={{ textAlign: 'right' }}>
-              <Form.Item style={{ marginBottom: '10px' }}>
-                <Button type="primary" htmlType="submit">
-                  Import JSON in our format
-                </Button>
-              </Form.Item>
+              <Button
+                type="primary"
+                style={{ marginBottom: '10px' }}
+                onClick={() => houmImport(getTask)}
+              >
+                Import JSON in our format
+              </Button>
+              <p style={{ color: 'grey' }}>
+                click this button if you are importing JSON in our application format
+              </p>
+            </div>
+            <div style={{ textAlign: 'right' }}>
+              <Button
+                type="primary"
+                style={{ marginBottom: '10px' }}
+                onClick={() => MDImport(getTask)}
+              >
+                Import from MD
+              </Button>
               <p style={{ color: 'grey' }}>
                 click this button if you are importing JSON in our application format
               </p>
