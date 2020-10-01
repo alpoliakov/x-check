@@ -2,8 +2,13 @@ import React from 'react';
 import { Table, Input, Button, Space } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 
+interface TableDataProps {
+  dataRow: [];
+  taskReview: boolean;
+}
+
 class TableData extends React.Component {
-  constructor(props) {
+  constructor(props: TableDataProps) {
     super(props);
   }
 
@@ -41,8 +46,10 @@ class TableData extends React.Component {
         </Space>
       </div>
     ),
-    filterIcon: (filtered) => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
-    onFilter: (value: string, record) =>
+    filterIcon: (filtered: any) => (
+      <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />
+    ),
+    onFilter: (value: string, record: any) =>
       record[dataIndex]
         ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase())
         : '',
@@ -55,7 +62,7 @@ class TableData extends React.Component {
     render: (text: string) => text,
   });
 
-  handleSearch = (selectedKeys: Array<[]>, confirm, dataIndex: string): void => {
+  handleSearch = (selectedKeys: Array<[]>, confirm: any, dataIndex: string): void => {
     confirm();
     this.setState({
       searchText: selectedKeys[0],
@@ -63,39 +70,59 @@ class TableData extends React.Component {
     });
   };
 
-  handleReset = (clearFilters): void => {
+  handleReset = (clearFilters: any): void => {
     clearFilters();
     this.setState({ searchText: '' });
   };
 
   render() {
-    const columns = [
-      {
-        title: 'User',
-        dataIndex: 'user',
-        key: 'user',
-        width: '30%',
-        ...this.getColumnSearchProps('user'),
-      },
-      {
-        title: 'Task',
-        dataIndex: 'task',
-        key: 'task',
-        ...this.getColumnSearchProps('task'),
-      },
-      {
-        title: 'Reviewer',
-        dataIndex: 'reviewer',
-        key: 'reviewer',
-        ...this.getColumnSearchProps('reviewer'),
-      },
-      {
-        title: 'Score',
-        dataIndex: 'score',
-        key: 'score',
-        ...this.getColumnSearchProps('score'),
-      },
-    ];
+    let columns: any = [];
+
+    if (this.props.taskReview) {
+      columns = [
+        {
+          title: 'User',
+          dataIndex: 'user',
+          key: 'user',
+          width: '30%',
+          ...this.getColumnSearchProps('user'),
+        },
+        {
+          title: 'Task',
+          dataIndex: 'task',
+          key: 'task',
+          ...this.getColumnSearchProps('task'),
+        },
+        {
+          title: 'Reviewer',
+          dataIndex: 'reviewer',
+          key: 'reviewer',
+          ...this.getColumnSearchProps('reviewer'),
+        },
+        {
+          title: 'Score',
+          dataIndex: 'score',
+          key: 'score',
+          ...this.getColumnSearchProps('score'),
+        },
+      ];
+    } else {
+      columns = [
+        {
+          title: 'User',
+          dataIndex: 'user',
+          key: 'user',
+          width: '30%',
+          ...this.getColumnSearchProps('user'),
+        },
+        {
+          title: 'Task',
+          dataIndex: 'task',
+          key: 'task',
+          ...this.getColumnSearchProps('task'),
+        },
+      ];
+    }
 
     return <Table columns={columns} dataSource={this.props.dataRow} />;
   }

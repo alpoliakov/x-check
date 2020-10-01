@@ -9,18 +9,27 @@ import TableData from '../../../components/TableData';
 import { ITask } from '../../../interfaces/ITask';
 import { UserBasic } from '../../../interfaces/IUser';
 import { ICourse } from '../../../interfaces/ICourse';
+import { TaskState } from '../../../interfaces/IWorkDone';
 
 interface PropsAdmin {
   dataUsers: UserBasic[];
   dataTasks: ITask[];
-  dataReviews: [];
+  dataReviews?: [];
   dataSession: ICourse[];
+  dataReviewRequest: [];
 }
 
-const AdminPage: React.FC<PropsAdmin> = ({ dataUsers, dataTasks, dataReviews, dataSession }) => {
+const AdminPage: React.FC<PropsAdmin> = ({
+  dataUsers,
+  dataTasks,
+  dataReviews,
+  dataSession,
+  dataReviewRequest,
+}) => {
   const { Title } = Typography;
   const [visibleModal, setVisibleModal] = useState<boolean>(false);
   const [visitableTable, setVisitableTable] = useState<boolean>(false);
+  const [visitableReviewTable, setVisitableReviewTable] = useState<boolean>(false);
   const [adminMain, setAdminMain] = useState<boolean>(true);
   const [transferTaskForm, setTransferTaskForm] = useState<ITask>();
 
@@ -36,6 +45,9 @@ const AdminPage: React.FC<PropsAdmin> = ({ dataUsers, dataTasks, dataReviews, da
   const showTable = () => {
     setVisitableTable(true);
   };
+  const showReviewTable = () => {
+    setVisitableReviewTable(true);
+  };
   const showModal = () => {
     setAdminMain(true);
     setVisibleModal(true);
@@ -48,6 +60,7 @@ const AdminPage: React.FC<PropsAdmin> = ({ dataUsers, dataTasks, dataReviews, da
   };
   const handleOkTable = (e: any) => {
     setVisitableTable(false);
+    setVisitableReviewTable(false);
   };
   const task = {};
 
@@ -78,6 +91,15 @@ const AdminPage: React.FC<PropsAdmin> = ({ dataUsers, dataTasks, dataReviews, da
                 Table results
               </Button>
             </Row>
+            <Row>
+              <Button
+                type="primary"
+                style={{ width: 150, marginTop: 20 }}
+                onClick={showReviewTable}
+              >
+                Review requests
+              </Button>
+            </Row>
           </div>
         </div>
         <div className="workspace">
@@ -105,7 +127,16 @@ const AdminPage: React.FC<PropsAdmin> = ({ dataUsers, dataTasks, dataReviews, da
             visible={visitableTable}
             onOk={handleOkTable}
           >
-            <TableData dataRow={dataReviews} />
+            <TableData dataRow={dataReviews} taskReview={visitableTable} />
+          </Modal>
+          <Modal
+            title="Review requests"
+            width={'auto'}
+            onCancel={() => setVisitableReviewTable(false)}
+            visible={visitableReviewTable}
+            onOk={handleOkTable}
+          >
+            <TableData dataRow={dataReviewRequest} taskReview={visitableTable} />
           </Modal>
         </div>
       </main>
@@ -155,10 +186,10 @@ export const getServerSideProps = async () => {
           const reviewerName = task.reviewers.filter((reviewer) => reviewer.id === el.checkerID)[0];
 
           return {
-            key: task.student.name,
+            key: task.student.name + reviewerName.name,
             user: task.student.name,
             task: task.taskID,
-            reviewer: reviewerName,
+            reviewer: reviewerName.name,
             score: el.score,
           };
         });
@@ -167,8 +198,29 @@ export const getServerSideProps = async () => {
     .filter((el) => el)
     .flat(Infinity);
 
+  const requestTasksID = dataSession[0].tasks
+    .filter((el) => el.taskStage === 'REQUESTS_GATHERING')
+    .map((el) => el.taskID);
+  const filterTasks = requestTasksID
+    .map((taskId) => completedTask.filter((el) => el.taskID === taskId))
+    .flat(Infinity);
+
+  const filterTaskState = filterTasks.filter((el) => el.state === TaskState.isSelfTest);
+
+  const dataReviewRequest = filterTaskState.map((task) => ({
+    key: task.student.name,
+    user: task.student.name,
+    task: task.taskID,
+  }));
+
   return {
-    props: { dataUsers, dataTasks, dataReviews, dataSession },
+    props: {
+      dataUsers,
+      dataTasks,
+      dataReviews,
+      dataSession,
+      dataReviewRequest,
+    },
   };
 };
 export default AdminPage;
