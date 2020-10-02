@@ -23,7 +23,6 @@ type PropsItemCriteriaTask = {
 function ItemCriteriaTask({
   criteriaPoint,
   cheсkingPoint,
-  role,
   typeTask,
   stateCheck,
   onChangeScore,
@@ -67,8 +66,6 @@ function ItemCriteriaTask({
             <InfoItem
               descriptionItem={criteriaPoint.criteriaPointName}
               commentsItem={cheсkingPoint.comments}
-              role={role}
-              typeTask={typeTask}
               stateCheck={stateCheck}
               onChangeComment={onChangeCommentInfo}
             />

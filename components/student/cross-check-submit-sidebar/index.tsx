@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Select, Input, Table, Tag } from 'antd';
-import { ITask } from '../../../interfaces/ITask';
-import styles from './sidebar.module.css';
-import { CheckState, IStudent, IWorkDone } from '../../../interfaces/IWorkDone';
+import { ITask, TypeTask } from '../../../interfaces/ITask';
+import styles from './index.module.css';
+import { CheckState, IStudent, IWorkDone, TaskState, IMentor } from '../../../interfaces/IWorkDone';
 
 interface ISelectTask {
   name: string;
@@ -18,10 +18,10 @@ interface PropsSidebar {
   getTask: (task: string) => void;
   getDeployUrl: (url: string) => void;
   getSourceGithubRepoUrl: (url: string) => void;
-  selectReviewer: (reviewer: IStudent) => void;
+  selectReviewer: (reviewer: IStudent | IMentor) => void;
 }
 
-const Sidebar: React.FC<PropsSidebar> = ({
+const SidebarSubmit: React.FC<PropsSidebar> = ({
   getTask,
   taskList,
   workDone,
@@ -51,17 +51,22 @@ const Sidebar: React.FC<PropsSidebar> = ({
     if (result.length !== 0) {
       selectReviewer(result[0]);
     } else {
-      selectReviewer({} as IStudent);
+      if (workDone.mentor.id !== undefined) {
+        selectReviewer(workDone.mentor);
+      } else {
+        selectReviewer({} as IStudent);
+      }
     }
   };
 
   let sideBarJSX: JSX.Element = <></>;
-  let colorTag = 'geekblue';
   let itemStatus = '';
   if (!isDeadline && workDone.id === undefined && reviewer.id === undefined) {
     sideBarJSX = <></>;
   } else if (isDeadline && workDone.id === undefined) {
     sideBarJSX = <>The deadline has passed already</>;
+  } else if (workDone.state === TaskState.isCheking && !isDeadline) {
+    sideBarJSX = <></>;
   } else if (!isDeadline && workDone.id === undefined && reviewer.id !== undefined) {
     sideBarJSX = (
       <div>
@@ -78,49 +83,87 @@ const Sidebar: React.FC<PropsSidebar> = ({
     );
   } else if (isDeadline && workDone.id !== undefined) {
     const data = workDone.reviewers.map((item, index) => {
+      let isAnonimSidebar: boolean;
       const stateItem = workDone.cheсks.filter((itemChecks) => itemChecks.checkerID === item.id);
       if (stateItem.length !== 0) {
         switch (stateItem[0].state) {
-          case CheckState.NotVerified:
-            colorTag = 'geekblue';
-            itemStatus = 'Not Verified';
-            break;
           case CheckState.AuditorDraft:
-            colorTag = 'geekblue';
             itemStatus = 'Auditor Draft';
             break;
+          case CheckState.NotVerified:
+            itemStatus = 'Not Verified';
+            break;
           case CheckState.Verified:
-            colorTag = 'green';
             itemStatus = 'Verified';
             break;
           case CheckState.Dispute:
-            colorTag = 'red';
             itemStatus = 'Dispute';
             break;
           case CheckState.DisputeClosed:
-            colorTag = 'gold';
             itemStatus = 'Dispute closed';
             break;
           default:
-            colorTag = 'blue';
-            itemStatus = 'Dispute closed';
+            itemStatus = 'Auditor Draft';
         }
+        isAnonimSidebar = stateItem[0].isAnonim;
       } else {
-        colorTag = 'geekblue';
+        isAnonimSidebar = false;
         itemStatus = 'Auditor Draft';
+      }
+      if (isAnonimSidebar) {
+        return {
+          key: item.id,
+          reviewer: item.name,
+          status: itemStatus,
+        };
       }
       return {
         key: item.id,
-        reviewer: `Reveiwer ${index}`,
+        reviewer: `Reveiwer ${index + 1}`,
         status: itemStatus,
       };
     });
-
+    const statusMentor =
+      workDone.mentorCheck.state !== undefined
+        ? workDone.mentorCheck.state
+        : CheckState.AuditorDraft;
+    const dataWithMentor =
+      workDone.mentor.id !== undefined
+        ? [
+            ...data,
+            {
+              key: workDone.mentor.id,
+              reviewer: workDone.mentor.name,
+              status: statusMentor,
+            },
+          ]
+        : data;
     const addLink = (text: string) => {
       return <a>{text}</a>;
     };
 
     const addTag = (text: string) => {
+      let colorTag = 'geekblue';
+      switch (text) {
+        case 'Auditor Draft':
+          colorTag = 'orange';
+          break;
+        case 'Not Verified':
+          colorTag = 'geekblue';
+          break;
+        case 'Verified':
+          colorTag = 'green';
+          break;
+        case 'Dispute':
+          colorTag = 'red';
+          break;
+        case 'Dispute closed':
+          colorTag = 'gold';
+          break;
+        default:
+          colorTag = 'orange';
+      }
+
       return (
         <Tag color={colorTag} key={text}>
           {text}
@@ -146,7 +189,7 @@ const Sidebar: React.FC<PropsSidebar> = ({
         {
           <Table
             columns={columns}
-            dataSource={data}
+            dataSource={dataWithMentor}
             pagination={false}
             onRow={(record) => {
               return {
@@ -178,7 +221,7 @@ const Sidebar: React.FC<PropsSidebar> = ({
   return (
     <div className={styles.sideBar}>
       <div className={styles.mb5}>
-        <Select placeholder="Select the task" onChange={handleClick}>
+        <Select placeholder="Select the task" style={{ width: '100%' }} onChange={handleClick}>
           {taskList.map((item) => (
             <Option key={item.id} value={item.id}>
               {item.name}
@@ -191,4 +234,4 @@ const Sidebar: React.FC<PropsSidebar> = ({
   );
 };
 
-export default Sidebar;
+export default SidebarSubmit;
