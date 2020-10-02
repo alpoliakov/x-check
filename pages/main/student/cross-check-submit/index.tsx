@@ -2,7 +2,6 @@ import React from 'react';
 import MainLayout from '../../../../components/MainLayout';
 import { auth, db } from '../../../../firebase';
 import CheckTask from '../../../../components/student/check-task';
-import { dataCourse } from '../../../../components/student/test-task/test-course';
 import { createWorkDone } from '../../../../components/student/check-task/common';
 import {
   CheckState,
@@ -13,7 +12,7 @@ import {
   TaskState,
 } from '../../../../interfaces/IWorkDone';
 import { ITask, TypeTask } from '../../../../interfaces/ITask';
-import { Role } from '../../../../interfaces/IUser';
+import { Role, UserBasic } from '../../../../interfaces/IUser';
 import {
   deleteDocument,
   setDocument,
@@ -21,196 +20,164 @@ import {
 } from '../../../../services/updateFirebase';
 import SidebarSubmit from '../../../../components/student/cross-check-submit-sidebar';
 import { ICourse } from '../../../../interfaces/ICourse';
+import NotAuthPage from '../../../../components/student/not-athorization-page';
+import { Button } from 'antd';
 
 interface PropsCrossCheckPage {
+  usersData: UserBasic[];
   tasksData: ITask[];
   courseData: ICourse[];
   completedTasksData: IWorkDone[]; // была проблема в 56 строки, ты присваивал свойство от undefined
 }
 
 const CrossCheckSubmitPage: React.FC<PropsCrossCheckPage> = ({
+  usersData,
   tasksData,
   courseData,
   completedTasksData,
 }) => {
-  const role = Role.student;
-  const typeTask = TypeTask.SubmitTask;
-  let userID = '';
-  let userName = '';
-  if (auth.currentUser !== null && auth.currentUser.displayName !== null) {
-    userID = auth.currentUser.uid;
-    userName = auth.currentUser.displayName;
-  }
-  const [changeOutside, setChangeOutside] = React.useState<boolean>(false);
-  const [task, setTask] = React.useState<ITask>({} as ITask);
-  const [isDeadline, setIsDeadline] = React.useState(false);
-  const [workDone, setWorkDone] = React.useState<IWorkDone>({} as IWorkDone);
-  const [neWworkDone, setNewWorkDone] = React.useState<IWorkDone>({} as IWorkDone);
-  const [checkTask, setCheckTask] = React.useState<ICheсk>({} as ICheсk);
-  const [reviewer, setReviewer] = React.useState<IStudent | IMentor>({} as IStudent);
-  const [mentor, setMentor] = React.useState<IStudent>({} as IStudent);
-  const [deployUrl, setDeployUrl] = React.useState<string>('');
-  const [sourceGithubRepoUrl, setSourceGithubRepoUrl] = React.useState<string>('');
-
-  // console.log('task', task);
-  console.log('workDone', workDone);
-  // console.log('neWworkDone', neWworkDone);
-  // console.log('isDeadline', isDeadline);
-  // console.log('checkTask', checkTask);
-  // console.log('reviewer', reviewer);
-
-  // console.log('tasksData', tasksData);
-  // console.log('courseData', courseData);
-  console.log('completedTasksData', completedTasksData);
-  let taskJSX: JSX.Element = <></>;
-
-  const onSave = (checkingTask: ICheсk) => {
-    if (workDone.id === undefined && !isDeadline && neWworkDone.id !== undefined) {
-      //Сохранение новосозданного IWorkDone(самотестрирование)
-      const newCheckingTask = {
-        ...neWworkDone,
-        selfTest: checkingTask,
-        deployUrl: deployUrl,
-        sourceGithubRepoUrl: sourceGithubRepoUrl,
-      };
-      console.log('Save in Data 1', newCheckingTask);
-      setDocument('completed_tasks', newCheckingTask.id, newCheckingTask);
-      // deleteDocument('completed_tasks', newCheckingTask.id);
-    } else if (workDone.id !== undefined && !isDeadline && neWworkDone.id === undefined) {
-      //Сохранение старого IWorkDone до дедлайна
-      const newCheckingTask = {
-        ...workDone,
-        selfTest: checkingTask,
-        deployUrl: deployUrl,
-        sourceGithubRepoUrl: sourceGithubRepoUrl,
-      };
-      console.log('Save in Data 2', newCheckingTask);
-      updateObjectField('completed_tasks', newCheckingTask.id, newCheckingTask);
+  if (
+    auth.currentUser !== null &&
+    auth.currentUser.displayName !== null &&
+    usersData.length !== 0
+  ) {
+    const role = Role.student;
+    const typeTask = TypeTask.SubmitTask;
+    let initUser: UserBasic;
+    const bufID = auth.currentUser.uid;
+    const initUsers = usersData.filter((user) => bufID === user.uid);
+    if (initUsers.length !== undefined) {
+      initUser = initUsers[0];
+    } else {
+      initUser = {} as UserBasic;
     }
-  };
 
-  const onSubmit = (checkingTask: ICheсk) => {
-    if (workDone.id === undefined && !isDeadline && neWworkDone.id !== undefined) {
-      //Сохранение новосозданного IWorkDone(самотестрирование)
-      const newCheckingTask = {
-        ...neWworkDone,
-        selfTest: checkingTask,
-        deployUrl: deployUrl,
-        state: TaskState.isCheking,
-        sourceGithubRepoUrl: sourceGithubRepoUrl,
-      };
-      console.log('Change and save in Data 1', newCheckingTask);
-      setWorkDone(newCheckingTask);
-      setDocument('completed_tasks', newCheckingTask.id, newCheckingTask);
-    } else if (workDone.id !== undefined && !isDeadline && neWworkDone.id === undefined) {
-      //Сохранение старого IWorkDone до дедлайна
-      const newCheckingTask: IWorkDone = {
-        ...workDone,
-        selfTest: checkingTask,
-        deployUrl: deployUrl,
-        state: TaskState.isCheking,
-        sourceGithubRepoUrl: sourceGithubRepoUrl,
-      };
-      console.log('Change and save in Data 2', newCheckingTask);
-      setWorkDone(newCheckingTask);
-      updateObjectField('completed_tasks', newCheckingTask.id, newCheckingTask);
-    } else if (
-      workDone.id !== undefined &&
-      isDeadline &&
-      neWworkDone.id === undefined &&
-      reviewer.id !== undefined &&
-      checkTask.checkerID !== undefined
-    ) {
-      //Сохранение старого IWorkDone после дедлайна (согласование выставленной оценки)
-      const updateCheck: ICheсk[] = workDone.cheсks.map((item) => {
-        if (item.checkerID === checkingTask.checkerID) {
-          return checkingTask;
+    const [activeUser, setActiveUser] = React.useState<UserBasic>(initUser);
+    const [changeOutside, setChangeOutside] = React.useState<boolean>(false);
+    const [task, setTask] = React.useState<ITask>({} as ITask);
+    const [isDeadline, setIsDeadline] = React.useState(false);
+    const [workDone, setWorkDone] = React.useState<IWorkDone>({} as IWorkDone);
+    const [neWworkDone, setNewWorkDone] = React.useState<IWorkDone>({} as IWorkDone);
+    const [checkTask, setCheckTask] = React.useState<ICheсk>({} as ICheсk);
+    const [reviewer, setReviewer] = React.useState<IStudent | IMentor>({} as IStudent);
+    const [mentor, setMentor] = React.useState<IStudent>({} as IStudent);
+    const [deployUrl, setDeployUrl] = React.useState<string>('');
+    const [sourceGithubRepoUrl, setSourceGithubRepoUrl] = React.useState<string>('');
+
+    console.log('activeUser', activeUser);
+    console.log('task', task);
+    console.log('workDone', workDone);
+    console.log('neWworkDone', neWworkDone);
+    console.log('isDeadline', isDeadline);
+    console.log('checkTask', checkTask);
+    console.log('reviewer', reviewer);
+
+    console.log('usersData', usersData);
+    console.log('tasksData', tasksData);
+    console.log('courseData', courseData);
+    console.log('completedTasksData', completedTasksData);
+    let taskJSX: JSX.Element = <></>;
+
+    const selectTask = (selectTaskID: string) => {
+      if (
+        auth.currentUser !== null &&
+        auth.currentUser.displayName !== null &&
+        usersData.length !== 0
+      ) {
+        const bufID = auth.currentUser.uid;
+        const initUsers = usersData.filter((user) => bufID === user.uid);
+        if (initUsers.length !== 0) {
+          setActiveUser(initUsers[0]);
         }
-        return item;
-      });
-      const newCheckingTask: IWorkDone = {
-        ...workDone,
-        cheсks: updateCheck,
-      };
-      console.log('Change and save in Data 3', newCheckingTask);
-      setWorkDone(newCheckingTask);
-      updateObjectField('completed_tasks', newCheckingTask.id, newCheckingTask);
-    }
-    setChangeOutside((prev) => !prev);
-    setCheckTask(checkingTask);
-    // setTask({} as ITask);
-    // setWorkDone({} as IWorkDone);
-    // setNewWorkDone({} as IWorkDone);
-    // setIsDeadline(false);
-    // setCheckTask({} as ICheсk);
-    // setReviewer({} as IStudent);
-  };
+      }
+      let selectTask = {} as ITask;
+      let selectWorkDone = {} as IWorkDone;
+      let selectNeWworkDone = {} as IWorkDone;
+      let selectIsDeadline = false;
+      let selectCheckTask = {} as ICheсk;
+      let selectReviewer = {} as IStudent;
 
-  const getDeployUrl = (url: string) => {
-    setDeployUrl(url);
-  };
-  const getSourceGithubRepoUrl = (url: string) => {
-    setSourceGithubRepoUrl(url);
-  };
-  const selectTask = (selectTaskID: string) => {
-    // setDocument('sessions', dataCourse.id, dataCourse);
-    // deleteDocument('sessions', dataCourse.id);
-
-    // setDocument('TasksArray', testTask.id, testTask);
-    // deleteDocument('TasksArray', testTask.id);
-    if (auth.currentUser !== null && auth.currentUser.displayName !== null) {
-      userID = auth.currentUser.uid;
-      userName = auth.currentUser.displayName;
-    }
-    let selectTask = {} as ITask;
-    let selectWorkDone = {} as IWorkDone;
-    let selectNeWworkDone = {} as IWorkDone;
-    let selectIsDeadline = false;
-    let selectCheckTask = {} as ICheсk;
-    let selectReviewer = {} as IStudent;
-
-    if (tasksData.length !== 0 && dataCourse.length !== 0) {
-      const select = tasksData.filter((taskData) => taskData.id === selectTaskID);
-      if (select.length !== 0) {
-        selectTask = select[0];
-        const selectTaskDeadline = dataCourse[0].tasks.filter(
-          (taskData) => taskData.taskID === selectTaskID
-        );
-        if (selectTaskDeadline.length !== 0) {
-          const selectTaskDeadline1 = selectTaskDeadline.map((el) => el.deadline)[0];
-          const date = new Date().getTime();
-          if (selectTaskDeadline1 < date) {
-            selectIsDeadline = true;
-          } else {
-            selectIsDeadline = false;
-          }
-        }
-
-        if (completedTasksData.length !== 0) {
-          const searchWorksDone = completedTasksData.filter(
-            (completedTask) =>
-              completedTask.taskID === select[0].id && completedTask.student.id === userID
+      if (usersData.length !== 0 && tasksData.length !== 0 && courseData.length !== 0) {
+        const select = tasksData.filter((taskData) => taskData.id === selectTaskID);
+        if (select.length !== 0) {
+          selectTask = select[0];
+          const selectTaskCourse = courseData[0].tasks.filter(
+            (taskData) => taskData.taskID === selectTaskID
           );
-          if (searchWorksDone.length !== 0) {
-            setDeployUrl(searchWorksDone[0].deployUrl);
-            setSourceGithubRepoUrl(searchWorksDone[0].sourceGithubRepoUrl);
+          if (selectTaskCourse.length !== 0) {
+            const selectTaskStage = selectTaskCourse.map((el) => el.taskStage);
+            if (selectTaskStage.length !== 0) {
+              switch (selectTaskStage[0]) {
+                case 'REQUESTS_GATHERING': {
+                  selectIsDeadline = false;
+                  break;
+                }
+                case 'CROSS_CHECK': {
+                  selectIsDeadline = true;
+                  break;
+                }
+                default: {
+                  selectIsDeadline = false;
+                }
+              }
+            }
+          }
 
-            selectWorkDone = searchWorksDone[0];
-            selectNeWworkDone = {} as IWorkDone;
-            if (!selectIsDeadline) {
-              //этап правки самопроверки
-              selectCheckTask = searchWorksDone[0].selfTest;
-              selectReviewer = searchWorksDone[0].student;
+          if (completedTasksData.length !== 0) {
+            //полная база
+            const searchWorksDone = completedTasksData.filter(
+              (completedTask) =>
+                completedTask.taskID === select[0].id && completedTask.student.id === activeUser.uid
+            );
+            if (searchWorksDone.length !== 0) {
+              // найден воркдан
+              setDeployUrl(searchWorksDone[0].deployUrl);
+              setSourceGithubRepoUrl(searchWorksDone[0].sourceGithubRepoUrl);
+              //тут проверка на наличие ментора в даннный момент
+              if (activeUser.mentor !== undefined && activeUser.mentor !== null) {
+                let mentor: IMentor;
+                const bufID = activeUser.mentor.id;
+                const mentors = usersData.filter((searchUser) => searchUser.uid === bufID);
+                if (mentors.length !== 0) {
+                  mentor = { id: activeUser.mentor.id, name: mentors[0].nickname } as IMentor;
+                } else {
+                  mentor = {} as IMentor;
+                }
+                selectWorkDone = { ...searchWorksDone[0], mentor: mentor };
+              } else {
+                selectWorkDone = searchWorksDone[0];
+              }
+              selectNeWworkDone = {} as IWorkDone;
+              if (!selectIsDeadline) {
+                //этап правки самопроверки
+                selectCheckTask = searchWorksDone[0].selfTest;
+                selectReviewer = searchWorksDone[0].student;
+              } else {
+                //этап согласования оценок никого не выбираем
+                selectCheckTask = {} as ICheсk;
+                selectReviewer = {} as IStudent;
+              }
             } else {
-              //этап согласования оценок никого не выбираем
-              selectCheckTask = {} as ICheсk;
-              selectReviewer = {} as IStudent;
+              if (!selectIsDeadline) {
+                //этап создания самопроверки
+                selectWorkDone = {} as IWorkDone;
+                selectNeWworkDone = createWorkDone(selectTask, activeUser, usersData);
+                selectCheckTask = selectNeWworkDone.selfTest;
+                selectReviewer = selectNeWworkDone.student;
+              } else {
+                // этап не засабмиченной работы
+                selectWorkDone = {} as IWorkDone;
+                selectNeWworkDone = {} as IWorkDone;
+                selectCheckTask = {} as ICheсk;
+                selectReviewer = {} as IStudent;
+              }
             }
           } else {
+            //пустая база
             if (!selectIsDeadline) {
               //этап создания самопроверки
               selectWorkDone = {} as IWorkDone;
-              selectNeWworkDone = createWorkDone(selectTask, userID, userName);
+              selectNeWworkDone = createWorkDone(selectTask, activeUser, usersData);
               selectCheckTask = selectNeWworkDone.selfTest;
               selectReviewer = selectNeWworkDone.student;
             } else {
@@ -222,94 +189,192 @@ const CrossCheckSubmitPage: React.FC<PropsCrossCheckPage> = ({
             }
           }
         } else {
-          selectWorkDone = {} as IWorkDone;
-          selectNeWworkDone = createWorkDone(selectTask, userID, userName);
+          selectTask = {} as ITask;
         }
+        setChangeOutside((prev) => !prev);
+        setTask(selectTask);
+        setWorkDone(selectWorkDone);
+        setNewWorkDone(selectNeWworkDone);
+        setIsDeadline(selectIsDeadline);
+        setCheckTask(selectCheckTask);
+        setReviewer(selectReviewer);
+      }
+    };
+
+    const selectReviewer = (selectReviewer: IStudent | IMentor) => {
+      setReviewer(selectReviewer);
+      const findCheckTask = workDone.cheсks.filter((item) => selectReviewer.id === item.checkerID);
+      if (findCheckTask.length !== 0) {
+        setCheckTask(findCheckTask[0]);
       } else {
-        selectTask = {} as ITask;
+        if (workDone.mentorCheck.checkerID !== selectReviewer.id) {
+          setCheckTask(workDone.mentorCheck);
+        } else {
+          setCheckTask(workDone.selfTest);
+        }
+      }
+    };
+
+    const getDeployUrl = (url: string) => {
+      setDeployUrl(url);
+    };
+
+    const getSourceGithubRepoUrl = (url: string) => {
+      setSourceGithubRepoUrl(url);
+    };
+    const onSave = (checkingTask: ICheсk) => {
+      if (workDone.id === undefined && !isDeadline && neWworkDone.id !== undefined) {
+        //Сохранение новосозданного IWorkDone(самотестрирование)
+        const newCheckingTask: IWorkDone = {
+          ...neWworkDone,
+          selfTest: checkingTask,
+          deployUrl: deployUrl,
+          sourceGithubRepoUrl: sourceGithubRepoUrl,
+        };
+        setDocument('completed_tasks', newCheckingTask.id, newCheckingTask);
+      } else if (workDone.id !== undefined && !isDeadline && neWworkDone.id === undefined) {
+        //Сохранение старого IWorkDone до дедлайна
+        const newCheckingTask: IWorkDone = {
+          ...workDone,
+          selfTest: checkingTask,
+          deployUrl: deployUrl,
+          sourceGithubRepoUrl: sourceGithubRepoUrl,
+        };
+        updateObjectField('completed_tasks', newCheckingTask.id, newCheckingTask);
+      }
+    };
+
+    const onSubmit = (checkingTask: ICheсk) => {
+      if (workDone.id === undefined && !isDeadline && neWworkDone.id !== undefined) {
+        //Сохранение новосозданного IWorkDone(самотестрирование)
+        const newCheckingTask: IWorkDone = {
+          ...neWworkDone,
+          selfTest: checkingTask,
+          deployUrl: deployUrl,
+          state: TaskState.isCheking,
+          sourceGithubRepoUrl: sourceGithubRepoUrl,
+        };
+        setWorkDone(newCheckingTask);
+        //добавление таска в  user
+        setDocument('completed_tasks', newCheckingTask.id, newCheckingTask);
+      } else if (workDone.id !== undefined && !isDeadline && neWworkDone.id === undefined) {
+        //Сохранение старого IWorkDone до дедлайна
+        const newCheckingTask: IWorkDone = {
+          ...workDone,
+          selfTest: checkingTask,
+          deployUrl: deployUrl,
+          state: TaskState.isCheking,
+          sourceGithubRepoUrl: sourceGithubRepoUrl,
+        };
+
+        setWorkDone(newCheckingTask);
+        updateObjectField('completed_tasks', newCheckingTask.id, newCheckingTask);
+      } else if (
+        workDone.id !== undefined &&
+        isDeadline &&
+        neWworkDone.id === undefined &&
+        reviewer.id !== undefined &&
+        checkTask.checkerID !== undefined
+      ) {
+        //Сохранение старого IWorkDone после дедлайна (согласование выставленной оценки)
+        const updateCheck: ICheсk[] = workDone.cheсks.map((item) => {
+          if (item.checkerID === checkingTask.checkerID) {
+            return checkingTask;
+          }
+          return item;
+        });
+        const newCheckingTask: IWorkDone = {
+          ...workDone,
+          cheсks: updateCheck,
+        };
+        setWorkDone(newCheckingTask);
+        updateObjectField('completed_tasks', newCheckingTask.id, newCheckingTask);
       }
       setChangeOutside((prev) => !prev);
-      setTask(selectTask);
-      setWorkDone(selectWorkDone);
-      setNewWorkDone(selectNeWworkDone);
-      setIsDeadline(selectIsDeadline);
-      setCheckTask(selectCheckTask);
-      setReviewer(selectReviewer);
-    }
-  };
+      setCheckTask(checkingTask);
+    };
 
-  const selectReviewer = (reviewer: IStudent | IMentor) => {
-    setReviewer(reviewer);
-    const findCheckTask = workDone.cheсks.filter((item) => reviewer.id === item.checkerID);
-    if (findCheckTask.length !== 0) {
-      setCheckTask(findCheckTask[0]);
-    } else {
-      if (workDone.mentorCheck.checkerID !== reviewer.id) {
-        setCheckTask(workDone.mentorCheck);
-      } else {
-        setCheckTask(workDone.selfTest);
-      }
+    if (task.id !== undefined && reviewer.id !== undefined && checkTask.checkerID !== undefined) {
+      taskJSX = (
+        <CheckTask
+          task={task}
+          checkingTask={checkTask}
+          reviewer={reviewer}
+          changeOutside={changeOutside}
+          deployUrl={deployUrl}
+          sourceGithubRepoUrl={sourceGithubRepoUrl}
+          role={role}
+          typeTask={typeTask}
+          onSave={onSave}
+          onSubmit={onSubmit}
+        />
+      );
+    } else if (
+      task.id === undefined ||
+      reviewer.id === undefined ||
+      checkTask.checkerID === undefined
+    ) {
+      taskJSX = <></>;
     }
-  };
 
-  if (task.id !== undefined && reviewer.id !== undefined && checkTask.checkerID !== undefined) {
-    taskJSX = (
-      <CheckTask
-        task={task}
-        checkingTask={checkTask}
-        reviewer={reviewer}
-        changeOutside={changeOutside}
-        deployUrl={deployUrl}
-        sourceGithubRepoUrl={sourceGithubRepoUrl}
-        role={role}
-        typeTask={typeTask}
-        onSave={onSave}
-        onSubmit={onSubmit}
-      />
+    const taskList =
+      courseData[0] !== undefined && courseData.length !== 0
+        ? courseData[0].tasks.map((task) => {
+            return { name: task.name, id: task.taskID };
+          })
+        : [];
+
+    return (
+      <>
+        <MainLayout title="Cross-Check: Submit">
+          <main className={'main__box'}>
+            <div className="nav__main">
+              <SidebarSubmit
+                getTask={selectTask}
+                taskList={taskList}
+                workDone={workDone}
+                isActiveTask={task.name !== undefined}
+                isDeadline={isDeadline}
+                deployUrl={deployUrl}
+                sourceGithubRepoUrl={sourceGithubRepoUrl}
+                getDeployUrl={getDeployUrl}
+                getSourceGithubRepoUrl={getSourceGithubRepoUrl}
+                selectReviewer={selectReviewer}
+              />
+              <Button
+                type="primary"
+                onClick={() => {
+                  console.log('click');
+                  deleteDocument('completed_tasks', workDone.id);
+                }}
+              >
+                Delete this workDone
+              </Button>
+            </div>
+            <div className="workspace">{taskJSX}</div>
+          </main>
+        </MainLayout>
+      </>
     );
-  } else if (
-    task.id === undefined ||
-    reviewer.id === undefined ||
-    checkTask.checkerID === undefined
-  ) {
-    taskJSX = <></>;
+  } else {
+    return <NotAuthPage></NotAuthPage>;
   }
-
-  const taskList =
-    dataCourse !== undefined
-      ? /*courseData[0]*/ dataCourse[0].tasks.map((task) => {
-          return { name: task.name, id: task.taskID };
-        })
-      : [];
-
-  return (
-    <>
-      <MainLayout title="Cross-Check: Submit">
-        <main className={'main__box'}>
-          <div className="nav__main">
-            <SidebarSubmit
-              getTask={selectTask}
-              taskList={taskList}
-              workDone={workDone}
-              reviewer={reviewer}
-              isDeadline={isDeadline}
-              deployUrl={deployUrl}
-              sourceGithubRepoUrl={sourceGithubRepoUrl}
-              getDeployUrl={getDeployUrl}
-              getSourceGithubRepoUrl={getSourceGithubRepoUrl}
-              selectReviewer={selectReviewer}
-            />
-          </div>
-          <div className="workspace">{taskJSX}</div>
-        </main>
-      </MainLayout>
-    </>
-  );
 };
 
 export default CrossCheckSubmitPage;
 
 export const getServerSideProps = async () => {
+  let usersData: UserBasic[] = [] as UserBasic[];
+  await db
+    .collection('users')
+    .get()
+    .then((snap) => {
+      if (snap !== undefined && snap !== null) {
+        usersData = snap.docs.map((doc) => doc.data()) as UserBasic[];
+      } else {
+        usersData = [] as UserBasic[];
+      }
+    });
   let tasksData: ITask[] = [] as ITask[];
   await db
     .collection('TasksArray')
@@ -346,6 +411,6 @@ export const getServerSideProps = async () => {
     });
 
   return {
-    props: { tasksData, courseData, completedTasksData },
+    props: { usersData, tasksData, courseData, completedTasksData },
   };
 };
