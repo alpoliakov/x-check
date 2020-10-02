@@ -11,8 +11,8 @@ interface ISelectTask {
 interface PropsSidebar {
   taskList: ISelectTask[];
   isDeadline: boolean;
+  isActiveTask: boolean;
   workDone: IWorkDone;
-  reviewer: IStudent;
   deployUrl: string;
   sourceGithubRepoUrl: string;
   getTask: (task: string) => void;
@@ -23,11 +23,12 @@ interface PropsSidebar {
 
 const SidebarSubmit: React.FC<PropsSidebar> = ({
   getTask,
+  isActiveTask,
   taskList,
   workDone,
   isDeadline,
   deployUrl,
-  reviewer,
+
   sourceGithubRepoUrl,
   getDeployUrl,
   getSourceGithubRepoUrl,
@@ -38,7 +39,8 @@ const SidebarSubmit: React.FC<PropsSidebar> = ({
   const handleClick = (value: string) => {
     getTask(value);
   };
-
+  console.log(isActiveTask);
+  console.log(isDeadline);
   const onChangeDeployUrl = (e: React.ChangeEvent<HTMLInputElement>) => {
     getDeployUrl(e.target.value);
   };
@@ -61,13 +63,13 @@ const SidebarSubmit: React.FC<PropsSidebar> = ({
 
   let sideBarJSX: JSX.Element = <></>;
   let itemStatus = '';
-  if (!isDeadline && workDone.id === undefined && reviewer.id === undefined) {
+  if (!isActiveTask && !isDeadline && workDone.id === undefined) {
     sideBarJSX = <></>;
-  } else if (isDeadline && workDone.id === undefined) {
+  } else if (isActiveTask && isDeadline && workDone.id === undefined) {
     sideBarJSX = <>The deadline has passed already</>;
   } else if (workDone.state === TaskState.isCheking && !isDeadline) {
     sideBarJSX = <></>;
-  } else if (!isDeadline && workDone.id === undefined && reviewer.id !== undefined) {
+  } else if (isActiveTask && !isDeadline && workDone.id === undefined) {
     sideBarJSX = (
       <div>
         <h3>Solution URL Demo</h3>
@@ -123,17 +125,39 @@ const SidebarSubmit: React.FC<PropsSidebar> = ({
         status: itemStatus,
       };
     });
-    const statusMentor =
-      workDone.mentorCheck.state !== undefined
-        ? workDone.mentorCheck.state
-        : CheckState.AuditorDraft;
+
+    let statusMentor: string;
+    if (workDone.mentorCheck.state !== undefined) {
+      switch (workDone.mentorCheck.state) {
+        case CheckState.AuditorDraft:
+          statusMentor = 'Auditor Draft';
+          break;
+        case CheckState.NotVerified:
+          statusMentor = 'Not Verified';
+          break;
+        case CheckState.Verified:
+          statusMentor = 'Verified';
+          break;
+        case CheckState.Dispute:
+          statusMentor = 'Dispute';
+          break;
+        case CheckState.DisputeClosed:
+          statusMentor = 'Dispute closed';
+          break;
+        default:
+          statusMentor = 'Auditor Draft';
+      }
+    } else {
+      statusMentor = 'Auditor Draft';
+    }
+
     const dataWithMentor =
       workDone.mentor.id !== undefined
         ? [
             ...data,
             {
               key: workDone.mentor.id,
-              reviewer: workDone.mentor.name,
+              reviewer: `mentor-${workDone.mentor.name}`,
               status: statusMentor,
             },
           ]
