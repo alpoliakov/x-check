@@ -256,6 +256,8 @@ const CrossCheckSubmitPage: React.FC<PropsCrossCheckPage> = ({
         };
         setWorkDone(newCheckingTask);
         //добавление таска в  user
+        const updateUser: UserBasic = { ...activeUser, tasksID: [...activeUser.tasksID, task.id] };
+        updateObjectField('users', activeUser.uid, updateUser);
         setDocument('completed_tasks', newCheckingTask.id, newCheckingTask);
       } else if (workDone.id !== undefined && !isDeadline && neWworkDone.id === undefined) {
         //Сохранение старого IWorkDone до дедлайна
@@ -292,6 +294,13 @@ const CrossCheckSubmitPage: React.FC<PropsCrossCheckPage> = ({
       }
       setChangeOutside((prev) => !prev);
       setCheckTask(checkingTask);
+    };
+
+    const deleteWorkDone = () => {
+      deleteDocument('completed_tasks', workDone.id);
+      const newTasksID = activeUser.tasksID.filter((item) => item !== task.id);
+      const updateUser: UserBasic = { ...activeUser, tasksID: newTasksID };
+      updateObjectField('users', activeUser.uid, updateUser);
     };
 
     if (task.id !== undefined && reviewer.id !== undefined && checkTask.checkerID !== undefined) {
@@ -341,13 +350,7 @@ const CrossCheckSubmitPage: React.FC<PropsCrossCheckPage> = ({
                 getSourceGithubRepoUrl={getSourceGithubRepoUrl}
                 selectReviewer={selectReviewer}
               />
-              <Button
-                type="primary"
-                onClick={() => {
-                  console.log('click');
-                  deleteDocument('completed_tasks', workDone.id);
-                }}
-              >
+              <Button type="primary" onClick={deleteWorkDone}>
                 Delete this workDone
               </Button>
             </div>
