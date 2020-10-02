@@ -124,11 +124,13 @@ const CrossCheckSubmitPage: React.FC<PropsCrossCheckPage> = ({
           }
 
           if (completedTasksData.length !== 0) {
+            //полная база
             const searchWorksDone = completedTasksData.filter(
               (completedTask) =>
                 completedTask.taskID === select[0].id && completedTask.student.id === activeUser.uid
             );
             if (searchWorksDone.length !== 0) {
+              // найден воркдан
               setDeployUrl(searchWorksDone[0].deployUrl);
               setSourceGithubRepoUrl(searchWorksDone[0].sourceGithubRepoUrl);
               //тут проверка на наличие ментора в даннный момент
@@ -171,10 +173,20 @@ const CrossCheckSubmitPage: React.FC<PropsCrossCheckPage> = ({
               }
             }
           } else {
-            selectWorkDone = {} as IWorkDone;
-            selectNeWworkDone = createWorkDone(selectTask, activeUser, usersData);
-            selectCheckTask = selectNeWworkDone.selfTest;
-            selectReviewer = selectNeWworkDone.student;
+            //пустая база
+            if (!selectIsDeadline) {
+              //этап создания самопроверки
+              selectWorkDone = {} as IWorkDone;
+              selectNeWworkDone = createWorkDone(selectTask, activeUser, usersData);
+              selectCheckTask = selectNeWworkDone.selfTest;
+              selectReviewer = selectNeWworkDone.student;
+            } else {
+              // этап не засабмиченной работы
+              selectWorkDone = {} as IWorkDone;
+              selectNeWworkDone = {} as IWorkDone;
+              selectCheckTask = {} as ICheсk;
+              selectReviewer = {} as IStudent;
+            }
           }
         } else {
           selectTask = {} as ITask;
@@ -329,6 +341,15 @@ const CrossCheckSubmitPage: React.FC<PropsCrossCheckPage> = ({
                 getSourceGithubRepoUrl={getSourceGithubRepoUrl}
                 selectReviewer={selectReviewer}
               />
+              <Button
+                type="primary"
+                onClick={() => {
+                  console.log('click');
+                  deleteDocument('completed_tasks', workDone.id);
+                }}
+              >
+                Delete this workDone
+              </Button>
             </div>
             <div className="workspace">{taskJSX}</div>
           </main>
