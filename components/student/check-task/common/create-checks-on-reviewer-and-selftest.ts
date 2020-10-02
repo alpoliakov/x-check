@@ -10,7 +10,6 @@ export default function createCheckOnReviewer(
   checkingTask: IWorkDone,
   reviewer: IStudent
 ): ICheсk {
-  console.log(checkingTask);
   const res = checkingTask.cheсks.filter((item) => {
     return item.checkerID === reviewer.id;
   });

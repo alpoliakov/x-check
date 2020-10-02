@@ -21,6 +21,7 @@ type PropsCheckTask = {
   checkingTask: ICheсk; // из него берется оценки
   reviewer: IStudent | IMentor; // нужен для комментов автора комментов
   role: Role; // нужен для определения особых пунктов специально для менторов
+  changeOutside: boolean; //чтобы определять изменился ли стате извне
   typeTask: TypeTask; // определить reviewer проверяющий или проверяемый
   deployUrl: string; // для ссылки в хедере
   sourceGithubRepoUrl: string; // для ссылки в хедере
@@ -34,6 +35,7 @@ function CheckTask({
   reviewer,
   role,
   typeTask,
+  changeOutside,
   deployUrl,
   sourceGithubRepoUrl,
   onSave,
@@ -45,12 +47,22 @@ function CheckTask({
         <p>In the process of checking</p>
       </div>
     );
+  } else if (typeTask === TypeTask.ReviewTask && checkingTask.state === CheckState.NotVerified) {
+    return (
+      <div className={styles.test}>
+        <p>In the process of approval</p>
+      </div>
+    );
   }
   task = filterTaskOnRole(task, role, checkingTask.state);
+  const [stateChangeOutside, setStateChangeOutside] = React.useState<boolean>(changeOutside);
   const [stateCheckingTask, setCheckingTask] = useState<ICheсk>(checkingTask);
-  if (checkingTask !== stateCheckingTask) {
+  if (checkingTask !== stateCheckingTask && stateChangeOutside !== changeOutside) {
+    console.log('изменения извне');
     setCheckingTask(checkingTask);
+    setStateChangeOutside((prev) => !prev);
   }
+
   console.log('stateCheckingTask', stateCheckingTask);
   const onAgreeAllPoint = () => {
     setCheckingTask((prev) => {
@@ -107,13 +119,13 @@ function CheckTask({
   const onChangeComment = (cheсkingPointID: string, comment: IComment) => {
     if ((reviewer as IStudent).isAuditorAnonim !== undefined) {
       if (
-        (reviewer as IStudent).isAuditorAnonim === true &&
+        !(reviewer as IStudent).isAuditorAnonim &&
         role === Role.student &&
         typeTask === TypeTask.ReviewTask
       ) {
         comment.whoSaidThat = `Reviewer`;
       } else if (
-        (reviewer as IStudent).isAuditorAnonim === true &&
+        !(reviewer as IStudent).isAuditorAnonim &&
         role === Role.student &&
         typeTask === TypeTask.SubmitTask
       ) {
@@ -121,9 +133,16 @@ function CheckTask({
       } else {
         comment.whoSaidThat = reviewer.name;
       }
+    } else if ((reviewer as IStudent).isAuditorAnonim === undefined) {
+      if (role === Role.student && typeTask === TypeTask.ReviewTask) {
+        comment.whoSaidThat = `Reviewer`;
+      } else if (role === Role.student && typeTask === TypeTask.SubmitTask) {
+        comment.whoSaidThat = `Student`;
+      }
     } else if (role === Role.mentor) {
       comment.whoSaidThat = reviewer.name;
     }
+
     setCheckingTask((prev) => {
       const newChecking = prev.cheсking.map((item) => {
         if (item.cheсkingPointID === cheсkingPointID) {
@@ -244,7 +263,7 @@ function CheckTask({
           const current = {
             ...prev,
             state: CheckState.NotVerified,
-            cheсking: changeStatePoint(prev, CheсkingPointState.Verified),
+            cheсking: changeStatePoint(prev, CheсkingPointState.NotVerified),
           };
           onSubmit(current);
           return current;

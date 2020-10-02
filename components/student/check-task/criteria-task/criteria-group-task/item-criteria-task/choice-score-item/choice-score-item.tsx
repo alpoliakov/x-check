@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { InputNumber, Radio, Button, Tooltip, Tag } from 'antd';
 import { TypeTask } from '../../../../../../../interfaces/ITask';
-import { Role } from '../../../../../../../interfaces/IUser';
 import { RadioChangeEvent } from 'antd/lib/radio';
 import { CheckState, CheсkingPointState } from '../../../../../../../interfaces/IWorkDone';
 import styles from './choice-score-item.module.css';

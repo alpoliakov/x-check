@@ -1,38 +1,35 @@
 import React, { useState } from 'react';
 import { Input, Typography, Collapse, Form, Button, Comment, Avatar } from 'antd';
 import { CheckState, IComment } from '../../../../../../../interfaces/IWorkDone';
-import { TypeTask } from '../../../../../../../interfaces/ITask';
-import { Role } from '../../../../../../../interfaces/IUser';
 import styles from './info-item.module.css';
 
 type PropsInfoItem = {
   descriptionItem: string;
-  commentsItem: IComment[];
-  role: Role;
-  typeTask: TypeTask;
   stateCheck: CheckState;
+  commentsItem: IComment[];
   onChangeComment: (comment: IComment) => void;
 };
 
 export default function InfoItem({
   descriptionItem,
   commentsItem,
-  role,
-  typeTask,
   stateCheck,
   onChangeComment,
 }: PropsInfoItem): JSX.Element {
   const { TextArea } = Input;
   const { Panel } = Collapse;
   const [stateComment, setComment] = useState<string>('');
-  const { Text, Title } = Typography;
+  const { Text } = Typography;
 
   const handleSubmit = () => {
     if (!stateComment) {
       return;
     }
+    const idComment =
+      commentsItem.length !== 0 ? `${commentsItem[commentsItem.length - 1].id}` : '0';
+
     const newComment: IComment = {
-      id: `${commentsItem[commentsItem.length - 1].id}`,
+      id: idComment,
       text: stateComment,
       date: new Date().getTime(),
       whoSaidThat: '',
@@ -45,7 +42,16 @@ export default function InfoItem({
   const onChangeInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setComment(e.target.value);
   };
-
+  let disabled: boolean;
+  if (
+    stateCheck === CheckState.Verified ||
+    stateCheck === CheckState.DisputeClosed ||
+    stateCheck === CheckState.Dispute
+  ) {
+    disabled = true;
+  } else {
+    disabled = false;
+  }
   const itemsComment = commentsItem.map((item, index) => {
     return (
       <Comment
@@ -57,7 +63,7 @@ export default function InfoItem({
           />
         }
         content={<p>{item.text}</p>}
-        datetime={item.date.toLocaleString()}
+        datetime={new Date(item.date).toLocaleString()}
         key={index}
       />
     );
@@ -75,10 +81,11 @@ export default function InfoItem({
               onChange={onChangeInput}
               value={stateComment}
               autoSize
+              disabled={disabled}
             />
           </Form.Item>
           <Form.Item>
-            <Button htmlType="submit" onClick={handleSubmit} type="primary">
+            <Button htmlType="submit" onClick={handleSubmit} type="primary" disabled={disabled}>
               Add Comment
             </Button>
           </Form.Item>
