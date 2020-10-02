@@ -1,9 +1,20 @@
 import { ITask } from '../../../../interfaces/ITask';
 import { UserBasic } from '../../../../interfaces/IUser';
-import { IStudent, IMentor, IWorkDone, TaskState } from '../../../../interfaces/IWorkDone';
+import {
+  IStudent,
+  IMentor,
+  IWorkDone,
+  TaskState,
+  CheckState,
+  ICheсk,
+} from '../../../../interfaces/IWorkDone';
 import createCheckOnTask from './create-check-on-task';
 
-export default function createWorkDone(task: ITask, activeUser: UserBasic, users: UserBasic[]): IWorkDone {
+export default function createWorkDone(
+  task: ITask,
+  activeUser: UserBasic,
+  users: UserBasic[]
+): IWorkDone {
   const student: IStudent = {
     id: activeUser.uid,
     name: activeUser.nickname,
@@ -13,10 +24,18 @@ export default function createWorkDone(task: ITask, activeUser: UserBasic, users
   const selfTest = createCheckOnTask(task, activeUser.uid);
   let mentor: IMentor;
   if (activeUser.mentor !== undefined && activeUser.mentor !== null) {
-    mentor = { id: activeUser.mentor.id, name: activeUser.mentor.id } as IMentor;
+    const bufID = activeUser.mentor.id;
+    const mentors = users.filter((searchUser) => searchUser.uid === bufID);
+    if (mentors.length !== 0) {
+      mentor = { id: activeUser.mentor.id, name: mentors[0].nickname } as IMentor;
+    } else {
+      mentor = {} as IMentor;
+    }
   } else {
     mentor = {} as IMentor;
   }
+
+  const mentorCheck: ICheсk = { ...selfTest, state: CheckState.AuditorDraft };
 
   return {
     id: `${task.id}_${activeUser.uid}`,
@@ -28,7 +47,7 @@ export default function createWorkDone(task: ITask, activeUser: UserBasic, users
     finalScore: 0,
     selfTest: selfTest,
     mentor: mentor,
-    mentorCheck: selfTest,
+    mentorCheck: mentorCheck,
     reviewers: [],
     cheсks: [],
     sourceGithubRepoUrl: '',

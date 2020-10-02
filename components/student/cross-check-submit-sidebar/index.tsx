@@ -125,17 +125,39 @@ const SidebarSubmit: React.FC<PropsSidebar> = ({
         status: itemStatus,
       };
     });
-    const statusMentor =
-      workDone.mentorCheck.state !== undefined
-        ? workDone.mentorCheck.state
-        : CheckState.AuditorDraft;
+
+    let statusMentor: string;
+    if (workDone.mentorCheck.state !== undefined) {
+      switch (workDone.mentorCheck.state) {
+        case CheckState.AuditorDraft:
+          statusMentor = 'Auditor Draft';
+          break;
+        case CheckState.NotVerified:
+          statusMentor = 'Not Verified';
+          break;
+        case CheckState.Verified:
+          statusMentor = 'Verified';
+          break;
+        case CheckState.Dispute:
+          statusMentor = 'Dispute';
+          break;
+        case CheckState.DisputeClosed:
+          statusMentor = 'Dispute closed';
+          break;
+        default:
+          statusMentor = 'Auditor Draft';
+      }
+    } else {
+      statusMentor = 'Auditor Draft';
+    }
+
     const dataWithMentor =
       workDone.mentor.id !== undefined
         ? [
             ...data,
             {
               key: workDone.mentor.id,
-              reviewer: workDone.mentor.name,
+              reviewer: `mentor-${workDone.mentor.name}`,
               status: statusMentor,
             },
           ]

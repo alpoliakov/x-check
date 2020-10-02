@@ -20,8 +20,8 @@ import {
 } from '../../../../services/updateFirebase';
 import SidebarSubmit from '../../../../components/student/cross-check-submit-sidebar';
 import { ICourse } from '../../../../interfaces/ICourse';
-import Title from 'antd/lib/skeleton/Title';
 import NotAuthPage from '../../../../components/student/not-athorization-page';
+import { Button } from 'antd';
 
 interface PropsCrossCheckPage {
   usersData: UserBasic[];
@@ -78,84 +78,6 @@ const CrossCheckSubmitPage: React.FC<PropsCrossCheckPage> = ({
     console.log('completedTasksData', completedTasksData);
     let taskJSX: JSX.Element = <></>;
 
-    const onSave = (checkingTask: ICheсk) => {
-      if (workDone.id === undefined && !isDeadline && neWworkDone.id !== undefined) {
-        //Сохранение новосозданного IWorkDone(самотестрирование)
-        const newCheckingTask: IWorkDone = {
-          ...neWworkDone,
-          selfTest: checkingTask,
-          deployUrl: deployUrl,
-          sourceGithubRepoUrl: sourceGithubRepoUrl,
-        };
-        setDocument('completed_tasks', newCheckingTask.id, newCheckingTask);
-      } else if (workDone.id !== undefined && !isDeadline && neWworkDone.id === undefined) {
-        //Сохранение старого IWorkDone до дедлайна
-        const newCheckingTask: IWorkDone = {
-          ...workDone,
-          selfTest: checkingTask,
-          deployUrl: deployUrl,
-          sourceGithubRepoUrl: sourceGithubRepoUrl,
-        };
-        updateObjectField('completed_tasks', newCheckingTask.id, newCheckingTask);
-      }
-    };
-
-    const onSubmit = (checkingTask: ICheсk) => {
-      if (workDone.id === undefined && !isDeadline && neWworkDone.id !== undefined) {
-        //Сохранение новосозданного IWorkDone(самотестрирование)
-        const newCheckingTask: IWorkDone = {
-          ...neWworkDone,
-          selfTest: checkingTask,
-          deployUrl: deployUrl,
-          state: TaskState.isCheking,
-          sourceGithubRepoUrl: sourceGithubRepoUrl,
-        };
-        setWorkDone(newCheckingTask);
-        setDocument('completed_tasks', newCheckingTask.id, newCheckingTask);
-      } else if (workDone.id !== undefined && !isDeadline && neWworkDone.id === undefined) {
-        //Сохранение старого IWorkDone до дедлайна
-        const newCheckingTask: IWorkDone = {
-          ...workDone,
-          selfTest: checkingTask,
-          deployUrl: deployUrl,
-          state: TaskState.isCheking,
-          sourceGithubRepoUrl: sourceGithubRepoUrl,
-        };
-        console.log('Change and save in Data 2', newCheckingTask);
-        setWorkDone(newCheckingTask);
-        updateObjectField('completed_tasks', newCheckingTask.id, newCheckingTask);
-      } else if (
-        workDone.id !== undefined &&
-        isDeadline &&
-        neWworkDone.id === undefined &&
-        reviewer.id !== undefined &&
-        checkTask.checkerID !== undefined
-      ) {
-        //Сохранение старого IWorkDone после дедлайна (согласование выставленной оценки)
-        const updateCheck: ICheсk[] = workDone.cheсks.map((item) => {
-          if (item.checkerID === checkingTask.checkerID) {
-            return checkingTask;
-          }
-          return item;
-        });
-        const newCheckingTask: IWorkDone = {
-          ...workDone,
-          cheсks: updateCheck,
-        };
-        console.log('Change and save in Data 3', newCheckingTask);
-        setWorkDone(newCheckingTask);
-        updateObjectField('completed_tasks', newCheckingTask.id, newCheckingTask);
-      }
-      setChangeOutside((prev) => !prev);
-      setCheckTask(checkingTask);
-    };
-
-    const getDeployUrl = (url: string) => {
-      setDeployUrl(url);
-    };
-    const getSourceGithubRepoUrl = (url: string) => {
-      setSourceGithubRepoUrl(url);
-    };
     const selectTask = (selectTaskID: string) => {
       if (
         auth.currentUser !== null &&
@@ -175,7 +97,7 @@ const CrossCheckSubmitPage: React.FC<PropsCrossCheckPage> = ({
       let selectCheckTask = {} as ICheсk;
       let selectReviewer = {} as IStudent;
 
-      if (tasksData.length !== 0 && courseData.length !== 0) {
+      if (usersData.length !== 0 && tasksData.length !== 0 && courseData.length !== 0) {
         const select = tasksData.filter((taskData) => taskData.id === selectTaskID);
         if (select.length !== 0) {
           selectTask = select[0];
@@ -209,8 +131,20 @@ const CrossCheckSubmitPage: React.FC<PropsCrossCheckPage> = ({
             if (searchWorksDone.length !== 0) {
               setDeployUrl(searchWorksDone[0].deployUrl);
               setSourceGithubRepoUrl(searchWorksDone[0].sourceGithubRepoUrl);
-
-              selectWorkDone = searchWorksDone[0];
+              //тут проверка на наличие ментора в даннный момент
+              if (activeUser.mentor !== undefined && activeUser.mentor !== null) {
+                let mentor: IMentor;
+                const bufID = activeUser.mentor.id;
+                const mentors = usersData.filter((searchUser) => searchUser.uid === bufID);
+                if (mentors.length !== 0) {
+                  mentor = { id: activeUser.mentor.id, name: mentors[0].nickname } as IMentor;
+                } else {
+                  mentor = {} as IMentor;
+                }
+                selectWorkDone = { ...searchWorksDone[0], mentor: mentor };
+              } else {
+                selectWorkDone = searchWorksDone[0];
+              }
               selectNeWworkDone = {} as IWorkDone;
               if (!selectIsDeadline) {
                 //этап правки самопроверки
@@ -267,6 +201,85 @@ const CrossCheckSubmitPage: React.FC<PropsCrossCheckPage> = ({
           setCheckTask(workDone.selfTest);
         }
       }
+    };
+
+    const getDeployUrl = (url: string) => {
+      setDeployUrl(url);
+    };
+
+    const getSourceGithubRepoUrl = (url: string) => {
+      setSourceGithubRepoUrl(url);
+    };
+    const onSave = (checkingTask: ICheсk) => {
+      if (workDone.id === undefined && !isDeadline && neWworkDone.id !== undefined) {
+        //Сохранение новосозданного IWorkDone(самотестрирование)
+        const newCheckingTask: IWorkDone = {
+          ...neWworkDone,
+          selfTest: checkingTask,
+          deployUrl: deployUrl,
+          sourceGithubRepoUrl: sourceGithubRepoUrl,
+        };
+        setDocument('completed_tasks', newCheckingTask.id, newCheckingTask);
+      } else if (workDone.id !== undefined && !isDeadline && neWworkDone.id === undefined) {
+        //Сохранение старого IWorkDone до дедлайна
+        const newCheckingTask: IWorkDone = {
+          ...workDone,
+          selfTest: checkingTask,
+          deployUrl: deployUrl,
+          sourceGithubRepoUrl: sourceGithubRepoUrl,
+        };
+        updateObjectField('completed_tasks', newCheckingTask.id, newCheckingTask);
+      }
+    };
+
+    const onSubmit = (checkingTask: ICheсk) => {
+      if (workDone.id === undefined && !isDeadline && neWworkDone.id !== undefined) {
+        //Сохранение новосозданного IWorkDone(самотестрирование)
+        const newCheckingTask: IWorkDone = {
+          ...neWworkDone,
+          selfTest: checkingTask,
+          deployUrl: deployUrl,
+          state: TaskState.isCheking,
+          sourceGithubRepoUrl: sourceGithubRepoUrl,
+        };
+        setWorkDone(newCheckingTask);
+        //добавление таска в  user
+        setDocument('completed_tasks', newCheckingTask.id, newCheckingTask);
+      } else if (workDone.id !== undefined && !isDeadline && neWworkDone.id === undefined) {
+        //Сохранение старого IWorkDone до дедлайна
+        const newCheckingTask: IWorkDone = {
+          ...workDone,
+          selfTest: checkingTask,
+          deployUrl: deployUrl,
+          state: TaskState.isCheking,
+          sourceGithubRepoUrl: sourceGithubRepoUrl,
+        };
+
+        setWorkDone(newCheckingTask);
+        updateObjectField('completed_tasks', newCheckingTask.id, newCheckingTask);
+      } else if (
+        workDone.id !== undefined &&
+        isDeadline &&
+        neWworkDone.id === undefined &&
+        reviewer.id !== undefined &&
+        checkTask.checkerID !== undefined
+      ) {
+        //Сохранение старого IWorkDone после дедлайна (согласование выставленной оценки)
+        const updateCheck: ICheсk[] = workDone.cheсks.map((item) => {
+          if (item.checkerID === checkingTask.checkerID) {
+            return checkingTask;
+          }
+          return item;
+        });
+        const newCheckingTask: IWorkDone = {
+          ...workDone,
+          cheсks: updateCheck,
+        };
+        setWorkDone(newCheckingTask);
+        updateObjectField('completed_tasks', newCheckingTask.id, newCheckingTask);
+      }
+      setChangeOutside((prev) => !prev);
+      setCheckTask(checkingTask);
     };
 
     if (task.id !== undefined && reviewer.id !== undefined && checkTask.checkerID !== undefined) {
