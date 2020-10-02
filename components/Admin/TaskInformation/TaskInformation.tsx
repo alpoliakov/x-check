@@ -87,7 +87,7 @@ const TaskInformation: React.FC<PropsTaskInformation> = ({
                 Distribute TEST
               </Button>
               <Button
-                disabled={taskStage !== 'REQUESTS_GATHERING'}
+                disabled={taskStage !== 'CROSS_CHECK'}
                 style={{ marginBottom: 20, width: 182 }}
                 type="primary"
                 onClick={() => distribute(dataCompletedTask, 'Songbird 1')}
