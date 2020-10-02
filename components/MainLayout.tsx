@@ -132,6 +132,7 @@ const MainLayout: React.FC<PropsML> = ({ children, title, changeAuthorization })
                 src="/static/images/logo-rsschool3.png"
                 alt="Rolling Scopes School Logo"
                 className="header-logo"
+                style={{ width: '75px', height: '27px' }}
               />
             </a>
           </div>
@@ -147,22 +148,39 @@ const MainLayout: React.FC<PropsML> = ({ children, title, changeAuthorization })
             </Dropdown>
           </div>
         </nav>
-        <section className={'select_role'}>
-          <Select
-            showSearch
-            defaultValue={''}
-            style={{ width: 200 }}
-            placeholder={roles.length !== 0 ? 'Select a role' : 'Loading...'}
-            optionFilterProp="children"
-            onChange={onChange}
-          >
-            <Option value={''}>choice a role</Option>
-            {roles.map((item: string) => (
-              <Option key={item} value={item}>
-                {item}
-              </Option>
-            ))}
-          </Select>
+        <section className={'select_role'} style={{ position: 'absolute', margin: '50px 0 0 5px' }}>
+          <div style={{ width: '200px' }}>
+            <Select
+              showSearch
+              defaultValue={''}
+              style={{ width: 220 }}
+              placeholder={roles.length !== 0 ? 'Select a role' : 'Loading...'}
+              optionFilterProp="children"
+              onChange={onChange}
+            >
+              <Option value={''}>choice a role</Option>
+              {roles.map((item: string) => (
+                <Option key={item} value={item}>
+                  {item}
+                </Option>
+              ))}
+            </Select>
+            <Select
+              showSearch
+              defaultValue={''}
+              style={{ width: 220, marginTop: '15px' }}
+              placeholder={roles.length !== 0 ? roles[0] : 'Loading...'}
+              optionFilterProp="children"
+              onChange={onChange}
+            >
+              <Option value={''}>-</Option>
+              {roles.map((item: string) => (
+                <Option key={item} value={item}>
+                  {item}
+                </Option>
+              ))}
+            </Select>
+          </div>
         </section>
         <main>{children}</main>
         <Footer>Footer</Footer>

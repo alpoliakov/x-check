@@ -82,8 +82,8 @@ const AdminPage: React.FC<PropsAdmin> = ({
   const task = {};
 
   return (
-    <MainLayout title={'main: admin'}>
-      <Title level={1}>Admin Page</Title>
+    <MainLayout title={'Admin'}>
+      {/* <Title level={1}>Admin Page</Title> */}
       <main className={'main__box'}>
         <div className="nav__main">
           <div>

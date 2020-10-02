@@ -11,20 +11,20 @@ interface PropsStudentPage {
 
 const StudentPage: React.FC<PropsStudentPage> = ({ data }) => {
   const { Title } = Typography;
-  const nameButton: Array<string> = ['Cross-check: Submit', 'Cross-check: Review'];
+  const nameButton: Array<string> = ['Home', 'Cross-check: Submit', 'Cross-check: Review'];
   const [stateStudent, setStateStudent] = useState<UserBasic>({} as UserBasic);
   const getUser = (user: UserBasic) => {
     setStateStudent(user);
   };
   const nameStudent = stateStudent.nickname !== undefined ? stateStudent.nickname : 'Student Page';
-
+  const role = 'student';
   return (
-    <MainLayout title={''}>
-      <Title level={1}>Student Page</Title>
+    <MainLayout title={'Student'}>
+      {/* <Title level={1}>Student Page</Title> */}
       <main className={'main__box'}>
         <div className="nav__main">
           <div>
-            <SidebarTask dataCategory={nameButton} nameStudent={nameStudent} />
+            <SidebarTask dataCategory={nameButton} nameStudent={nameStudent} role={role} />
           </div>
         </div>
         <div className="workspace"></div>

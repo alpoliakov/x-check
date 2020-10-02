@@ -12,9 +12,12 @@ const MainPages: React.FC<PropsMainPage> = ({ changeAuthorization }) => {
   return (
     <>
       <MainLayout title={`main: choice a role`} changeAuthorization={changeAuthorization}>
-        <section className={'box-roles'}>
-          <Title level={1}>Choice a role</Title>
-        </section>
+        <main className={'main__box'}>
+          <div className="nav__main">
+            <div style={{ width: '240px' }}></div>
+          </div>
+          <div className="workspace"></div>
+        </main>
       </MainLayout>
     </>
   );

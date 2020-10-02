@@ -45,8 +45,8 @@ const MentorPage: React.FC<PropsMentorPage> = ({ userData }) => {
   };
 
   return (
-    <MainLayout title={'main: mentor'}>
-      <Title level={1}>Mentor Page</Title>
+    <MainLayout title={'Mentor'}>
+      {/* <Title level={1}>Mentor Page</Title> */}
       <main className={'main__box'}>
         <div className="nav__main">
           {/*    <Title level={2}>Mentor</Title>
