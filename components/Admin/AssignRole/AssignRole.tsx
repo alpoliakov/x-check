@@ -47,6 +47,15 @@ const AssignRole: React.FC<IProps> = ({ users }) => {
     updateObjectField('users', result[0].uid, {
       roles: firebase.firestore.FieldValue.arrayRemove(key),
     });
+    console.log(key);
+    setUser(
+      usersData.map((e) => {
+        if (e.uid === userKey) {
+          e.roles = result[0].roles.filter((e: string) => e !== key);
+        }
+        return e;
+      })
+    );
   };
   return (
     <>

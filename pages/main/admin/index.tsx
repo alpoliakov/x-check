@@ -36,7 +36,7 @@ const AdminPage: React.FC<PropsAdmin> = ({
   const [visitableReviewTable, setVisitableReviewTable] = useState<boolean>(false);
   const [adminMain, setAdminMain] = useState<boolean>(true);
   const [transferTaskForm, setTransferTaskForm] = useState<ITask | boolean>(false);
-
+  console.log(dataUsers, dataTasks, dataReviews, dataReviewRequest, dataSession, dataCompletedTask);
   const showModalCreateTask = () => {
     setAdminMain(false);
     setTransferTaskForm(false);
@@ -141,7 +141,7 @@ const AdminPage: React.FC<PropsAdmin> = ({
               visibleModal={visibleModal}
               dataTasks={dataTasks}
               dataUsers={dataUsers}
-              dataSession={dataSession}
+              dataSession={dataSession[0]}
               dataCompletedTask={dataCompletedTask}
             />
           ) : (

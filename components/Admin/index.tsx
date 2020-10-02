@@ -8,11 +8,12 @@ import { ICourse, ITaskStep } from '../../interfaces/ICourse';
 import { ITask } from '../../interfaces/ITask';
 import { UserBasic } from '../../interfaces/IUser';
 import { IWorkDone } from '../../interfaces/IWorkDone';
+import { setDocument } from '../../services/updateFirebase';
 
 interface PropsAdminMain {
   dataUsers: UserBasic[];
   dataTasks: ITask[];
-  dataSession: ICourse[];
+  dataSession: ICourse;
   dataCompletedTask: IWorkDone[];
   visibleModal: boolean;
   getVisibleModal: (value: boolean) => void;
@@ -30,12 +31,23 @@ const AdminMain: React.FC<PropsAdminMain> = ({
 }) => {
   const [users, setUser] = useState<any[]>(dataUsers);
   const [visible, setVisible] = useState<boolean>(visibleModal);
+  const [dataSessions, setDataSessions] = useState<ICourse>(dataSession);
+  const [render, setRender] = useState<string>();
+
   useEffect(() => {
     setVisible(visibleModal);
   }, [visibleModal]);
   useEffect(() => {
     getVisibleModal(visible);
   }, [visible]);
+  const updateDataSession = (data: ICourse, value: string) => {
+    setDataSessions(data);
+    setRender(value);
+  };
+
+  useEffect(() => {
+    console.log('dataupdate');
+  }, [render]);
 
   const handleOk = () => {
     setVisible(false);
@@ -44,7 +56,8 @@ const AdminMain: React.FC<PropsAdminMain> = ({
     <div className="admin-wrapper">
       <Row>
         <TaskInformation
-          dataSession={dataSession}
+          updateDataSession={updateDataSession}
+          dataSession={dataSessions}
           users={users}
           dataCompletedTask={dataCompletedTask}
         />
@@ -63,7 +76,12 @@ const AdminMain: React.FC<PropsAdminMain> = ({
               </Button>,
             ]}
           >
-            <TableNewTask dataSession={dataSession} getClickTask={getClickTask} tasks={dataTasks} />
+            <TableNewTask
+              updateDataSession={updateDataSession}
+              dataSession={dataSessions}
+              getClickTask={getClickTask}
+              tasks={dataTasks}
+            />
           </Modal>
         </Col>
         <Col span={12} style={{ textAlign: 'center', margin: '20px 0' }}></Col>

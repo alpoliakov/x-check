@@ -13,23 +13,28 @@ import { distribute } from '../../../services/distributeStudents';
 
 interface PropsTaskInformation {
   users: UserBasic[];
-  dataSession: ICourse[];
+  dataSession: ICourse;
   dataCompletedTask: IWorkDone[];
+  updateDataSession: (data: ICourse, value: string) => void;
 }
 
 const TaskInformation: React.FC<PropsTaskInformation> = ({
   users,
   dataSession,
   dataCompletedTask,
+  updateDataSession,
 }) => {
   const [activeTask, setActiveTask] = useState<string | undefined>(undefined);
   const [taskStage, setTaskStage] = useState<string | undefined>();
+  const [session, setSession] = useState(dataSession);
   useEffect(() => {
     if (activeTask !== undefined) {
-      const active: any = dataSession[0].tasks.find((e) => e.taskID === activeTask);
+      const active: any = dataSession.tasks.find((e) => e.taskID === activeTask);
       setTaskStage(active.taskStage);
+      setSession(dataSession);
     }
   }, [activeTask]);
+
   const getActiveTask = (value: string) => {
     setActiveTask(value);
   };
@@ -55,7 +60,7 @@ const TaskInformation: React.FC<PropsTaskInformation> = ({
             <ActiveTask
               getActiveTask={getActiveTask}
               activeTask={activeTask}
-              dataSession={dataSession}
+              dataSession={session}
             />
           </Col>
         </Row>
@@ -64,6 +69,7 @@ const TaskInformation: React.FC<PropsTaskInformation> = ({
             getTaskStage={getTaskStage}
             dataSession={dataSession}
             activeTask={activeTask}
+            updateDataSession={updateDataSession}
           />
         </Row>
         <Row style={{ marginTop: 40 }}>

@@ -2,15 +2,14 @@
 import React, { useState } from 'react';
 import { Table, Radio, Divider, Tag, Button, Popconfirm, Space } from 'antd';
 import { ITask, StateTask } from '../../../interfaces/ITask';
-import { db } from '../../../firebase';
 import { deleteDocument, setDocument, updateObjectField } from '../../../services/updateFirebase';
 import { ICourse } from '../../../interfaces/ICourse';
-import firebase from 'firebase';
 
 interface PropsTableNewTask {
   tasks: ITask[];
-  dataSession: ICourse[];
+  dataSession: ICourse;
   getClickTask: (value: string) => void;
+  updateDataSession: (data: ICourse, value: string) => void;
 }
 interface Item {
   key: string;
@@ -19,7 +18,12 @@ interface Item {
   state: StateTask;
   authorName: string;
 }
-const TableNewTask: React.FC<PropsTableNewTask> = ({ tasks, getClickTask, dataSession }) => {
+const TableNewTask: React.FC<PropsTableNewTask> = ({
+  tasks,
+  getClickTask,
+  dataSession,
+  updateDataSession,
+}) => {
   const data: any = [];
   for (let i = 0; i < tasks.length; i++) {
     data.push({
@@ -114,16 +118,16 @@ const TableNewTask: React.FC<PropsTableNewTask> = ({ tasks, getClickTask, dataSe
   };
   const onClickActive = (_: any, e: any) => {
     const dataSource = [...dataTasks];
-    dataSession[0].tasks.push({
+    dataSession.tasks.push({
       taskID: e.id,
       name: e.name,
       taskStage: 'DRAFT',
       deadline: Date.now(),
       start: Date.now(),
     });
-    const pushBase = dataSession[0];
-    console.log(pushBase);
-    setDocument('sessions', 'course1', dataSession[0]);
+    const pushBase = dataSession;
+    setDocument('sessions', 'course1', dataSession);
+    updateDataSession(pushBase, e.id);
     updateObjectField('TasksArray', e.id, {
       state: StateTask.active,
     });

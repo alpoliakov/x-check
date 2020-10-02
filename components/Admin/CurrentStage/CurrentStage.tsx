@@ -8,18 +8,24 @@ import firebase from 'firebase';
 
 interface PropsCurrentStage {
   activeTask: string | undefined;
-  dataSession: ICourse[];
+  dataSession: ICourse;
   getTaskStage: (value: string | undefined) => void;
+  updateDataSession: (data: ICourse, value: string) => void;
 }
 
-const CurrentStage: React.FC<PropsCurrentStage> = ({ activeTask, dataSession, getTaskStage }) => {
+const CurrentStage: React.FC<PropsCurrentStage> = ({
+  activeTask,
+  dataSession,
+  getTaskStage,
+  updateDataSession,
+}) => {
   const [currentStage, setCurrentStage] = useState<string | undefined>(undefined);
   const [start, setStart] = useState<string | null>(null);
   const [deadline, setDeadline] = useState<string | null>(null);
 
   useEffect(() => {
     if (activeTask !== undefined) {
-      const active: any = dataSession[0].tasks.find((e) => e.taskID === activeTask);
+      const active: any = dataSession.tasks.find((e) => e.taskID === activeTask);
       setStart(moment(active.start).format('YYYY-MM-DD'));
       setDeadline(moment(active.deadline).format('YYYY-MM-DD'));
       setCurrentStage(active.taskStage);
@@ -44,9 +50,8 @@ const CurrentStage: React.FC<PropsCurrentStage> = ({ activeTask, dataSession, ge
     }
   };
   const onFinish = (): void => {
-    const active: any = dataSession[0].tasks.find((e) => e.taskID === activeTask);
-    console.log(active, active.name, moment(deadline).valueOf(), moment(start).valueOf());
-    dataSession[0].tasks.forEach((e: any) => {
+    const active: any = dataSession.tasks.find((e) => e.taskID === activeTask);
+    dataSession.tasks.forEach((e: any) => {
       if (e.name === active.name) {
         e.taskStage = currentStage === null ? e.taskStage : currentStage;
         e.deadline = deadline === null ? e.deadline : moment(deadline).valueOf();
@@ -54,7 +59,8 @@ const CurrentStage: React.FC<PropsCurrentStage> = ({ activeTask, dataSession, ge
       }
       return e;
     });
-    setDocument('sessions', 'course1', dataSession[0]);
+    setDocument('sessions', 'course1', dataSession);
+    updateDataSession(dataSession, active.taskID);
     getTaskStage(currentStage);
   };
   return (
@@ -71,6 +77,7 @@ const CurrentStage: React.FC<PropsCurrentStage> = ({ activeTask, dataSession, ge
             <Option value="REQUESTS_GATHERING">REQUESTS_GATHERING</Option>
             <Option value="CROSS_CHECK">CROSS_CHECK</Option>
             <Option value="COMPLETED">COMPLETED</Option>
+            <Option value="ARCHIVED">ARCHIVED</Option>
           </Select>
         </Form.Item>
         <Form.Item label="Start">
