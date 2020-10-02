@@ -1,49 +1,47 @@
-import React, { useEffect, useState } from 'react';
-import { Typography } from 'antd';
-import { db } from '../../../firebase';
+import React from 'react';
 import MainLayout from '../../../components/MainLayout';
-import SidebarTask from '../../../components/student/sidebar-task-cross-check';
-import { UserBasic } from '../../../interfaces/IUser';
+import Link from 'next/link';
+import { CheckCircleTwoTone, CodeTwoTone, HomeTwoTone } from '@ant-design/icons';
+import { List } from 'antd';
 
-interface PropsStudentPage {
-  data: [];
-}
-
-const StudentPage: React.FC<PropsStudentPage> = ({ data }) => {
-  const { Title } = Typography;
-  const nameButton: Array<string> = ['Home', 'Cross-check: Submit', 'Cross-check: Review'];
-  const [stateStudent, setStateStudent] = useState<UserBasic>({} as UserBasic);
-  const getUser = (user: UserBasic) => {
-    setStateStudent(user);
-  };
-  const nameStudent = stateStudent.nickname !== undefined ? stateStudent.nickname : 'Student Page';
-  const role = 'student';
+const StudentPage: React.FC = () => {
   return (
     <MainLayout title={'Student'}>
-      {/* <Title level={1}>Student Page</Title> */}
       <main className={'main__box'}>
         <div className="nav__main">
-          <div>
-            <SidebarTask dataCategory={nameButton} nameStudent={nameStudent} role={role} />
+          <div style={{ marginRight: '20px', width: '220px' }}>
+            <List size="small" bordered>
+              <List.Item key={'Home'}>
+                <Link href={'./student/'}>
+                  <div>
+                    <HomeTwoTone twoToneColor="#40E127" style={{ marginRight: '4px' }} />
+                    <a>Home</a>
+                  </div>
+                </Link>
+              </List.Item>
+              <List.Item key={'Cross-check: Submit'}>
+                <Link href={'./student/cross-check-submit'}>
+                  <div>
+                    <CodeTwoTone style={{ marginRight: '4px' }} />
+                    <a>Cross-check: Submit</a>
+                  </div>
+                </Link>
+              </List.Item>
+              <List.Item key={'Cross-check: Review'}>
+                <Link href={'./student/cross-check-review'}>
+                  <div>
+                    <CheckCircleTwoTone twoToneColor="#eb2f96" style={{ marginRight: '4px' }} />
+                    <a>Cross-check: Review</a>
+                  </div>
+                </Link>
+              </List.Item>
+            </List>
           </div>
         </div>
         <div className="workspace"></div>
       </main>
     </MainLayout>
   );
-};
-
-export const getServerSideProps = async () => {
-  let data: any | undefined = [];
-  await db
-    .collection('users')
-    .get()
-    .then((snap) => {
-      data = snap.docs.map((doc) => doc.data());
-    });
-  return {
-    props: { data },
-  };
 };
 
 export default StudentPage;

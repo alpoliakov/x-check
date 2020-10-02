@@ -11,6 +11,16 @@ import { ITask } from '../../../interfaces/ITask';
 import { UserBasic } from '../../../interfaces/IUser';
 import { ICourse } from '../../../interfaces/ICourse';
 import { IWorkDone, TaskState } from '../../../interfaces/IWorkDone';
+import {
+  CheckCircleTwoTone,
+  CodeTwoTone,
+  HomeTwoTone,
+  DatabaseTwoTone,
+  PlusCircleTwoTone,
+  RightSquareTwoTone,
+} from '@ant-design/icons';
+import { List } from 'antd';
+import Link from 'next/link';
 
 interface PropsAdmin {
   dataUsers: UserBasic[];
@@ -87,41 +97,44 @@ const AdminPage: React.FC<PropsAdmin> = ({
       <main className={'main__box'}>
         <div className="nav__main">
           <div>
-            {/*    <Title level={2}>Admin</Title>
-            <SubmitRandom /> */}
-            <Row>
-              <Button
-                type="primary"
-                style={{ width: 150, marginTop: 20 }}
-                onClick={showModalCreateTask}
-              >
-                Create task
-              </Button>
-            </Row>
-            <Row>
-              <Button type="primary" style={{ width: 150, marginTop: 20 }} onClick={showImport}>
-                Import/Export
-              </Button>
-            </Row>
-            <Row>
-              <Button type="primary" style={{ width: 150, marginTop: 20 }} onClick={showModal}>
-                Start new task
-              </Button>
-            </Row>
-            <Row>
-              <Button type="primary" style={{ width: 150, marginTop: 20 }} onClick={showTable}>
-                Table results
-              </Button>
-            </Row>
-            <Row>
-              <Button
-                type="primary"
-                style={{ width: 150, marginTop: 20 }}
-                onClick={showReviewTable}
-              >
-                Review requests
-              </Button>
-            </Row>
+            <List size="small" bordered style={{ marginRight: '20px', width: '220px' }}>
+              <List.Item key={'Home'} onClick={returnAdminMain}>
+                <div>
+                  <HomeTwoTone twoToneColor="#40E127" style={{ marginRight: '4px' }} />
+                  <a>Home</a>
+                </div>
+              </List.Item>
+              <List.Item key={'Create task'} onClick={showModalCreateTask}>
+                <div>
+                  <PlusCircleTwoTone twoToneColor="#FFDB00" style={{ marginRight: '4px' }} />
+                  <a>Create task</a>
+                </div>
+              </List.Item>
+              <List.Item key={'Import/Export'} onClick={showImport}>
+                <div>
+                  <CodeTwoTone style={{ marginRight: '4px' }} />
+                  <a>Import/Export</a>
+                </div>
+              </List.Item>
+              <List.Item key={'task management'} onClick={showModal}>
+                <div>
+                  <RightSquareTwoTone twoToneColor="#eb2f96" style={{ marginRight: '4px' }} />
+                  <a>task management</a>
+                </div>
+              </List.Item>
+              <List.Item key={'Table results'} onClick={showTable}>
+                <div>
+                  <DatabaseTwoTone twoToneColor="#40E0D0" style={{ marginRight: '4px' }} />
+                  <a>Table results</a>
+                </div>
+              </List.Item>
+              <List.Item key={'Review requests'} onClick={showReviewTable}>
+                <div>
+                  <CheckCircleTwoTone twoToneColor="#BA55D3" style={{ marginRight: '4px' }} />
+                  <a>Review requests</a>
+                </div>
+              </List.Item>
+            </List>
           </div>
         </div>
         <div className="workspace">
@@ -146,9 +159,6 @@ const AdminPage: React.FC<PropsAdmin> = ({
             />
           ) : (
             <Row style={{ width: 1000, display: 'flex', flexDirection: 'column' }}>
-              <Button style={{ width: 100 }} onClick={returnAdminMain}>
-                Return
-              </Button>
               <Form task={transferTaskForm} />
             </Row>
           )}
