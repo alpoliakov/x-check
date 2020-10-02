@@ -350,7 +350,7 @@ const CrossCheckSubmitPage: React.FC<PropsCrossCheckPage> = ({
                 getSourceGithubRepoUrl={getSourceGithubRepoUrl}
                 selectReviewer={selectReviewer}
               />
-              <Button type="primary" onClick={deleteWorkDone}>
+              <Button type="primary" onClick={deleteWorkDone} disabled={task.id === undefined}>
                 Delete this workDone
               </Button>
             </div>
