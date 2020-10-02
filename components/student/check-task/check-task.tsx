@@ -119,13 +119,13 @@ function CheckTask({
   const onChangeComment = (cheсkingPointID: string, comment: IComment) => {
     if ((reviewer as IStudent).isAuditorAnonim !== undefined) {
       if (
-        (reviewer as IStudent).isAuditorAnonim === true &&
+        !(reviewer as IStudent).isAuditorAnonim &&
         role === Role.student &&
         typeTask === TypeTask.ReviewTask
       ) {
         comment.whoSaidThat = `Reviewer`;
       } else if (
-        (reviewer as IStudent).isAuditorAnonim === true &&
+        !(reviewer as IStudent).isAuditorAnonim &&
         role === Role.student &&
         typeTask === TypeTask.SubmitTask
       ) {
@@ -133,9 +133,16 @@ function CheckTask({
       } else {
         comment.whoSaidThat = reviewer.name;
       }
+    } else if ((reviewer as IStudent).isAuditorAnonim === undefined) {
+      if (role === Role.student && typeTask === TypeTask.ReviewTask) {
+        comment.whoSaidThat = `Reviewer`;
+      } else if (role === Role.student && typeTask === TypeTask.SubmitTask) {
+        comment.whoSaidThat = `Student`;
+      }
     } else if (role === Role.mentor) {
       comment.whoSaidThat = reviewer.name;
     }
+
     setCheckingTask((prev) => {
       const newChecking = prev.cheсking.map((item) => {
         if (item.cheсkingPointID === cheсkingPointID) {

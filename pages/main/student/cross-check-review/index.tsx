@@ -3,17 +3,8 @@ import MainLayout from '../../../../components/MainLayout';
 import { auth, db } from '../../../../firebase';
 import CheckTask from '../../../../components/student/check-task';
 import { dataCourse } from '../../../../components/student/test-task/test-course';
-import {
-  createCheckOnReviewer,
-  createMentorCheck,
-} from '../../../../components/student/check-task/common';
-import {
-  CheckState,
-  ICheсk,
-  IStudent,
-  IWorkDone,
-  TaskState,
-} from '../../../../interfaces/IWorkDone';
+import { createCheckOnReviewer } from '../../../../components/student/check-task/common';
+import { CheckState, ICheсk, IStudent, IWorkDone } from '../../../../interfaces/IWorkDone';
 import { ITask, TypeTask } from '../../../../interfaces/ITask';
 import { Role } from '../../../../interfaces/IUser';
 import {
@@ -57,15 +48,14 @@ const CrossCheckReviewPage: React.FC<PropsCrossCheckPage> = ({
   const [activeCheckTask, setActiveCheckTask] = React.useState<ICheсk>({} as ICheсk);
   const [students, setStudents] = React.useState<IStudentStatus[]>([]);
   const [activeWorkDone, setActiveWorkDone] = React.useState<IWorkDone>({} as IWorkDone);
-  const [worksDone, setworksDone] = React.useState<IWorkDone[]>([]);
 
-  console.log('tasksData', tasksData);
-  console.log('courseData', courseData);
-  console.log('completedTasksData', completedTasksData);
-  console.log('activeCheckTask', activeCheckTask);
-  console.log('students', students);
-  console.log('activeWorkDone', activeWorkDone);
-  console.log('isDeadline', isDeadline);
+  // console.log('tasksData', tasksData);
+  // console.log('courseData', courseData);
+  // console.log('completedTasksData', completedTasksData);
+  // console.log('activeCheckTask', activeCheckTask);
+  // console.log('students', students);
+  // console.log('activeWorkDone', activeWorkDone);
+  // console.log('isDeadline', isDeadline);
 
   let taskJSX: JSX.Element = <></>;
 

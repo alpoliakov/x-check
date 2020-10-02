@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Select, Input, Table, Tag } from 'antd';
 import { ITask, TypeTask } from '../../../interfaces/ITask';
 import styles from './index.module.css';
-import { CheckState, IStudent, IWorkDone, TaskState } from '../../../interfaces/IWorkDone';
+import { CheckState, IStudent, IWorkDone, TaskState, IMentor } from '../../../interfaces/IWorkDone';
 
 interface ISelectTask {
   name: string;
@@ -18,7 +18,7 @@ interface PropsSidebar {
   getTask: (task: string) => void;
   getDeployUrl: (url: string) => void;
   getSourceGithubRepoUrl: (url: string) => void;
-  selectReviewer: (reviewer: IStudent) => void;
+  selectReviewer: (reviewer: IStudent | IMentor) => void;
 }
 
 const SidebarSubmit: React.FC<PropsSidebar> = ({
@@ -51,7 +51,11 @@ const SidebarSubmit: React.FC<PropsSidebar> = ({
     if (result.length !== 0) {
       selectReviewer(result[0]);
     } else {
-      selectReviewer({} as IStudent);
+      if (workDone.mentor.id !== undefined) {
+        selectReviewer(workDone.mentor);
+      } else {
+        selectReviewer({} as IStudent);
+      }
     }
   };
 

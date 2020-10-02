@@ -7,6 +7,7 @@ import { createWorkDone } from '../../../../components/student/check-task/common
 import {
   CheckState,
   ICheсk,
+  IMentor,
   IStudent,
   IWorkDone,
   TaskState,
@@ -46,7 +47,7 @@ const CrossCheckSubmitPage: React.FC<PropsCrossCheckPage> = ({
   const [workDone, setWorkDone] = React.useState<IWorkDone>({} as IWorkDone);
   const [neWworkDone, setNewWorkDone] = React.useState<IWorkDone>({} as IWorkDone);
   const [checkTask, setCheckTask] = React.useState<ICheсk>({} as ICheсk);
-  const [reviewer, setReviewer] = React.useState<IStudent>({} as IStudent);
+  const [reviewer, setReviewer] = React.useState<IStudent | IMentor>({} as IStudent);
   const [mentor, setMentor] = React.useState<IStudent>({} as IStudent);
   const [deployUrl, setDeployUrl] = React.useState<string>('');
   const [sourceGithubRepoUrl, setSourceGithubRepoUrl] = React.useState<string>('');
@@ -134,7 +135,6 @@ const CrossCheckSubmitPage: React.FC<PropsCrossCheckPage> = ({
       console.log('Change and save in Data 3', newCheckingTask);
       setWorkDone(newCheckingTask);
       updateObjectField('completed_tasks', newCheckingTask.id, newCheckingTask);
-      getServerSideProps();
     }
     setChangeOutside((prev) => !prev);
     setCheckTask(checkingTask);
@@ -238,6 +238,20 @@ const CrossCheckSubmitPage: React.FC<PropsCrossCheckPage> = ({
     }
   };
 
+  const selectReviewer = (reviewer: IStudent | IMentor) => {
+    setReviewer(reviewer);
+    const findCheckTask = workDone.cheсks.filter((item) => reviewer.id === item.checkerID);
+    if (findCheckTask.length !== 0) {
+      setCheckTask(findCheckTask[0]);
+    } else {
+      if (workDone.mentorCheck.checkerID !== reviewer.id) {
+        setCheckTask(workDone.mentorCheck);
+      } else {
+        setCheckTask(workDone.selfTest);
+      }
+    }
+  };
+
   if (task.id !== undefined && reviewer.id !== undefined && checkTask.checkerID !== undefined) {
     taskJSX = (
       <CheckTask
@@ -260,16 +274,6 @@ const CrossCheckSubmitPage: React.FC<PropsCrossCheckPage> = ({
   ) {
     taskJSX = <></>;
   }
-
-  const selectReviewer = (reviewer: IStudent) => {
-    setReviewer(reviewer);
-    const findCheckTask = workDone.cheсks.filter((item) => reviewer.id === item.checkerID);
-    if (findCheckTask.length !== 0) {
-      setCheckTask(findCheckTask[0]);
-    } else {
-      setCheckTask(workDone.selfTest);
-    }
-  };
 
   const taskList =
     dataCourse !== undefined
