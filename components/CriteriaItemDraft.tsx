@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Form, Input, Button, Space, Checkbox } from 'antd';
+import { Form, Input, Button, Space } from 'antd';
 import { ICriteriaGroup } from '../interfaces/ITask';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 
@@ -120,7 +120,7 @@ const MyCriteriaItemDraft: React.FC<{ evaluationCriteria: any }> = ({ evaluation
               <Button
                 type="dashed"
                 onClick={() => {
-                  pointArray.push("");
+                  pointArray.push('');
                   add();
                 }}
                 block

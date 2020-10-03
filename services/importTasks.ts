@@ -80,7 +80,7 @@ export function importTaskRSSChecklist(RSSChecklist: any): any {
     criteriaPoints: [],
   };
 
-  const evaluationCriteria: any[ ] = [];
+  const evaluationCriteria: any[] = [];
   RSSChecklist.criteria.forEach((item: any) => {
     if (item.type === 'title') {
       if (group.groupID !== '') {
@@ -151,10 +151,10 @@ function evaluationCriteriaParse(
     'Evaluation criteria'
   );
 
-  if (!evaluationCriteriaDingy){
+  if (!evaluationCriteriaDingy) {
     return '';
   } else {
-  let OneStrEnd = evaluationCriteriaDingy.indexOf(categorySeparator, 4);
+    let OneStrEnd = evaluationCriteriaDingy.indexOf(categorySeparator, 4);
     let newEvaluationCriteria = evaluationCriteriaDingy.slice(OneStrEnd, -1);
     const evaluationCriteriaArray = [];
     while (newEvaluationCriteria.indexOf(categorySeparator, 4) !== -1) {

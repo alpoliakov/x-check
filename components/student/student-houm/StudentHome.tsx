@@ -1,13 +1,9 @@
 // import * as React from 'react';
-import React, { useState, useEffect } from 'react';
-import { auth, db } from '../../../firebase';
-import { UserBasic } from '../../../interfaces/IUser';
+import React from 'react';
+import { db } from '../../../firebase';
 import styles from './StudentHome.module.css';
 
 const StudentHome: React.FC = () => {
-  const [users, setUser] = useState<any>();
-  const [myUid, setMyUid] = useState<any>();
-
   const getUsers = async () => {
     let userData: any;
     await db
@@ -17,27 +13,11 @@ const StudentHome: React.FC = () => {
         userData = snap.docs.map((doc) => doc.data());
       });
     return userData;
-  }
+  };
   const x = getUsers;
-  // setUser(x);
-  // useEffect(() => {
-  //   const waitForCurrentUser = setInterval(() => {
-  //     // @ts-ignore
-  //     const uid = auth.currentUser;
-  //     if (uid !== null) {
-  //       clearInterval(waitForCurrentUser);
-  //       const myuid = uid.uid;
-  //       setMyUid(myuid);
-  //       return uid;
-  //     } else {
-  //       console.log('Wait for it');
-  //     }
-  //   }, 1000);
-  // }, []);
-  // const user = users.filter((user) => user.uid === myUid);
+
   x();
   return (
-    // {users}
     <div>
       <div className={styles.info}>
         <div className={styles.info__title_block}>

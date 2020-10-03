@@ -3,7 +3,7 @@ import { Button } from 'antd';
 import { task } from '../../../db/tasks';
 import { db } from '../../../firebase';
 
-const SubmitTasks = () => {
+const SubmitTasks = (): any => {
   const [stopSubmit, setStopSubmit] = useState(true);
 
   const submitTasks = (e: any) => {

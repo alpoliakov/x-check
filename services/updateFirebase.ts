@@ -1,7 +1,7 @@
 import { db } from '../firebase';
 import { message } from 'antd';
 
-export const setDocument = (collection: string, doc: string, object: any) => {
+export const setDocument = (collection: string, doc: string, object: any): any => {
   db.collection(collection)
     .doc(doc)
     .set(object)
@@ -14,7 +14,7 @@ export const setDocument = (collection: string, doc: string, object: any) => {
     });
 };
 
-export const updateObjectField = (collection: string, doc: string, objectField: any) => {
+export const updateObjectField = (collection: string, doc: string, objectField: any): any => {
   db.collection(collection)
     .doc(doc)
     .update(objectField)
@@ -27,7 +27,7 @@ export const updateObjectField = (collection: string, doc: string, objectField: 
     });
 };
 
-export const deleteDocument = (collection: string, doc: string) => {
+export const deleteDocument = (collection: string, doc: string): any => {
   db.collection(collection)
     .doc(doc)
     .delete()

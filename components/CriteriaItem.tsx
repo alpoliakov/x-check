@@ -1,10 +1,8 @@
 import * as React from 'react';
-import { Form, Input, Button, Space, Checkbox } from 'antd';
-import { ICriteriaGroup } from '../interfaces/ITask';
+import { Form, Input, Button, Space } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 
 const MyCriteriaItem: React.FC = () => {
-
   return (
     <Form.List name="criterias">
       {(fields, { add, remove }) => {

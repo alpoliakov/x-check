@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, Divider } from 'antd';
+import { Typography } from 'antd';
 import Link from 'next/link';
 import styles from './index.module.css';
 

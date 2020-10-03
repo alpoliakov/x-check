@@ -42,7 +42,7 @@ const Register: React.FC<PropsRegister> = ({ changeAuthPage, changeAuthorization
   const [notify, setNotification] = useState('');
   const [visible, setVisible] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
-  let [userData, setUserData] = useState({
+  const [userData, setUserData] = useState({
     name: '',
     avatar_url: '',
     location: '',
@@ -59,8 +59,8 @@ const Register: React.FC<PropsRegister> = ({ changeAuthPage, changeAuthorization
   const [userDataFromGit, setUserDataFromGit] = useState({});
 
   const getUserDataFromGit = async (nickname: string) => {
-    let response = await fetch(`${gitUserAPI}${nickname}`);
-    let data = await response.json();
+    const response = await fetch(`${gitUserAPI}${nickname}`);
+    const data = await response.json();
     await setUserDataFromGit(data);
   };
 
@@ -247,10 +247,6 @@ const Register: React.FC<PropsRegister> = ({ changeAuthPage, changeAuthorization
                   <Checkbox value="mentor" style={{ lineHeight: '32px' }}>
                     mentor
                   </Checkbox>
-{/* 
-                  <Checkbox value="manager" style={{ lineHeight: '32px' }}>
-                    manager
-                  </Checkbox> */}
                 </Row>
               </Checkbox.Group>
             </Form.Item>

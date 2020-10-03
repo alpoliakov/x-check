@@ -63,11 +63,11 @@ const Import: React.FC<{ dataTasks: any[]; getClickDraft: (value: any) => void }
   const MDImport = (getTask: string) => {
     try {
       const newTask = importTaskMD(getTask);
-      getClickDraft(newTask); 
+      getClickDraft(newTask);
     } catch {
       setTask("Sorry, I can't parse your data, please make sure you enter text as MD");
     }
-  }
+  };
 
   const RSSChecklistImport = (getTask: any) => {
     try {
@@ -78,8 +78,7 @@ const Import: React.FC<{ dataTasks: any[]; getClickDraft: (value: any) => void }
         "Sorry, I can't parse your data, please make sure you enter JSON as a string according to the format RSS Checklist"
       );
     }
-
-  }
+  };
 
   const houmImport = (getTask: string) => {
     try {

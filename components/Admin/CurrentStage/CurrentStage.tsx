@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Select, Button, DatePicker } from 'antd';
 const { Option } = Select;
-import { ICourse, ITaskStep } from '../../../interfaces/ICourse';
+import { ICourse } from '../../../interfaces/ICourse';
 import moment from 'moment';
-import { setDocument, updateObjectField } from '../../../services/updateFirebase';
-import firebase from 'firebase';
+import { setDocument } from '../../../services/updateFirebase';
 
 interface PropsCurrentStage {
   activeTask: string | undefined;

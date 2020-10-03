@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import MainLayout from '../../../components/MainLayout';
-import { Button, Form, Input, Space, Typography } from 'antd';
-import SubmitTasks from './submit';
 import StudentList from '../../../components/Mentor/StudentsList/index';
 import { auth, db } from '../../../firebase';
 import MentorCheck from '../../../components/Mentor/mentor-check';
@@ -13,14 +11,6 @@ import { ICourse } from '../../../interfaces/ICourse';
 import { ICheсk, IWorkDone } from '../../../interfaces/IWorkDone';
 import { setDocument, updateObjectField } from '../../../services/updateFirebase';
 
-const userData = {
-  uid: '1',
-  githubAddress: 'string',
-  nickname: 'Petrov',
-  role: Role.mentor,
-  studentsid: ['', ''],
-  tasksID: ['', ''],
-};
 interface PropsMentorPage {
   usersData: UserBasic[];
   tasksData: ITask[];

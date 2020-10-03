@@ -3,7 +3,7 @@ import { Result, Button } from 'antd';
 import { auth } from '../firebase';
 import { useRouter } from 'next/router';
 
-const Error = () => {
+const Error = (): any => {
   const router = useRouter();
   const logOut = () => {
     auth.signOut().then(

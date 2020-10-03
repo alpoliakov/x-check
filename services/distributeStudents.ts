@@ -1,9 +1,8 @@
 import { message } from 'antd';
-import { IStudent, IWorkDone } from '../interfaces/IWorkDone';
+import { IWorkDone } from '../interfaces/IWorkDone';
 import { updateObjectField } from './updateFirebase';
 
-export const distribute = (array: IWorkDone[], task: string | undefined) => {
-  console.log(array, task);
+export const distribute = (array: IWorkDone[], task: string | undefined): any => {
   const result = array.filter((e) => e.taskID === task);
   const objStudentsArray = result.map((e) => {
     return e.student;
