@@ -17,7 +17,7 @@ import {
 
 interface PropsUser {
   title: string;
-  data?: object;
+  data?: any;
 }
 
 const User: React.FC<PropsUser> = ({ data }) => {

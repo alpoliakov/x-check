@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import firebase from '../firebase';
 
-const useRequest = () => {
+const useRequest = (): any => {
   const [data, setData] = useState();
   const databaseQuery = (node: string) => {
     firebase

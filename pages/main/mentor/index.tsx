@@ -1,28 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import MainLayout from '../../../components/MainLayout';
-import { Button, Form, Input, Space, Typography } from 'antd';
-import SubmitTasks from './submit';
 import StudentList from '../../../components/Mentor/StudentsList/index';
 import { auth, db } from '../../../firebase';
 import Work from '../../../components/Work';
-import { Role } from '../../../interfaces/IUser';
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import AddStudents from '../../../components/Mentor/StudentsList/AddStudents';
 
-const userData = {
-  uid: '1',
-  githubAddress: 'string',
-  nickname: 'Petrov',
-  role: Role.mentor,
-  studentsid: ['', ''],
-  tasksID: ['', ''],
-};
 interface PropsMentorPage {
   userData: [];
 }
 
 const MentorPage: React.FC<PropsMentorPage> = ({ userData }) => {
-  const { Title, Link, Text } = Typography;
   const [task, setTask] = useState();
   const [myUid, setMyUid] = useState<any>();
   useEffect(() => {

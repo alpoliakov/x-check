@@ -1,11 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Button } from 'antd';
 import { random } from '../../../db/random';
 import { db } from '../../../firebase';
 
-const SubmitRandom = () => {
-  const [stopSubmit, setStopSubmit] = useState(true);
-
+const SubmitRandom = (): any => {
   const submitRandomData = (e: any) => {
     e.preventDefault();
     random.forEach((data) => {

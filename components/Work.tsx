@@ -1,7 +1,4 @@
-import React, { useState, Key, useEffect } from 'react';
-import { Select, Avatar, Form } from 'antd';
-import { UserOutlined } from '@ant-design/icons';
-import { useForm } from 'antd/lib/form/Form';
+import React from 'react';
 
 interface PropsWork {
   task: any;

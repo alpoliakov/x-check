@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Form, Select, Button, Tag, Avatar, Tooltip } from 'antd';
+import { Card, Form, Select, Button, Avatar, Tooltip } from 'antd';
 import { UserBasic } from '../../../interfaces/IUser';
 
 interface IProps {
@@ -49,7 +49,6 @@ const AddStudents: React.FC<IProps> = ({ myUid, userData, getUpdate }) => {
               placeholder="Select a user..."
               optionFilterProp="value"
               onSelect={(value, event) => changeKeyUser(value, event)}
-              /* onChange={(e) => changeKeyUser(e)} */
               filterOption={(input: string, option: any) =>
                 option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
               }

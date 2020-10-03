@@ -14,7 +14,7 @@ interface ProfileType {
 
 const ProgressBar: React.FC<ProfileType> = () => <NextNprogress />;
 
-const MyApp = ({ Component, pageProps }: AppProps) => {
+const MyApp = ({ Component, pageProps }: AppProps): any => {
   return (
     <>
       <ProgressBar color="#29D" startPosition="0.3" stopDelayMs="200" height="3" />

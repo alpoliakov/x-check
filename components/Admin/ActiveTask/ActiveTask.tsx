@@ -1,8 +1,7 @@
 import React from 'react';
 import { Form, Select } from 'antd';
 const { Option } = Select;
-import { ITask } from '../../../interfaces/ITask';
-import { ICourse, ITaskStep } from '../../../interfaces/ICourse';
+import { ICourse } from '../../../interfaces/ICourse';
 
 interface AProps {
   dataSession: ICourse[];

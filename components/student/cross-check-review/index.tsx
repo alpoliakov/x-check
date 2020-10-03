@@ -1,18 +1,13 @@
 import React from 'react';
-import MainLayout from '../../../../components/MainLayout';
-import { auth, db } from '../../../../firebase';
-import CheckTask from '../../../../components/student/check-task';
-import { createCheckOnReviewer } from '../../../../components/student/check-task/common';
-import { CheckState, ICheсk, IStudent, IWorkDone } from '../../../../interfaces/IWorkDone';
-import { ITask, TypeTask } from '../../../../interfaces/ITask';
-import { Role } from '../../../../interfaces/IUser';
-import {
-  deleteDocument,
-  setDocument,
-  updateObjectField,
-} from '../../../../services/updateFirebase';
-import SidebarReview from '../../../../components/student/cross-check-review-sidebar';
-import { ICourse } from '../../../../interfaces/ICourse';
+import { auth } from '../../../firebase';
+import CheckTask from '../check-task';
+import { createCheckOnReviewer } from '../check-task/common';
+import { CheckState, ICheсk, IStudent, IWorkDone } from '../../../interfaces/IWorkDone';
+import { ITask, TypeTask } from '../../../interfaces/ITask';
+import { Role } from '../../../interfaces/IUser';
+import { updateObjectField } from '../../../services/updateFirebase';
+import SidebarReview from '../cross-check-review-sidebar';
+import { ICourse } from '../../../interfaces/ICourse';
 
 interface PropsCrossCheckPage {
   tasksData: ITask[];

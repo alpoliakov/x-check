@@ -18,7 +18,7 @@ import {
 } from '@ant-design/icons';
 
 interface PropsEditUser {
-  data?: object;
+  data?: any;
 }
 
 const EditUser: React.FC<PropsEditUser> = ({ data }) => {

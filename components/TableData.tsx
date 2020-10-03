@@ -7,21 +7,20 @@ interface TableDataProps {
   taskReview: boolean;
 }
 
-class TableData extends React.Component {
-  constructor(props: TableDataProps) {
-    super(props);
-  }
+class TableData extends React.Component<TableDataProps> {
 
   state = {
     searchText: '',
     searchedColumn: '',
   };
 
-  getColumnSearchProps = (dataIndex: string) => ({
+  getColumnSearchProps = (dataIndex: string): any => ({
+    //@ts-ignore
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
       <div style={{ padding: 8 }}>
         <Input
           ref={(node) => {
+            //@ts-ignore
             this.searchInput = node;
           }}
           placeholder={`Search ${dataIndex}`}
@@ -55,9 +54,11 @@ class TableData extends React.Component {
         : '',
     onFilterDropdownVisibleChange: (visible: boolean) => {
       if (visible) {
+        //@ts-ignore
         setTimeout(() => this.searchInput.select(), 100);
       }
     },
+    //@ts-ignore
     sorter: (a, b) => {
       switch (dataIndex) {
         case 'score':
@@ -90,7 +91,7 @@ class TableData extends React.Component {
 
   render() {
     let columns: any = [];
-
+    //@ts-ignore
     if (this.props.taskReview) {
       columns = [
         {
@@ -136,7 +137,7 @@ class TableData extends React.Component {
         },
       ];
     }
-
+    //@ts-ignore
     return <Table columns={columns} dataSource={this.props.dataRow} />;
   }
 }

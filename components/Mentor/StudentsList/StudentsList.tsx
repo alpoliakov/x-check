@@ -1,9 +1,6 @@
 import React, { useState, Key, useEffect } from 'react';
 import { Select, Avatar, Form } from 'antd';
-import { UserOutlined } from '@ant-design/icons';
-import { useForm } from 'antd/lib/form/Form';
 import { UserBasic } from '../../../interfaces/IUser';
-import { ITask } from '../../../interfaces/ITask';
 import AddStudents from './AddStudents';
 import { updateObjectField } from '../../../services/updateFirebase';
 import firebase from 'firebase';
@@ -22,8 +19,6 @@ const StudentsList: React.FC<PropsStudentList> = ({ userData, getTask, myUid }) 
   const [tasks, setSTask] = useState<string[]>([]);
   const [isDisabled, setIsDisabled] = useState<boolean>(true);
   const [taskValue, setTaskValue] = useState<string | undefined>(undefined);
-  const [update, setUpdate] = useState<any>();
-  const [form] = useForm();
 
   useEffect(() => {
     setTaskValue(undefined);
