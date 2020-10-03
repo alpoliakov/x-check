@@ -2,7 +2,6 @@ import React from 'react';
 import MainLayout from '../../../../components/MainLayout';
 import { auth, db } from '../../../../firebase';
 import CheckTask from '../../../../components/student/check-task';
-import { dataCourse } from '../../../../components/student/test-task/test-course';
 import { createCheckOnReviewer } from '../../../../components/student/check-task/common';
 import { CheckState, ICheсk, IStudent, IWorkDone } from '../../../../interfaces/IWorkDone';
 import { ITask, TypeTask } from '../../../../interfaces/ITask';
@@ -50,8 +49,8 @@ const CrossCheckReviewPage: React.FC<PropsCrossCheckPage> = ({
   const [activeWorkDone, setActiveWorkDone] = React.useState<IWorkDone>({} as IWorkDone);
 
   // console.log('tasksData', tasksData);
-  // console.log('courseData', courseData);
-  // console.log('completedTasksData', completedTasksData);
+  console.log('courseData', courseData);
+  console.log('completedTasksData', completedTasksData);
   // console.log('activeCheckTask', activeCheckTask);
   // console.log('students', students);
   // console.log('activeWorkDone', activeWorkDone);
@@ -112,20 +111,29 @@ const CrossCheckReviewPage: React.FC<PropsCrossCheckPage> = ({
       };
     }
 
-    if (tasksData.length !== 0 && dataCourse.length !== 0) {
+    if (tasksData.length !== 0 && courseData.length !== 0) {
       const select = tasksData.filter((taskData) => taskData.id === selectTaskID);
       if (select.length !== 0) {
         setTask(select[0]);
-        const selectTaskDeadline = dataCourse[0].tasks.filter(
+        const selectTaskCourse = courseData[0].tasks.filter(
           (taskData) => taskData.taskID === selectTaskID
         );
-        if (selectTaskDeadline.length !== 0) {
-          const selectTaskDeadline1 = selectTaskDeadline.map((el) => el.deadline)[0];
-          const date = new Date().getTime();
-          if (selectTaskDeadline1 < date) {
-            setIsDeadline(true);
-          } else {
-            setIsDeadline(false);
+        if (selectTaskCourse.length !== 0) {
+          const selectTaskStage = selectTaskCourse.map((el) => el.taskStage);
+          if (selectTaskStage.length !== 0) {
+            switch (selectTaskStage[0]) {
+              case 'REQUESTS_GATHERING': {
+                setIsDeadline(false);
+                break;
+              }
+              case 'CROSS_CHECK': {
+                setIsDeadline(true);
+                break;
+              }
+              default: {
+                setIsDeadline(false);
+              }
+            }
           }
         }
 
@@ -241,8 +249,8 @@ const CrossCheckReviewPage: React.FC<PropsCrossCheckPage> = ({
   }
 
   const taskList =
-    dataCourse !== undefined
-      ? /*courseData[0]*/ dataCourse[0].tasks.map((task) => {
+    courseData[0] !== undefined && courseData.length !== 0
+      ? courseData[0].tasks.map((task) => {
           return { name: task.name, id: task.taskID };
         })
       : [];

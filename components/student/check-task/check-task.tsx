@@ -58,7 +58,6 @@ function CheckTask({
   const [stateChangeOutside, setStateChangeOutside] = React.useState<boolean>(changeOutside);
   const [stateCheckingTask, setCheckingTask] = useState<ICheсk>(checkingTask);
   if (checkingTask !== stateCheckingTask && stateChangeOutside !== changeOutside) {
-    console.log('изменения извне');
     setCheckingTask(checkingTask);
     setStateChangeOutside((prev) => !prev);
   }
@@ -251,7 +250,7 @@ function CheckTask({
     setCheckingTask((prev) => {
       switch (prev.state) {
         case CheckState.SelfTest: {
-          const current = {
+          const current: ICheсk = {
             ...prev,
             state: CheckState.AuditorDraft,
             cheсking: changeStatePoint(prev, CheсkingPointState.NotVerified),
@@ -260,7 +259,7 @@ function CheckTask({
           return current;
         }
         case CheckState.AuditorDraft: {
-          const current = {
+          const current: ICheсk = {
             ...prev,
             state: CheckState.NotVerified,
             cheсking: changeStatePoint(prev, CheсkingPointState.NotVerified),
@@ -269,7 +268,7 @@ function CheckTask({
           return current;
         }
         case CheckState.NotVerified: {
-          const current = {
+          const current: ICheсk = {
             ...prev,
             state: changeStateCheck(prev),
           };
@@ -277,7 +276,7 @@ function CheckTask({
           return current;
         }
         case CheckState.Dispute: {
-          const current = {
+          const current: ICheсk = {
             ...prev,
             state: changeStateCheck(prev),
           };
@@ -285,7 +284,7 @@ function CheckTask({
           return current;
         }
         default: {
-          const current = {
+          const current: ICheсk = {
             ...prev,
             state: changeStateCheck(prev),
           };
