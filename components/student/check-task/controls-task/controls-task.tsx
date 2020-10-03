@@ -26,7 +26,7 @@ function ControlsTask({
   onSubmit,
 }: PropsControlsTask): JSX.Element {
   const isSelfTest =
-    stateCheck !== CheckState.SelfTest ? (
+    stateCheck !== CheckState.SelfTest && role !== Role.mentor ? (
       <Checkbox checked={isAnonim} onChange={onChangeIsAnonim}>
         Make my name visible in feedback
       </Checkbox>

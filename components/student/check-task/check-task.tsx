@@ -61,8 +61,6 @@ function CheckTask({
     setCheckingTask(checkingTask);
     setStateChangeOutside((prev) => !prev);
   }
-
-  console.log('stateCheckingTask', stateCheckingTask);
   const onAgreeAllPoint = () => {
     setCheckingTask((prev) => {
       const newCheckingPointState = prev.cheсking.map((item) => {
@@ -183,19 +181,6 @@ function CheckTask({
     }, 0);
   };
 
-  const onSaveCheckTask = () => {
-    setCheckingTask((prev) => {
-      if (prev.state === CheckState.SelfTest) {
-        return { ...prev, state: CheckState.SelfTest };
-      } else if (prev.state === CheckState.AuditorDraft) {
-        return { ...prev, state: CheckState.NotVerified };
-      } else {
-        return { ...prev, state: CheckState.NotVerified };
-      }
-    });
-    onSave(stateCheckingTask);
-  };
-
   const changeStatePoint = (checkTask: ICheсk, newCheсkingPointState: CheсkingPointState) => {
     if (newCheсkingPointState === CheсkingPointState.Verified) {
       return checkTask.cheсking.map((item) => {
@@ -244,6 +229,23 @@ function CheckTask({
         return CheckState.NotVerified;
       }
     }
+  };
+  const onSaveCheckTask = () => {
+    setCheckingTask((prev) => {
+      if (prev.state === CheckState.SelfTest) {
+        const current: ICheсk = { ...prev, state: CheckState.SelfTest };
+        onSave(current);
+        return current;
+      } else if (prev.state === CheckState.AuditorDraft) {
+        const current: ICheсk = { ...prev, state: CheckState.AuditorDraft };
+        onSave(current);
+        return current;
+      } else {
+        const current: ICheсk = { ...prev, state: CheckState.NotVerified };
+        onSave(current);
+        return current;
+      }
+    });
   };
 
   const onSubmitCheckTask = () => {

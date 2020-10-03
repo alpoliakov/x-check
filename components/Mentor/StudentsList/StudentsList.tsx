@@ -10,20 +10,21 @@ const { Option } = Select;
 interface PropsStudentList {
   userData: UserBasic[];
   myUid: string;
-  getTask: (value: any) => void;
+  getTask: (taskID: string, userID: string) => void;
 }
 
 const StudentsList: React.FC<PropsStudentList> = ({ userData, getTask, myUid }) => {
   const [students, setStudent] = useState<UserBasic[]>([]);
+  const [activeStudentID, setActiveStudentID] = useState<string>();
   const [users, setUsers] = useState<UserBasic[]>([]);
-  const [tasks, setSTask] = useState<string[]>([]);
+  const [tasks, setTasks] = useState<string[]>([]);
   const [isDisabled, setIsDisabled] = useState<boolean>(true);
   const [taskValue, setTaskValue] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     setTaskValue(undefined);
-    getTask(null);
   }, [tasks]);
+
   useEffect(() => {
     if (myUid) {
       const mentorStudents: any[] = userData.filter((e: any) => e.uid === myUid)[0].studentsid;
@@ -54,13 +55,16 @@ const StudentsList: React.FC<PropsStudentList> = ({ userData, getTask, myUid }) 
   };
   const handleProvinceChange = (value: Key, key: any) => {
     const userTasks: UserBasic[] = students.filter((i) => i.uid === key.key);
-    setSTask(userTasks[0].tasksID);
+    setActiveStudentID(key.key);
+    setTasks(userTasks[0].tasksID);
     setIsDisabled(false);
   };
 
   const onSecondCityChange = (value: string) => {
     setTaskValue(value);
-    getTask(value);
+    if (activeStudentID !== undefined) {
+      getTask(value, activeStudentID);
+    }
   };
   return (
     <>
