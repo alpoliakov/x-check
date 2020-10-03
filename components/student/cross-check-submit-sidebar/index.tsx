@@ -1,37 +1,39 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Select, Input, Table, Tag } from 'antd';
-import { ITask, TypeTask } from '../../../interfaces/ITask';
+import { ITask } from '../../../interfaces/ITask';
 import styles from './index.module.css';
-import { CheckState, IStudent, IWorkDone, TaskState, IMentor } from '../../../interfaces/IWorkDone';
+import { CheckState, IStudent, IWorkDone, IMentor, TaskState } from '../../../interfaces/IWorkDone';
+import { ITaskStep } from '../../../interfaces/ICourse';
 
 interface ISelectTask {
   name: string;
   id: string;
 }
-interface PropsSidebar {
-  taskList: ISelectTask[];
-  isDeadline: boolean;
-  isActiveTask: boolean;
-  workDone: IWorkDone;
+interface ILinks {
   deployUrl: string;
   sourceGithubRepoUrl: string;
+}
+interface ICourseData {
+  taskStep: ITaskStep;
+  task: ITask;
+  workDone: IWorkDone;
+}
+
+interface PropsSidebar {
+  taskList: ISelectTask[];
+  activeCourseData: ICourseData;
+  links: ILinks;
   getTask: (task: string) => void;
-  getDeployUrl: (url: string) => void;
-  getSourceGithubRepoUrl: (url: string) => void;
+  getLinks: (links: ILinks) => void;
   selectReviewer: (reviewer: IStudent | IMentor) => void;
 }
 
 const SidebarSubmit: React.FC<PropsSidebar> = ({
-  getTask,
-  isActiveTask,
   taskList,
-  workDone,
-  isDeadline,
-  deployUrl,
-
-  sourceGithubRepoUrl,
-  getDeployUrl,
-  getSourceGithubRepoUrl,
+  activeCourseData,
+  links,
+  getTask,
+  getLinks,
   selectReviewer,
 }) => {
   const { Option } = Select;
@@ -39,22 +41,21 @@ const SidebarSubmit: React.FC<PropsSidebar> = ({
   const handleClick = (value: string) => {
     getTask(value);
   };
-  console.log(isActiveTask);
-  console.log(isDeadline);
+
   const onChangeDeployUrl = (e: React.ChangeEvent<HTMLInputElement>) => {
-    getDeployUrl(e.target.value);
+    getLinks({ deployUrl: e.target.value, sourceGithubRepoUrl: links.sourceGithubRepoUrl });
   };
   const onChangeSourceGithubRepoUrl = (e: React.ChangeEvent<HTMLInputElement>) => {
-    getSourceGithubRepoUrl(e.target.value);
+    getLinks({ deployUrl: links.deployUrl, sourceGithubRepoUrl: e.target.value });
   };
 
   const onClickRevewers = (reviewerID: string) => {
-    const result = workDone.reviewers.filter((item) => item.id === reviewerID);
+    const result = activeCourseData.workDone.reviewers.filter((item) => item.id === reviewerID);
     if (result.length !== 0) {
       selectReviewer(result[0]);
     } else {
-      if (workDone.mentor.id !== undefined) {
-        selectReviewer(workDone.mentor);
+      if (activeCourseData.workDone.mentor.id !== undefined) {
+        selectReviewer(activeCourseData.workDone.mentor);
       } else {
         selectReviewer({} as IStudent);
       }
@@ -63,30 +64,24 @@ const SidebarSubmit: React.FC<PropsSidebar> = ({
 
   let sideBarJSX: JSX.Element = <></>;
   let itemStatus = '';
-  if (!isActiveTask && !isDeadline && workDone.id === undefined) {
+  if (activeCourseData.task === undefined) {
     sideBarJSX = <></>;
-  } else if (isActiveTask && isDeadline && workDone.id === undefined) {
-    sideBarJSX = <>The deadline has passed already</>;
-  } else if (workDone.state === TaskState.isCheking && !isDeadline) {
-    sideBarJSX = <></>;
-  } else if (isActiveTask && !isDeadline && workDone.id === undefined) {
-    sideBarJSX = (
-      <div>
-        <h3>Solution URL Demo</h3>
-        <Input placeholder="Link here" value={deployUrl} allowClear onChange={onChangeDeployUrl} />
-        <h3>Solution URL Pull request</h3>
-        <Input
-          placeholder="Link here"
-          value={sourceGithubRepoUrl}
-          allowClear
-          onChange={onChangeSourceGithubRepoUrl}
-        />
-      </div>
-    );
-  } else if (isDeadline && workDone.id !== undefined) {
-    const data = workDone.reviewers.map((item, index) => {
+  } else if (
+    activeCourseData.task !== undefined &&
+    activeCourseData.taskStep.taskStage === 'CROSS_CHECK' &&
+    activeCourseData.workDone.id === undefined
+  ) {
+    sideBarJSX = <>The deadline has passed.</>;
+  } else if (
+    activeCourseData.task !== undefined &&
+    activeCourseData.taskStep.taskStage === 'CROSS_CHECK' &&
+    activeCourseData.workDone.id !== undefined
+  ) {
+    const data = activeCourseData.workDone.reviewers.map((item, index) => {
       let isAnonimSidebar: boolean;
-      const stateItem = workDone.cheсks.filter((itemChecks) => itemChecks.checkerID === item.id);
+      const stateItem = activeCourseData.workDone.cheсks.filter(
+        (itemChecks) => itemChecks.checkerID === item.id
+      );
       if (stateItem.length !== 0) {
         switch (stateItem[0].state) {
           case CheckState.AuditorDraft:
@@ -127,8 +122,8 @@ const SidebarSubmit: React.FC<PropsSidebar> = ({
     });
 
     let statusMentor: string;
-    if (workDone.mentorCheck.state !== undefined) {
-      switch (workDone.mentorCheck.state) {
+    if (activeCourseData.workDone.mentorCheck.state !== undefined) {
+      switch (activeCourseData.workDone.mentorCheck.state) {
         case CheckState.AuditorDraft:
           statusMentor = 'Auditor Draft';
           break;
@@ -152,12 +147,12 @@ const SidebarSubmit: React.FC<PropsSidebar> = ({
     }
 
     const dataWithMentor =
-      workDone.mentor.id !== undefined
+      activeCourseData.workDone.mentor.id !== undefined
         ? [
             ...data,
             {
-              key: workDone.mentor.id,
-              reviewer: `mentor-${workDone.mentor.name}`,
+              key: activeCourseData.workDone.mentor.id,
+              reviewer: `mentor-${activeCourseData.workDone.mentor.name}`,
               status: statusMentor,
             },
           ]
@@ -226,20 +221,32 @@ const SidebarSubmit: React.FC<PropsSidebar> = ({
         }
       </div>
     );
-  } else {
+  } else if (
+    activeCourseData.task !== undefined &&
+    activeCourseData.taskStep.taskStage === 'REQUESTS_GATHERING' &&
+    (activeCourseData.workDone.id === undefined ||
+      activeCourseData.workDone.state === TaskState.isSelfTest)
+  ) {
     sideBarJSX = (
       <div>
         <h3>Solution URL Demo</h3>
-        <Input placeholder="Link here" value={deployUrl} allowClear onChange={onChangeDeployUrl} />
+        <Input
+          placeholder="Link here"
+          value={links.deployUrl}
+          allowClear
+          onChange={onChangeDeployUrl}
+        />
         <h3>Solution URL Pull request</h3>
         <Input
           placeholder="Link here"
-          value={sourceGithubRepoUrl}
+          value={links.sourceGithubRepoUrl}
           allowClear
           onChange={onChangeSourceGithubRepoUrl}
         />
       </div>
     );
+  } else {
+    sideBarJSX = <>You submitted. Cross-Check did not start!</>;
   }
 
   return (

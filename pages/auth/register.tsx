@@ -247,10 +247,10 @@ const Register: React.FC<PropsRegister> = ({ changeAuthPage, changeAuthorization
                   <Checkbox value="mentor" style={{ lineHeight: '32px' }}>
                     mentor
                   </Checkbox>
-
+{/* 
                   <Checkbox value="manager" style={{ lineHeight: '32px' }}>
                     manager
-                  </Checkbox>
+                  </Checkbox> */}
                 </Row>
               </Checkbox.Group>
             </Form.Item>
