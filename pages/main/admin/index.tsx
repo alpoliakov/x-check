@@ -158,7 +158,7 @@ const AdminPage: React.FC<PropsAdmin> = ({
               dataCompletedTask={dataCompletedTask}
             />
           ) : (
-            <Row style={{ width: 1000, display: 'flex', flexDirection: 'column' }}>
+            <Row style={{ maxWidth: 1000, display: 'flex', flexDirection: 'column' }}>
               <Form task={transferTaskForm} />
             </Row>
           )}

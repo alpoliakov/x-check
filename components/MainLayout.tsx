@@ -148,7 +148,7 @@ const MainLayout: React.FC<PropsML> = ({ children, title, changeAuthorization })
             </Dropdown>
           </div>
         </nav>
-        <section className={'select_role'} style={{ position: 'absolute', margin: '50px 0 0 5px' }}>
+        <section className={'select_role'} style={{ position: 'absolute', margin: '64px 0 0 5px' }}>
           <div style={{ width: '200px' }}>
             <Select
               showSearch

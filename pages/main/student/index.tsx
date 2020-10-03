@@ -63,9 +63,17 @@ const StudentPage: React.FC<PropsStudentPage> = ({ tasksData, courseData, comple
           {houmPage ? (
             <StudentHome />
           ) : CCSubmit ? (
-            <CrossCheckSubmitPage tasksData={tasksData}, courseData={courseData}, completedTasksData={completedTasksData}/>
+            <CrossCheckSubmitPage
+              tasksData={tasksData}
+              courseData={courseData}
+              completedTasksData={completedTasksData}
+            />
           ) : (
-            <CrossCheckReviewPage />
+            <CrossCheckReviewPage
+              tasksData={tasksData}
+              courseData={courseData}
+              completedTasksData={completedTasksData}
+            />
           )}
         </div>
       </main>

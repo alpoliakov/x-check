@@ -254,18 +254,20 @@ const CrossCheckSubmitPage: React.FC<PropsCrossCheckPage> = ({
 
   if (task.id !== undefined && reviewer.id !== undefined && checkTask.checkerID !== undefined) {
     taskJSX = (
-      <CheckTask
-        task={task}
-        checkingTask={checkTask}
-        reviewer={reviewer}
-        changeOutside={changeOutside}
-        deployUrl={deployUrl}
-        sourceGithubRepoUrl={sourceGithubRepoUrl}
-        role={role}
-        typeTask={typeTask}
-        onSave={onSave}
-        onSubmit={onSubmit}
-      />
+      <div style={{ position: 'absolute', margin: '40px 0 0 -260px', width: '95%'}}>
+        <CheckTask
+          task={task}
+          checkingTask={checkTask}
+          reviewer={reviewer}
+          changeOutside={changeOutside}
+          deployUrl={deployUrl}
+          sourceGithubRepoUrl={sourceGithubRepoUrl}
+          role={role}
+          typeTask={typeTask}
+          onSave={onSave}
+          onSubmit={onSubmit}
+        />
+      </div>
     );
   } else if (
     task.id === undefined ||
@@ -284,65 +286,21 @@ const CrossCheckSubmitPage: React.FC<PropsCrossCheckPage> = ({
 
   return (
     <>
-      <div className="nav__main">
-        <SidebarSubmit
-          getTask={selectTask}
-          taskList={taskList}
-          workDone={workDone}
-          reviewer={reviewer}
-          isDeadline={isDeadline}
-          deployUrl={deployUrl}
-          sourceGithubRepoUrl={sourceGithubRepoUrl}
-          getDeployUrl={getDeployUrl}
-          getSourceGithubRepoUrl={getSourceGithubRepoUrl}
-          selectReviewer={selectReviewer}
-        />
-        {taskJSX}
-      </div>
-      <div className="workspace"></div>
+      <SidebarSubmit
+        getTask={selectTask}
+        taskList={taskList}
+        workDone={workDone}
+        reviewer={reviewer}
+        isDeadline={isDeadline}
+        deployUrl={deployUrl}
+        sourceGithubRepoUrl={sourceGithubRepoUrl}
+        getDeployUrl={getDeployUrl}
+        getSourceGithubRepoUrl={getSourceGithubRepoUrl}
+        selectReviewer={selectReviewer}
+      />
+      {taskJSX}
     </>
   );
 };
 
 export default CrossCheckSubmitPage;
-
-// export const getServerSideProps = async () => {
-//   let tasksData: ITask[] = [] as ITask[];
-//   await db
-//     .collection('TasksArray')
-//     .get()
-//     .then((snap) => {
-//       if (snap !== undefined && snap !== null) {
-//         tasksData = snap.docs.map((doc) => doc.data()) as ITask[];
-//       } else {
-//         tasksData = [] as ITask[];
-//       }
-//     });
-//   let courseData: ICourse[] = [] as ICourse[];
-//   await db
-//     .collection('sessions')
-//     .get()
-//     .then((snap) => {
-//       if (snap !== undefined && snap !== null) {
-//         courseData = snap.docs.map((doc) => doc.data()) as ICourse[];
-//       } else {
-//         courseData = [] as ICourse[];
-//       }
-//     });
-
-//   let completedTasksData: IWorkDone[] = [] as IWorkDone[];
-//   await db
-//     .collection('completed_tasks')
-//     .get()
-//     .then((snap) => {
-//       if (snap !== undefined && snap !== null) {
-//         completedTasksData = snap.docs.map((doc) => doc.data()) as IWorkDone[];
-//       } else {
-//         completedTasksData = [] as IWorkDone[];
-//       }
-//     });
-
-//   return {
-//     props: { tasksData, courseData, completedTasksData },
-//   };
-// };
