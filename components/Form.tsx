@@ -29,26 +29,26 @@ const Myform: React.FC<{ task: any, dataUsers: any }> = ({ task, dataUsers }) =>
 
   const onFinish = (values: any) => {
     const evaluationCriteria: any = [];
-
     for (let i = 0; i < values.criterias.length; i++) {
       const criteriaPoint = {
         criteriaPointID: values.criterias[i].criteriaPointName,
         criteriaPointName: values.criterias[i].criteriaPointName,
         criteriaPointScore: values.criterias[i].criteriaPointScore,
-        isFine: values.criterias[i].isFine && values.criterias[i].isFine !== 'false'? true : false,
+        isFine: values.criterias[i].isFine && values.criterias[i].isFine !== 'false' ? true : false,
         isThisPointForAMentor:
           values.criterias[i].isThisPointForAMentor &&
           values.criterias[i].isThisPointForAMentor !== 'false'
             ? true
             : false,
       };
+      let mark = false;
       for (let j = 0; j < evaluationCriteria.length; j++) {
         if (evaluationCriteria[j].groupName === values.criterias[i].groupName) {
           evaluationCriteria[j].criteriaPoints.push(criteriaPoint);
-          criteriaPoint.criteriaPointName = undefined;
+          mark = true;
         }
       }
-      if (criteriaPoint.criteriaPointName !== undefined) {
+      if (!mark) {
         const criteriaGroup: ICriteriaGroup = {
           groupID: values.criterias[i].groupName,
           groupName: values.criterias[i].groupName,
@@ -84,10 +84,9 @@ const Myform: React.FC<{ task: any, dataUsers: any }> = ({ task, dataUsers }) =>
       oldUrl: values.oldUrl ? values.oldUrl : '',
       publisherID: myUid,
     };
+    console.log(newTask);
     try {
-      myUid
-        ? setDocument('TasksArray', newTask.id, newTask)
-        : console.log('Something went wrong. You may not be eligible to create task.');
+      setDocument('TasksArray', newTask.id, newTask);
     } catch {
       console.log('Something went wrong. You may not be eligible to create task.')
     }

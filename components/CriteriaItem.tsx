@@ -4,27 +4,10 @@ import { ICriteriaGroup } from '../interfaces/ITask';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 
 const MyCriteriaItem: React.FC = () => {
-  // const pointArray: any[] = [];
-  // if (evaluationCriteria.criteriaPoints) {
-  //   evaluationCriteria.forEach((group: ICriteriaGroup) => {
-  //     group.criteriaPoints.forEach((point) => {
-  //       const item = {
-  //         criteriaPointName: point.criteriaPointName,
-  //         criteriaPointScore: point.criteriaPointScore,
-  //         isThisPointForAMentor: point.isThisPointForAMentor,
-  //         isFine: point.isFine,
-  //         groupName: group.groupName,
-  //       };
-  //       pointArray.push(item);
-  //     });
-  //   });
-  // }
+
   return (
     <Form.List name="criterias">
       {(fields, { add, remove }) => {
-        // for (let i = 0; i < pointArray.length; i++) {
-        //   fields.push({ fieldKey: i, name: i, key: i });
-        // }
         return (
           <div>
             {fields.map((field) => (
@@ -35,15 +18,7 @@ const MyCriteriaItem: React.FC = () => {
                   required={true}
                   style={{ minWidth: '480px', width: 'auto' }}
                 >
-                  <Input
-                    placeholder="Criteria item description"
-                    style={{ width: '100%' }}
-                    // defaultValue={
-                    //   pointArray[field.name].criteriaPointName
-                    //     ? pointArray[field.name].criteriaPointName
-                    //     : ''
-                    // }
-                  />
+                  <Input placeholder="Criteria item description" style={{ width: '100%' }} />
                 </Form.Item>
                 <Form.Item
                   label={'Score'}
@@ -51,15 +26,7 @@ const MyCriteriaItem: React.FC = () => {
                   required={true}
                   style={{ minWidth: '100px', width: 'auto' }}
                 >
-                  <Input
-                    placeholder="10"
-                    style={{ width: '100%' }}
-                    // defaultValue={
-                    //   pointArray[field.name].criteriaPointScore
-                    //     ? pointArray[field.name].criteriaPointScore
-                    //     : ''
-                    // }
-                  />
+                  <Input placeholder="10" style={{ width: '100%' }} />
                 </Form.Item>
                 <Form.Item
                   label={'For mentor'}
@@ -67,15 +34,7 @@ const MyCriteriaItem: React.FC = () => {
                   required={false}
                   style={{ minWidth: '180px', width: 'auto' }}
                 >
-                  <Input
-                    placeholder="true if not empty"
-                    style={{ width: '100%' }}
-                    // defaultValue={
-                    //   pointArray[field.name].isThisPointForAMentor
-                    //     ? pointArray[field.name].isThisPointForAMentor
-                    //     : 'false'
-                    // }
-                  />
+                  <Input placeholder="true if not empty" style={{ width: '100%' }} />
                 </Form.Item>
                 <Form.Item
                   label={'is Fine?'}
@@ -83,13 +42,7 @@ const MyCriteriaItem: React.FC = () => {
                   required={false}
                   style={{ minWidth: '160px', width: 'auto' }}
                 >
-                  <Input
-                    placeholder="true if not empty"
-                    style={{ width: '100%' }}
-                    // defaultValue={
-                    //   pointArray[field.name].isFine ? pointArray[field.name].isFine : 'false'
-                    // }
-                  />
+                  <Input placeholder="true if not empty" style={{ width: '100%' }} />
                 </Form.Item>
                 <Form.Item
                   label={'Criteria group'}
@@ -97,13 +50,7 @@ const MyCriteriaItem: React.FC = () => {
                   required={true}
                   style={{ minWidth: '300px', width: 'auto' }}
                 >
-                  <Input
-                    placeholder="Criteria group name"
-                    style={{ width: '100%' }}
-                    // defaultValue={
-                    //   pointArray[field.name].groupName ? pointArray[field.name].groupName : ''
-                    // }
-                  />
+                  <Input placeholder="Criteria group name" style={{ width: '100%' }} />
                 </Form.Item>
                 <MinusCircleOutlined
                   className="dynamic-delete-button"
