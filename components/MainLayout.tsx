@@ -171,7 +171,7 @@ const MainLayout: React.FC<PropsML> = ({ children, title, changeAuthorization })
               style={{ width: 220, marginTop: '15px' }}
               placeholder={roles.length !== 0 ? roles[0] : 'Loading...'}
               optionFilterProp="children"
-              onChange={onChange}
+              // onChange={onChange}
             >
               <Option value={''}>-</Option>
               {roles.map((item: string) => (
