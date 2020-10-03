@@ -46,12 +46,8 @@ const MentorPage: React.FC<PropsMentorPage> = ({ userData }) => {
 
   return (
     <MainLayout title={'Mentor'}>
-      {/* <Title level={1}>Mentor Page</Title> */}
       <main className={'main__box'}>
         <div className="nav__main">
-          {/*    <Title level={2}>Mentor</Title>
-          <SubmitTasks /> */}
-          {/* <AddStudents users={userData} myUid={myUid} /> */}
           <StudentList userData={userData} myUid={myUid} getTask={getTask} />
         </div>
         <div className="workspace">

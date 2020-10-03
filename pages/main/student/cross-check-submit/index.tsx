@@ -284,25 +284,22 @@ const CrossCheckSubmitPage: React.FC<PropsCrossCheckPage> = ({
 
   return (
     <>
-      <MainLayout title="Cross-Check: Submit">
-        <main className={'main__box'}>
-          <div className="nav__main">
-            <SidebarSubmit
-              getTask={selectTask}
-              taskList={taskList}
-              workDone={workDone}
-              reviewer={reviewer}
-              isDeadline={isDeadline}
-              deployUrl={deployUrl}
-              sourceGithubRepoUrl={sourceGithubRepoUrl}
-              getDeployUrl={getDeployUrl}
-              getSourceGithubRepoUrl={getSourceGithubRepoUrl}
-              selectReviewer={selectReviewer}
-            />
-          </div>
-          <div className="workspace">{taskJSX}</div>
-        </main>
-      </MainLayout>
+      <div className="nav__main">
+        <SidebarSubmit
+          getTask={selectTask}
+          taskList={taskList}
+          workDone={workDone}
+          reviewer={reviewer}
+          isDeadline={isDeadline}
+          deployUrl={deployUrl}
+          sourceGithubRepoUrl={sourceGithubRepoUrl}
+          getDeployUrl={getDeployUrl}
+          getSourceGithubRepoUrl={getSourceGithubRepoUrl}
+          selectReviewer={selectReviewer}
+        />
+        {taskJSX}
+      </div>
+      <div className="workspace"></div>
     </>
   );
 };

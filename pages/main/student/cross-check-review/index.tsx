@@ -249,20 +249,14 @@ const CrossCheckReviewPage: React.FC<PropsCrossCheckPage> = ({
 
   return (
     <>
-      <MainLayout title="Cross-Check: Review">
-        <main className={'main__box'}>
-          <div className="nav__main">
-            <SidebarReview
-              taskList={taskList}
-              isDeadline={isDeadline}
-              students={students}
-              getTask={selectTask}
-              selectStudent={selectStudent}
-            />
-          </div>
-          <div className="workspace">{taskJSX}</div>
-        </main>
-      </MainLayout>
+      <SidebarReview
+        taskList={taskList}
+        isDeadline={isDeadline}
+        students={students}
+        getTask={selectTask}
+        selectStudent={selectStudent}
+      />
+      {taskJSX}
     </>
   );
 };
