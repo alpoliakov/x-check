@@ -9,14 +9,21 @@ import { db } from '../../../firebase';
 import { ITask } from '../../../interfaces/ITask';
 import { ICourse } from '../../../interfaces/ICourse';
 import { IWorkDone } from '../../../interfaces/IWorkDone';
+import { UserBasic } from '../../../interfaces/IUser';
 
 interface PropsStudentPage {
+  usersData: UserBasic[];
   tasksData: ITask[];
   courseData: ICourse[];
   completedTasksData: IWorkDone[]; // была проблема в 56 строки, ты присваивал свойство от undefined
 }
 
-const StudentPage: React.FC<PropsStudentPage> = ({ tasksData, courseData, completedTasksData }) => {
+const StudentPage: React.FC<PropsStudentPage> = ({
+  tasksData,
+  courseData,
+  completedTasksData,
+  usersData,
+}) => {
   const [houmPage, setHoumPage] = useState<boolean>(true);
   const [CCSubmit, setCCSubmit] = useState<boolean>(false);
 
@@ -64,6 +71,7 @@ const StudentPage: React.FC<PropsStudentPage> = ({ tasksData, courseData, comple
             <StudentHome />
           ) : CCSubmit ? (
             <CrossCheckSubmitPage
+              usersData={usersData}
               tasksData={tasksData}
               courseData={courseData}
               completedTasksData={completedTasksData}
@@ -80,7 +88,19 @@ const StudentPage: React.FC<PropsStudentPage> = ({ tasksData, courseData, comple
     </MainLayout>
   );
 };
+
 export const getServerSideProps = async () => {
+  let usersData: UserBasic[] = [] as UserBasic[];
+  await db
+    .collection('users')
+    .get()
+    .then((snap) => {
+      if (snap !== undefined && snap !== null) {
+        usersData = snap.docs.map((doc) => doc.data()) as UserBasic[];
+      } else {
+        usersData = [] as UserBasic[];
+      }
+    });
   let tasksData: ITask[] = [] as ITask[];
   await db
     .collection('TasksArray')
@@ -117,7 +137,7 @@ export const getServerSideProps = async () => {
     });
 
   return {
-    props: { tasksData, courseData, completedTasksData },
+    props: { usersData, tasksData, courseData, completedTasksData },
   };
 };
 

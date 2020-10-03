@@ -79,10 +79,6 @@ const CrossCheckSubmitPage: React.FC<PropsCrossCheckPage> = ({
       initCrossCheckSubmit(activeUser, tasksData, completedTasksData, courseData)
     );
 
-    console.log('crossCheckSubmit', crossCheckSubmit);
-    console.log('reviewer', reviewer);
-    console.log('checkTask', checkTask);
-    console.log('links', links);
     let taskJSX: JSX.Element = <></>;
 
     const selectTask = (selectTaskID: string) => {
@@ -332,55 +328,3 @@ const CrossCheckSubmitPage: React.FC<PropsCrossCheckPage> = ({
 };
 
 export default CrossCheckSubmitPage;
-
-export const getServerSideProps = async () => {
-  let usersData: UserBasic[] = [] as UserBasic[];
-  await db
-    .collection('users')
-    .get()
-    .then((snap) => {
-      if (snap !== undefined && snap !== null) {
-        usersData = snap.docs.map((doc) => doc.data()) as UserBasic[];
-      } else {
-        usersData = [] as UserBasic[];
-      }
-    });
-  let tasksData: ITask[] = [] as ITask[];
-  await db
-    .collection('TasksArray')
-    .get()
-    .then((snap) => {
-      if (snap !== undefined && snap !== null) {
-        tasksData = snap.docs.map((doc) => doc.data()) as ITask[];
-      } else {
-        tasksData = [] as ITask[];
-      }
-    });
-  let courseData: ICourse[] = [] as ICourse[];
-  await db
-    .collection('sessions')
-    .get()
-    .then((snap) => {
-      if (snap !== undefined && snap !== null) {
-        courseData = snap.docs.map((doc) => doc.data()) as ICourse[];
-      } else {
-        courseData = [] as ICourse[];
-      }
-    });
-
-  let completedTasksData: IWorkDone[] = [] as IWorkDone[];
-  await db
-    .collection('completed_tasks')
-    .get()
-    .then((snap) => {
-      if (snap !== undefined && snap !== null) {
-        completedTasksData = snap.docs.map((doc) => doc.data()) as IWorkDone[];
-      } else {
-        completedTasksData = [] as IWorkDone[];
-      }
-    });
-
-  return {
-    props: { usersData, tasksData, courseData, completedTasksData },
-  };
-};
