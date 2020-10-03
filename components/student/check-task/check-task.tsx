@@ -58,7 +58,6 @@ function CheckTask({
   const [stateChangeOutside, setStateChangeOutside] = React.useState<boolean>(changeOutside);
   const [stateCheckingTask, setCheckingTask] = useState<ICheсk>(checkingTask);
   if (checkingTask !== stateCheckingTask && stateChangeOutside !== changeOutside) {
-    console.log('изменения извне');
     setCheckingTask(checkingTask);
     setStateChangeOutside((prev) => !prev);
   }
