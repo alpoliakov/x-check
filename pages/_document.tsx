@@ -4,7 +4,7 @@ import Document, { Head, Main, NextScript } from 'next/document';
 export default class extends Document {
   enableGA = process.env.NODE_ENV === 'production';
 
-  render() {
+  render(): any {
     return (
       <html lang="en">
         <Head>

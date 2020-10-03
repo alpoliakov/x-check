@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { Button, Modal, Row, Typography } from 'antd';
+import { Modal, Row } from 'antd';
 import MainLayout from '../../../components/MainLayout';
-import SubmitRandom from './submit-random';
 import { db } from '../../../firebase';
 import AdminMain from '../../../components/Admin/index';
 import Form from '../../../components/Form';
@@ -20,7 +19,6 @@ import {
   RightSquareTwoTone,
 } from '@ant-design/icons';
 import { List } from 'antd';
-import Link from 'next/link';
 
 interface PropsAdmin {
   dataUsers: UserBasic[];
@@ -39,7 +37,6 @@ const AdminPage: React.FC<PropsAdmin> = ({
   dataSession,
   dataCompletedTask,
 }) => {
-  const { Title } = Typography;
   const [visibleModal, setVisibleModal] = useState<boolean>(false);
   const [visibleImport, setVisibleImport] = useState<boolean>(false);
   const [visitableTable, setVisitableTable] = useState<boolean>(false);
@@ -82,14 +79,13 @@ const AdminPage: React.FC<PropsAdmin> = ({
   const getVisibleModal = (value: boolean) => {
     setVisibleModal(value);
   };
-  const handleOkImport = (e: any) => {
+  const handleOkImport = () => {
     setVisibleImport(false);
   };
-  const handleOkTable = (e: any) => {
+  const handleOkTable = () => {
     setVisitableTable(false);
     setVisitableReviewTable(false);
   };
-  const task = {};
 
   return (
     <MainLayout title={'Admin'}>
@@ -101,37 +97,37 @@ const AdminPage: React.FC<PropsAdmin> = ({
               <List.Item key={'Home'} onClick={returnAdminMain}>
                 <div>
                   <HomeTwoTone twoToneColor="#40E127" style={{ marginRight: '4px' }} />
-                  <a>Home</a>
+                  <span style={{ color: '#1890FF' }}>Home</span>
                 </div>
               </List.Item>
               <List.Item key={'Create task'} onClick={showModalCreateTask}>
                 <div>
                   <PlusCircleTwoTone twoToneColor="#FFDB00" style={{ marginRight: '4px' }} />
-                  <a>Create task</a>
+                  <span style={{ color: '#1890FF' }}>Create task</span>
                 </div>
               </List.Item>
               <List.Item key={'Import/Export'} onClick={showImport}>
                 <div>
                   <CodeTwoTone style={{ marginRight: '4px' }} />
-                  <a>Import/Export</a>
+                  <span style={{ color: '#1890FF' }}>Import/Export</span>
                 </div>
               </List.Item>
               <List.Item key={'task management'} onClick={showModal}>
                 <div>
                   <RightSquareTwoTone twoToneColor="#eb2f96" style={{ marginRight: '4px' }} />
-                  <a>task management</a>
+                  <span style={{ color: '#1890FF' }}>task management</span>
                 </div>
               </List.Item>
               <List.Item key={'Table results'} onClick={showTable}>
                 <div>
                   <DatabaseTwoTone twoToneColor="#40E0D0" style={{ marginRight: '4px' }} />
-                  <a>Table results</a>
+                  <span style={{ color: '#1890FF' }}>Table results</span>
                 </div>
               </List.Item>
               <List.Item key={'Review requests'} onClick={showReviewTable}>
                 <div>
                   <CheckCircleTwoTone twoToneColor="#BA55D3" style={{ marginRight: '4px' }} />
-                  <a>Review requests</a>
+                  <span style={{ color: '#1890FF' }}>Review requests</span>
                 </div>
               </List.Item>
             </List>
@@ -189,9 +185,6 @@ const AdminPage: React.FC<PropsAdmin> = ({
 export const getServerSideProps = async () => {
   let dataUsers: any | undefined = [];
   let dataTasks: any | undefined = [];
-  const crossCheckSession: any | undefined = [];
-  // let courseUser: any | undefined = [];
-  // let courseCrossCheckTasks: any | undefined = [];
   let dataSession: any | undefined = [];
   let dataCompletedTask: any | undefined = [];
   await db
@@ -221,10 +214,12 @@ export const getServerSideProps = async () => {
     });
 
   const dataReviews = dataCompletedTask
-    .map((task) => {
+    .map((task: any) => {
       if (task.cheсks.length > 0) {
-        return task.cheсks.map((el) => {
-          const reviewerName = task.reviewers.filter((reviewer) => reviewer.id === el.checkerID)[0];
+        return task.cheсks.map((el: any) => {
+          const reviewerName = task.reviewers.filter(
+            (reviewer: any) => reviewer.id === el.checkerID
+          )[0];
 
           return {
             key: task.student.name + reviewerName.name,
@@ -236,19 +231,19 @@ export const getServerSideProps = async () => {
         });
       }
     })
-    .filter((el) => el)
+    .filter((el: any) => el)
     .flat(Infinity);
 
   const requestTasksID = dataSession[0].tasks
-    .filter((el) => el.taskStage === 'REQUESTS_GATHERING')
-    .map((el) => el.taskID);
+    .filter((el: any) => el.taskStage === 'REQUESTS_GATHERING')
+    .map((el: any) => el.taskID);
   const filterTasks = requestTasksID
-    .map((taskId) => dataCompletedTask.filter((el) => el.taskID === taskId))
+    .map((taskId: any) => dataCompletedTask.filter((el: any) => el.taskID === taskId))
     .flat(Infinity);
 
-  const filterTaskState = filterTasks.filter((el) => el.state === TaskState.isSelfTest);
+  const filterTaskState = filterTasks.filter((el: any) => el.state === TaskState.isSelfTest);
 
-  const dataReviewRequest = filterTaskState.map((task) => ({
+  const dataReviewRequest = filterTaskState.map((task: any) => ({
     key: task.student.name,
     user: task.student.name,
     task: task.taskID,

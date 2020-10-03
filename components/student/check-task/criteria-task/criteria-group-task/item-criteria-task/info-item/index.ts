@@ -1,3 +1,3 @@
-import InfoItem  from './info-item';
+import InfoItem from './info-item';
 
 export default InfoItem;

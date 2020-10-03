@@ -1,8 +1,7 @@
 /* eslint-disable react/display-name */
 import React, { useState } from 'react';
-import { Table, Radio, Divider, Tag, Button, Popconfirm, Space } from 'antd';
+import { Table, Tag, Button, Popconfirm, Space } from 'antd';
 import { ITask, StateTask } from '../../../interfaces/ITask';
-import { db } from '../../../firebase';
 import { deleteDocument, setDocument, updateObjectField } from '../../../services/updateFirebase';
 
 interface PropsTableNewTask {

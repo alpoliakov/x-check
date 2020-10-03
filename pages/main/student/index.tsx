@@ -3,8 +3,8 @@ import MainLayout from '../../../components/MainLayout';
 import { CheckCircleTwoTone, CodeTwoTone, HomeTwoTone } from '@ant-design/icons';
 import { List } from 'antd';
 import StudentHome from '../../../components/student/student-houm/StudentHome';
-import CrossCheckSubmitPage from './cross-check-submit';
-import CrossCheckReviewPage from './cross-check-review';
+import CrossCheckSubmitPage from '../../../components/student/cross-check-submit';
+import CrossCheckReviewPage from '../../../components/student/cross-check-review';
 import { db } from '../../../firebase';
 import { ITask } from '../../../interfaces/ITask';
 import { ICourse } from '../../../interfaces/ICourse';
@@ -48,19 +48,19 @@ const StudentPage: React.FC<PropsStudentPage> = ({
               <List.Item key={'Home'} onClick={goToHoum}>
                 <div>
                   <HomeTwoTone twoToneColor="#40E127" style={{ marginRight: '4px' }} />
-                  <a>Home</a>
+                  <span style={{ color: '#1890FF' }}>Home</span>
                 </div>
               </List.Item>
               <List.Item key={'Cross-check: Submit'} onClick={goToCCSubmit}>
                 <div>
                   <CodeTwoTone style={{ marginRight: '4px' }} />
-                  <a>Cross-check: Submit</a>
+                  <span style={{ color: '#1890FF' }}>Cross-check: Submit</span>
                 </div>
               </List.Item>
               <List.Item key={'Cross-check: Review'} onClick={goToCCReview}>
                 <div>
                   <CheckCircleTwoTone twoToneColor="#eb2f96" style={{ marginRight: '4px' }} />
-                  <a>Cross-check: Review</a>
+                  <span style={{ color: '#1890FF' }}>Cross-check: Review</span>
                 </div>
               </List.Item>
             </List>

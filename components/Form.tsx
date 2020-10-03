@@ -6,7 +6,7 @@ import { ICriteriaGroup, StateTask } from '../interfaces/ITask';
 import { setDocument } from '../services/updateFirebase';
 import { useEffect, useState } from 'react';
 
-const Myform: React.FC<{ task: any, dataUsers: any }> = ({ task, dataUsers }) => {
+const Myform: React.FC<{ task: any}> = ({ task }) => {
   const [myUid, setMyUid] = useState<any>();
 
   useEffect(() => {
@@ -23,9 +23,6 @@ const Myform: React.FC<{ task: any, dataUsers: any }> = ({ task, dataUsers }) =>
       }
     }, 300);
   }, []);
-  // console.log(dataUsers);
-  // const myRolle = dataUsers.find(item => item.id == myUid).role;
-  //     console.log(myRolle)
 
   const onFinish = (values: any) => {
     const evaluationCriteria: any = [];
@@ -67,7 +64,7 @@ const Myform: React.FC<{ task: any, dataUsers: any }> = ({ task, dataUsers }) =>
     let useJury = false;
     if (values.useJury && values.useJury !== 'false') {
       useJury = true;
-    } 
+    }
 
     const newTask = {
       name: values.name.replace(/\//g, ' '),
@@ -88,9 +85,8 @@ const Myform: React.FC<{ task: any, dataUsers: any }> = ({ task, dataUsers }) =>
     try {
       setDocument('TasksArray', newTask.id, newTask);
     } catch {
-      console.log('Something went wrong. You may not be eligible to create task.')
+      console.log('Something went wrong. You may not be eligible to create task.');
     }
-
   };
   const name = task.name ? task.name : '';
   const description = task.description ? task.description : '';
@@ -152,7 +148,7 @@ export const getServerSideProps = async () => {
     });
   console.log(dataUsers);
   return {
-    props: { dataUsers }
-  }
-}
+    props: { dataUsers },
+  };
+};
 export default Myform;

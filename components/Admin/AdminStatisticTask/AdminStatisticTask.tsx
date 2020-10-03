@@ -1,6 +1,5 @@
-import React, { useState, Key, useEffect, Props } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card } from 'antd';
-import { IStatistics } from '../../../interfaces/IStatistics';
 import { UserBasic } from '../../../interfaces/IUser';
 import { IWorkDone } from '../../../interfaces/IWorkDone';
 

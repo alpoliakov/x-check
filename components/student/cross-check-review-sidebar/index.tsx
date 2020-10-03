@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Select, Table, Tag } from 'antd';
 import styles from './index.module.css';
-import { CheckState, ICheсk, IStudent } from '../../../interfaces/IWorkDone';
+import { CheckState, IStudent } from '../../../interfaces/IWorkDone';
 
 interface ISelectTask {
   name: string;
