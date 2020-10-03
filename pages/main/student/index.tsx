@@ -15,7 +15,7 @@ interface PropsStudentPage {
   usersData: UserBasic[];
   tasksData: ITask[];
   courseData: ICourse[];
-  completedTasksData: IWorkDone[]; // была проблема в 56 строки, ты присваивал свойство от undefined
+  completedTasksData: IWorkDone[];
 }
 
 const StudentPage: React.FC<PropsStudentPage> = ({
