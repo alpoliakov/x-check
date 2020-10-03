@@ -257,63 +257,16 @@ const CrossCheckReviewPage: React.FC<PropsCrossCheckPage> = ({
 
   return (
     <>
-      <MainLayout title="Cross-Check: Review">
-        <main className={'main__box'}>
-          <div className="nav__main">
-            <SidebarReview
-              taskList={taskList}
-              isDeadline={isDeadline}
-              students={students}
-              getTask={selectTask}
-              selectStudent={selectStudent}
-            />
-          </div>
-          <div className="workspace">{taskJSX}</div>
-        </main>
-      </MainLayout>
+      <SidebarReview
+        taskList={taskList}
+        isDeadline={isDeadline}
+        students={students}
+        getTask={selectTask}
+        selectStudent={selectStudent}
+      />
+      {taskJSX}
     </>
   );
 };
 
 export default CrossCheckReviewPage;
-
-export const getServerSideProps = async () => {
-  let tasksData: ITask[] = [] as ITask[];
-  await db
-    .collection('TasksArray')
-    .get()
-    .then((snap) => {
-      if (snap !== undefined && snap !== null) {
-        tasksData = snap.docs.map((doc) => doc.data()) as ITask[];
-      } else {
-        tasksData = [] as ITask[];
-      }
-    });
-  let courseData: ICourse[] = [] as ICourse[];
-  await db
-    .collection('sessions')
-    .get()
-    .then((snap) => {
-      if (snap !== undefined && snap !== null) {
-        courseData = snap.docs.map((doc) => doc.data()) as ICourse[];
-      } else {
-        courseData = [] as ICourse[];
-      }
-    });
-
-  let completedTasksData: IWorkDone[] = [] as IWorkDone[];
-  await db
-    .collection('completed_tasks')
-    .get()
-    .then((snap) => {
-      if (snap !== undefined && snap !== null) {
-        completedTasksData = snap.docs.map((doc) => doc.data()) as IWorkDone[];
-      } else {
-        completedTasksData = [] as IWorkDone[];
-      }
-    });
-
-  return {
-    props: { tasksData, courseData, completedTasksData },
-  };
-};

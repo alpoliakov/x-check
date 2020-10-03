@@ -73,8 +73,9 @@ const StudentsList: React.FC<PropsStudentList> = ({ userData, getTask, myUid }) 
       <Form layout="vertical">
         <Form.Item label="Students" rules={[{ required: true }]}>
           <Select
+            size="small"
             placeholder="Select students..."
-            style={{ width: 280 }}
+            style={{ width: 220 }}
             onChange={handleProvinceChange}
           >
             {students.map((province) => (
@@ -95,9 +96,10 @@ const StudentsList: React.FC<PropsStudentList> = ({ userData, getTask, myUid }) 
         </Form.Item>
         <Form.Item label="Tasks" rules={[{ required: true }]}>
           <Select
+            size="small"
             placeholder="Select student tasks..."
             value={taskValue}
-            style={{ width: 280, marginRight: 20 }}
+            style={{ width: 220, marginRight: 20 }}
             onChange={onSecondCityChange}
             disabled={isDisabled}
           >

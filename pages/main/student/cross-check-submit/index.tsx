@@ -280,18 +280,20 @@ const CrossCheckSubmitPage: React.FC<PropsCrossCheckPage> = ({
       reviewer.id !== undefined
     ) {
       taskJSX = (
-        <CheckTask
-          task={crossCheckSubmit.activeCourseData.task}
-          checkingTask={checkTask}
-          reviewer={reviewer}
-          changeOutside={changeOutside}
-          deployUrl={links.deployUrl}
-          sourceGithubRepoUrl={links.sourceGithubRepoUrl}
-          role={role}
-          typeTask={typeTask}
-          onSave={onSave}
-          onSubmit={onSubmit}
-        />
+        <div style={{ position: 'absolute', margin: '40px 0 0 -260px', width: '95%' }}>
+          <CheckTask
+            task={crossCheckSubmit.activeCourseData.task}
+            checkingTask={checkTask}
+            reviewer={reviewer}
+            changeOutside={changeOutside}
+            deployUrl={links.deployUrl}
+            sourceGithubRepoUrl={links.sourceGithubRepoUrl}
+            role={role}
+            typeTask={typeTask}
+            onSave={onSave}
+            onSubmit={onSubmit}
+          />
+        </div>
       );
     } else if (crossCheckSubmit.activeCourseData.task === undefined) {
       taskJSX = <></>;
@@ -306,28 +308,22 @@ const CrossCheckSubmitPage: React.FC<PropsCrossCheckPage> = ({
 
     return (
       <>
-        <MainLayout title="Cross-Check: Submit">
-          <main className={'main__box'}>
-            <div className="nav__main">
-              <SidebarSubmit
-                taskList={taskList}
-                activeCourseData={crossCheckSubmit.activeCourseData}
-                links={links}
-                getLinks={getLinks}
-                getTask={selectTask}
-                selectReviewer={selectReviewer}
-              />
-              <Button
-                type="primary"
-                onClick={deleteWorkDone}
-                disabled={crossCheckSubmit.activeCourseData.workDone === undefined}
-              >
-                Delete this workDone
-              </Button>
-            </div>
-            <div className="workspace">{taskJSX}</div>
-          </main>
-        </MainLayout>
+        <SidebarSubmit
+          taskList={taskList}
+          activeCourseData={crossCheckSubmit.activeCourseData}
+          links={links}
+          getLinks={getLinks}
+          getTask={selectTask}
+          selectReviewer={selectReviewer}
+        />
+        <Button
+          type="primary"
+          onClick={deleteWorkDone}
+          disabled={crossCheckSubmit.activeCourseData.workDone === undefined}
+        >
+          Delete this workDone
+        </Button>
+        {taskJSX}
       </>
     );
   } else {
