@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card } from 'antd';
 import { UserBasic } from '../../../interfaces/IUser';
-import { IWorkDone } from '../../../interfaces/IWorkDone';
+import { IWorkDone, TaskState } from '../../../interfaces/IWorkDone';
 
 interface IProps {
   user: UserBasic[];
@@ -21,6 +21,7 @@ const AdminStatisticTask: React.FC<IProps> = ({ user, dataCompletedTask, activeT
     setStudent(getNumberStudents(users));
   }, [user, users]);
   useEffect(() => {
+    setWorkInCheck(getWorkInCheck(dataCompletedTask, activeTask));
     setWorkDone(getWorkDone(dataCompletedTask, activeTask));
   }, [activeTask]);
   const getNumberStudents = (value: any): number => {
@@ -37,7 +38,16 @@ const AdminStatisticTask: React.FC<IProps> = ({ user, dataCompletedTask, activeT
   const getWorkDone = (array: IWorkDone[], task: string | undefined): number => {
     let result = 0;
     array.forEach((e) => {
-      if (e.taskID === task) {
+      if (e.taskID === task && e.state === TaskState.isCheking) {
+        result += 1;
+      }
+    });
+    return result;
+  };
+  const getWorkInCheck = (array: IWorkDone[], task: string | undefined): number => {
+    let result = 0;
+    array.forEach((e) => {
+      if (e.taskID === task && e.state === TaskState.isCompleted) {
         result += 1;
       }
     });

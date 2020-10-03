@@ -3,10 +3,13 @@ import React, { useState } from 'react';
 import { Table, Tag, Button, Popconfirm, Space } from 'antd';
 import { ITask, StateTask } from '../../../interfaces/ITask';
 import { deleteDocument, setDocument, updateObjectField } from '../../../services/updateFirebase';
+import { ICourse } from '../../../interfaces/ICourse';
 
 interface PropsTableNewTask {
   tasks: ITask[];
+  dataSession: ICourse;
   getClickTask: (value: string) => void;
+  updateDataSession: (data: ICourse, value: string) => void;
 }
 interface Item {
   key: string;
@@ -15,7 +18,12 @@ interface Item {
   state: StateTask;
   authorName: string;
 }
-const TableNewTask: React.FC<PropsTableNewTask> = ({ tasks, getClickTask }) => {
+const TableNewTask: React.FC<PropsTableNewTask> = ({
+  tasks,
+  getClickTask,
+  dataSession,
+  updateDataSession,
+}) => {
   const data: any = [];
   for (let i = 0; i < tasks.length; i++) {
     data.push({
@@ -99,7 +107,7 @@ const TableNewTask: React.FC<PropsTableNewTask> = ({ tasks, getClickTask }) => {
     setDataTasks(
       dataSource.map((item: Item) => {
         if (item.id === _) {
-          item.state = StateTask.active;
+          item.state = StateTask.published;
         }
         return item;
       })
@@ -107,36 +115,22 @@ const TableNewTask: React.FC<PropsTableNewTask> = ({ tasks, getClickTask }) => {
     updateObjectField('TasksArray', e.id, {
       state: StateTask.published,
     });
-    /* db.collection('TasksArray')
-      .doc(e.id)
-      .update({
-        state: StateTask.published,
-      })
-      .then(function () {
-        console.log('Document successfully written!');
-      }); */
   };
   const onClickActive = (_: any, e: any) => {
     const dataSource = [...dataTasks];
-    setDocument('session', e.name, {
+    dataSession.tasks.push({
       taskID: e.id,
       name: e.name,
-      taskStage: null,
-      deadline: null,
-      start: null,
+      taskStage: 'DRAFT',
+      deadline: Date.now(),
+      start: Date.now(),
     });
-    /* db.collection('session')
-      .doc(e.name)
-      .set({
-        taskID: e.id,
-        name: e.name,
-        taskStage: null,
-        deadline: null,
-        start: null,
-      })
-      .then(function () {
-        console.log('Document successfully written!');
-      }); */
+    const pushBase = dataSession;
+    setDocument('sessions', 'course1', dataSession);
+    updateDataSession(pushBase, e.id);
+    updateObjectField('TasksArray', e.id, {
+      state: StateTask.active,
+    });
     setDataTasks(
       dataSource.map((item: Item) => {
         if (item.id === _) {
