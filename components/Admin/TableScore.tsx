@@ -47,7 +47,6 @@ const TableScore: React.FC<PropsScore> = ({ dataUsers, dataTasks, dataCompletedT
     for (const keys in obj) {
       for (let i = 0; i < dataCompletedTask.length; i++) {
         if (keys === dataCompletedTask[i].taskID && obj.key === dataCompletedTask[i].student.id) {
-          console.log('111111', obj, (obj[keys] = dataCompletedTask[i].finalScore));
           obj[dataCompletedTask[i].taskID] = dataCompletedTask[i].finalScore;
         }
       }
