@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Modal, Row, Typography } from 'antd';
+import { Button, Modal, Row, Space, Table, Typography } from 'antd';
 import MainLayout from '../../../components/MainLayout';
 import SubmitRandom from './submit-random';
 import { db } from '../../../firebase';
@@ -21,6 +21,8 @@ import {
 } from '@ant-design/icons';
 import { List } from 'antd';
 import Link from 'next/link';
+import Avatar from 'antd/lib/avatar/avatar';
+import TableScore from '../../../components/Admin/TableScore';
 
 interface PropsAdmin {
   dataUsers: UserBasic[];
@@ -89,7 +91,6 @@ const AdminPage: React.FC<PropsAdmin> = ({
     setVisitableTable(false);
     setVisitableReviewTable(false);
   };
-  const task = {};
 
   return (
     <MainLayout title={'Admin'}>
@@ -180,6 +181,11 @@ const AdminPage: React.FC<PropsAdmin> = ({
           >
             <TableData dataRow={dataReviewRequest} taskReview={visitableTable} />
           </Modal>
+          <TableScore
+            dataTasks={dataTasks}
+            dataUsers={dataUsers}
+            dataCompletedTask={dataCompletedTask}
+          />
         </div>
       </main>
     </MainLayout>

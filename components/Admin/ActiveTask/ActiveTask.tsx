@@ -18,7 +18,6 @@ const ActiveTask: React.FC<AProps> = ({ dataSession, getActiveTask }) => {
     setFilterDataSession(filter);
   }, []);
   const onSelected = (value: string) => {
-    setFilterDataSession(dataSession.tasks);
     getActiveTask(value);
   };
   const updateActiveTask = () => {

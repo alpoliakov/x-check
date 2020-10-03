@@ -107,7 +107,7 @@ const TableNewTask: React.FC<PropsTableNewTask> = ({
     setDataTasks(
       dataSource.map((item: Item) => {
         if (item.id === _) {
-          item.state = StateTask.active;
+          item.state = StateTask.published;
         }
         return item;
       })
