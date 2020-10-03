@@ -42,7 +42,7 @@ const TaskInformation: React.FC<PropsTaskInformation> = ({
     setTaskStage(value);
   };
 
-  const distributeTest = () => {
+  /*   const distributeTest = () => {
     dataCompletedTask.forEach((e) => {
       e.reviewers.push(e.student);
       updateObjectField('completed_tasks', e.id, {
@@ -51,7 +51,7 @@ const TaskInformation: React.FC<PropsTaskInformation> = ({
     });
 
     console.log(dataCompletedTask);
-  };
+  }; */
   return (
     <>
       <Card style={{ marginTop: 30 }}>
@@ -85,13 +85,13 @@ const TaskInformation: React.FC<PropsTaskInformation> = ({
             style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
           >
             <Space align="end" direction="vertical">
-              <Button
+              {/*      <Button
                 style={{ marginBottom: 20, width: 182 }}
                 type="primary"
                 onClick={distributeTest}
               >
                 Distribute TEST
-              </Button>
+              </Button> */}
               <Button
                 disabled={taskStage !== 'CROSS_CHECK'}
                 style={{ marginBottom: 20, width: 182 }}
