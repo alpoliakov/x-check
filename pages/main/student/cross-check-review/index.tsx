@@ -1,16 +1,11 @@
 import React from 'react';
-import MainLayout from '../../../../components/MainLayout';
 import { auth, db } from '../../../../firebase';
 import CheckTask from '../../../../components/student/check-task';
 import { createCheckOnReviewer } from '../../../../components/student/check-task/common';
 import { CheckState, ICheсk, IStudent, IWorkDone } from '../../../../interfaces/IWorkDone';
 import { ITask, TypeTask } from '../../../../interfaces/ITask';
 import { Role } from '../../../../interfaces/IUser';
-import {
-  deleteDocument,
-  setDocument,
-  updateObjectField,
-} from '../../../../services/updateFirebase';
+import { updateObjectField } from '../../../../services/updateFirebase';
 import SidebarReview from '../../../../components/student/cross-check-review-sidebar';
 import { ICourse } from '../../../../interfaces/ICourse';
 
@@ -47,14 +42,6 @@ const CrossCheckReviewPage: React.FC<PropsCrossCheckPage> = ({
   const [activeCheckTask, setActiveCheckTask] = React.useState<ICheсk>({} as ICheсk);
   const [students, setStudents] = React.useState<IStudentStatus[]>([]);
   const [activeWorkDone, setActiveWorkDone] = React.useState<IWorkDone>({} as IWorkDone);
-
-  // console.log('tasksData', tasksData);
-  console.log('courseData', courseData);
-  console.log('completedTasksData', completedTasksData);
-  // console.log('activeCheckTask', activeCheckTask);
-  // console.log('students', students);
-  // console.log('activeWorkDone', activeWorkDone);
-  // console.log('isDeadline', isDeadline);
 
   let taskJSX: JSX.Element = <></>;
 
@@ -145,12 +132,10 @@ const CrossCheckReviewPage: React.FC<PropsCrossCheckPage> = ({
             );
           });
           if (searchWorksDone.length !== 0) {
-            console.log('searchWorksDone', searchWorksDone);
             const searchStudents = searchWorksDone.map((item) => {
               const searchStatus = item.cheсks.filter(
                 (cheсk) => cheсk.checkerID === authorizedStudent.id
               );
-              console.log('searchStatus', searchStatus);
               let status: CheckState;
               if (searchStatus.length !== 0) {
                 status = searchStatus[0].state;
@@ -198,7 +183,6 @@ const CrossCheckReviewPage: React.FC<PropsCrossCheckPage> = ({
           completedTask.student.id === student.id
         );
       });
-      console.log('searchWorkDone', searchWorkDone);
       if (searchWorkDone.length !== 0) {
         //фича для удаления
         // deleteDocument('completed_tasks', searchWorkDone[0].id);
@@ -210,7 +194,6 @@ const CrossCheckReviewPage: React.FC<PropsCrossCheckPage> = ({
         if (findCheckingTask.length !== 0) {
           setActiveCheckTask(findCheckingTask[0]);
         } else {
-          console.log('searchWorkDone', searchWorkDone[0]);
           setActiveCheckTask(createCheckOnReviewer(task, searchWorkDone[0], authorizedStudent));
         }
       } else {

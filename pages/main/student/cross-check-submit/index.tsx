@@ -1,19 +1,11 @@
 import React, { useState } from 'react';
-import MainLayout from '../../../../components/MainLayout';
 import { auth, db } from '../../../../firebase';
 import CheckTask from '../../../../components/student/check-task';
 import {
   createWorkDone,
   initCrossCheckSubmit,
 } from '../../../../components/student/check-task/common';
-import {
-  CheckState,
-  ICheсk,
-  IMentor,
-  IStudent,
-  IWorkDone,
-  TaskState,
-} from '../../../../interfaces/IWorkDone';
+import { ICheсk, IMentor, IStudent, IWorkDone, TaskState } from '../../../../interfaces/IWorkDone';
 import { ITask, TypeTask } from '../../../../interfaces/ITask';
 import { Role, UserBasic } from '../../../../interfaces/IUser';
 import {
