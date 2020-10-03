@@ -19,6 +19,7 @@ import {
   RightSquareTwoTone,
 } from '@ant-design/icons';
 import { List } from 'antd';
+import TableScore from '../../../components/Admin/TableScore';
 
 interface PropsAdmin {
   dataUsers: UserBasic[];

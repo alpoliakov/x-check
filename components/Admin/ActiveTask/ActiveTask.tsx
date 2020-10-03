@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Form, Select } from 'antd';
 const { Option } = Select;
-import { ICourse } from '../../../interfaces/ICourse';
+import { ICourse, ITaskStep } from '../../../interfaces/ICourse';
 
 interface AProps {
   dataSession: ICourse;
   activeTask: string | undefined;
   getActiveTask: (value: string) => void;
 }
-
 const ActiveTask: React.FC<AProps> = ({ dataSession, getActiveTask }) => {
   const [filterDataSession, setFilterDataSession] = useState<ITaskStep[]>([]);
 
