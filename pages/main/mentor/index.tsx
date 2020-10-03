@@ -48,13 +48,11 @@ const MentorPage: React.FC<PropsMentorPage> = ({ usersData, tasksData, completed
   }, []);
 
   const getTask = (taskID: string, userID: string) => {
-    console.log(taskID, userID);
     const selectWorkDone = completedTasksData.filter(
       (item) => item.taskID === taskID && item.student.id === userID
     );
     const selectTask = tasksData.filter((item) => item.id === taskID);
     if (selectWorkDone.length !== 0 && selectTask.length !== 0) {
-      console.log(selectWorkDone[0]);
       setTask(selectTask[0]);
       setWorkDone(selectWorkDone[0]);
     }
@@ -66,7 +64,6 @@ const MentorPage: React.FC<PropsMentorPage> = ({ usersData, tasksData, completed
       ...workDone,
       mentorCheck: checkingTask,
     };
-    console.log('onSave', neWworkDone);
     updateObjectField('completed_tasks', neWworkDone.id, neWworkDone);
   };
 
@@ -75,8 +72,7 @@ const MentorPage: React.FC<PropsMentorPage> = ({ usersData, tasksData, completed
       ...workDone,
       mentorCheck: checkingTask,
     };
-
-    // updateObjectField('completed_tasks', neWworkDone.id, neWworkDone);
+    updateObjectField('completed_tasks', neWworkDone.id, neWworkDone);
   };
   let mentorCheckJSX: JSX.Element = <></>;
   if (task.id !== undefined && workDone.id !== undefined) {

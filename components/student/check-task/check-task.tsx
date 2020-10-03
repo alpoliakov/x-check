@@ -61,8 +61,6 @@ function CheckTask({
     setCheckingTask(checkingTask);
     setStateChangeOutside((prev) => !prev);
   }
-
-  console.log('stateCheckingTask', stateCheckingTask);
   const onAgreeAllPoint = () => {
     setCheckingTask((prev) => {
       const newCheckingPointState = prev.cheсking.map((item) => {
