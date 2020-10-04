@@ -1,0 +1,9 @@
+.notAuthPage {
+  height: 10em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.notAuthPage div {
+  margin-top: 150px;
+}

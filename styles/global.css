@@ -1,0 +1,165 @@
+*,
+*:after,
+*:before {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.box_auth {
+  margin: 0 auto;
+  text-align: center;
+}
+
+.nav {
+  padding: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.header-logo {
+  height: 30px;
+}
+
+.layout {
+  display: flex;
+  flex: auto;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.profile-text {
+  margin-left: 12px;
+  font-size: 18px;
+}
+
+.login-form {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -65%);
+  text-align: center;
+}
+
+.login-image {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto 50px;
+}
+#login-card-img {
+  width: 100px;
+  margin: 30px auto 20px;
+}
+
+.main_register {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.box__registration {
+  width: 25%;
+  height: auto;
+  padding: 50px;
+  border: 1px solid #d9d9d9;
+  border-radius: 2px;
+}
+
+.notify {
+  color: tomato;
+}
+
+.ant-btn {
+  margin-right: 8px;
+}
+
+.box__image_register {
+  width: 75%;
+  margin: 0 auto;
+  padding: 10px;
+}
+
+.login__now_text {
+  text-align: center;
+}
+
+.register__now_text {
+  margin-top: 25px;
+}
+
+#normal_login {
+  padding: 60px;
+  border: 1px solid #d9d9d9;
+  border-radius: 2px;
+}
+
+#components-form-demo-normal-login .login-form {
+  max-width: 300px;
+}
+#components-form-demo-normal-login .login-form-forgot {
+  float: right;
+}
+#components-form-demo-normal-login .ant-col-rtl .login-form-forgot {
+  float: left;
+}
+#components-form-demo-normal-login .login-form-button {
+  width: 100%;
+}
+
+.main__about {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.intro {
+  text-align: center;
+}
+
+.site-card-wrapper {
+  padding: 15px;
+}
+
+.ant-card-actions {
+  background: #fafafa !important;
+}
+
+.ant-col {
+  margin-top: 0px;
+}
+
+.box-roles {
+  padding: 20px;
+}
+
+.select_role {
+  padding: 15px;
+}
+
+.main__box {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid:
+  'nav working'
+  / 1fr 10fr;
+  column-gap: 20px;
+  padding: 20px;
+}
+
+.nav__main {
+  margin-top: 0;
+  padding-top: 90px;
+  height: 100vh;
+  grid-area: nav;
+  /* border-right: 1px solid #d9d9d9; */
+}
+
+.workspace {
+  grid-area: working;
+}
